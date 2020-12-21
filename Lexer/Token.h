@@ -28,7 +28,7 @@ public:
     }
 
     string toString(){
-        return type +" "+ symbol+ " "+ line;
+        return to_string((int)m_type) +" "+ m_symbol+ " "+ to_string(m_line);
     }
 };
 

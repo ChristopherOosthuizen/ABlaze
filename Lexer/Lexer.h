@@ -14,12 +14,13 @@ class Lexer {
     int m_line;
     string m_input;
 public:
-    Lexer(string input);
-    vector<Token> readAllTokens;
+    Lexer(const string& input);
+    vector<Token> readAllTokens(); //reads turns all of input into Tokens then returns.
 
 private:
-    Token next();
-    char peek();
+    Token next(); //returns the token at pos and increments
+    char peek(); // returns the character one in front of pos
+    bool isAtEnd(); //tells weather pos is at the end
 
 };
 

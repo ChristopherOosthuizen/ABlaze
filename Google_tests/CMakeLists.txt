@@ -3,6 +3,6 @@ Project(Google_tests)
 add_subdirectory(googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-add_executable(GoogleTests_run )
+add_executable(Google_Tests_run LexerTest.cpp)
 
 target_link_libraries(Google_Tests_run gtest gtest_main)
