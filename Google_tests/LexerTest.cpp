@@ -47,7 +47,7 @@ TEST(Lexer,Operators){
  *
  */ 
 TEST(Lexer,characters){
-	string str  = "+-*/&|:;<>{}[](),.!";
+	string str  = "+-*/&|:;<>{}[](),.! =";
 	Lexer lexer(str);
 	ASSERT_EQ(lexer.next().m_type,TokenType::PLUS); 
 	ASSERT_EQ(lexer.next().m_type,TokenType::MINUS);
@@ -68,6 +68,31 @@ TEST(Lexer,characters){
 	ASSERT_EQ(lexer.next().m_type,TokenType::COMMA);
 	ASSERT_EQ(lexer.next().m_type,TokenType::DOT);
 	ASSERT_EQ(lexer.next().m_type,TokenType::NOT);
+	ASSERT_EQ(lexer.next().m_type,TokenType::EQUAL);
 	
+	
+}
+
+/*
+ * Two line characters 
+ * This test that the program can handle all two line character such as +=, -= *&
+ */
+TEST(Lexer,Two){
+	string str = "==+=-=*=/=!=++--//**&&||<=>=";
+	Lexer lexer(str);
+	ASSERT_EQ(lexer.next().m_type,TokenType::EQUAL_EQUAL);
+	ASSERT_EQ(lexer.next().m_type,TokenType::PLUS_EQUAL);
+	ASSERT_EQ(lexer.next().m_type,TokenType::MINUS_EQUAL);
+	ASSERT_EQ(lexer.next().m_type,TokenType::TIMES_EQUAL);
+	ASSERT_EQ(lexer.next().m_type,TokenType::DIVIDE_EQUAL);
+	ASSERT_EQ(lexer.next().m_type,TokenType::NOT_EQUAL);
+	ASSERT_EQ(lexer.next().m_type,TokenType::PLUS_PLUS);
+	ASSERT_EQ(lexer.next().m_type,TokenType::MINUS_MINUS);
+	ASSERT_EQ(lexer.next().m_type,TokenType::DIVIDE_DIVIDE);
+	ASSERT_EQ(lexer.next().m_type,TokenType::TIMES_TIMES);
+	ASSERT_EQ(lexer.next().m_type,TokenType::AND_AND);
+	ASSERT_EQ(lexer.next().m_type,TokenType::OR_OR);
+	ASSERT_EQ(lexer.next().m_type,TokenType::LESS_EQUAL);
+	ASSERT_EQ(lexer.next().m_type,TokenType::MORE_EQUAL);
 	
 }
