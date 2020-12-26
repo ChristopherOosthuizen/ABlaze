@@ -38,6 +38,22 @@ Token Lexer::next() {
         case '-':return Token(TokenType::MINUS,"-",m_line);
         case '*':return Token(TokenType::TIMES,"*",m_line);
         case '/':return Token(TokenType::DIVIDE,"/",m_line);
+        case '&':return Token(TokenType::AND,"&",m_line);
+        case '|':return Token(TokenType::OR,"|",m_line);
+        case ':':return Token(TokenType::COLON,":",m_line);
+        case ';':return Token(TokenType::SEMI_COLON,";",m_line);
+        case '<':return Token(TokenType::LESS,"<",m_line);
+        case '>':return Token(TokenType::GREATER,">",m_line);
+        case '{':return Token(TokenType::OPEN_BRACE,"{",m_line);
+        case '}':return Token(TokenType::CLOSE_BRACE,"}",m_line);
+        case '[':return Token(TokenType::OPEN_BRACKET,"[",m_line);
+        case ']':return Token(TokenType::CLOSE_BRACKET,"]",m_line);
+        case '(':return Token(TokenType::OPEN_PARENTHESE,"(",m_line);
+        case ')':return Token(TokenType::CLOSE_PARENTHESE,")",m_line);
+        case ',':return Token(TokenType::COMMA,",",m_line);
+        case '.':return Token(TokenType::DOT,".",m_line);
+        case '!':return Token(TokenType::NOT,"!",m_line);
+
         case ' ':return next();
         default: return Token(TokenType::END, "", m_line);
     }

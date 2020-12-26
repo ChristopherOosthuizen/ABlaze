@@ -1,6 +1,4 @@
-//
-// Created by chris on 12/21/20.
-// Test the Lexer class in its entirety a
+// Created by chris on 12/21/20.  Test the Lexer class in its entirety a
 // and make sure that it can handle any input with out
 // unintentionally crashing.
 //
@@ -42,4 +40,34 @@ TEST(Lexer,Operators){
     }
 
 
+}
+
+/*
+ * This test is desgned to test any one character tokens
+ *
+ */ 
+TEST(Lexer,characters){
+	string str  = "+-*/&|:;<>{}[](),.!";
+	Lexer lexer(str);
+	ASSERT_EQ(lexer.next().m_type,TokenType::PLUS); 
+	ASSERT_EQ(lexer.next().m_type,TokenType::MINUS);
+	ASSERT_EQ(lexer.next().m_type,TokenType::TIMES);
+	ASSERT_EQ(lexer.next().m_type,TokenType::DIVIDE);
+	ASSERT_EQ(lexer.next().m_type,TokenType::AND);
+	ASSERT_EQ(lexer.next().m_type,TokenType::OR);
+	ASSERT_EQ(lexer.next().m_type,TokenType::COLON);
+	ASSERT_EQ(lexer.next().m_type,TokenType::SEMI_COLON);
+	ASSERT_EQ(lexer.next().m_type,TokenType::LESS);
+	ASSERT_EQ(lexer.next().m_type,TokenType::GREATER);
+	ASSERT_EQ(lexer.next().m_type,TokenType::OPEN_BRACE);
+	ASSERT_EQ(lexer.next().m_type,TokenType::CLOSE_BRACE);
+	ASSERT_EQ(lexer.next().m_type,TokenType::OPEN_BRACKET);
+	ASSERT_EQ(lexer.next().m_type,TokenType::CLOSE_BRACKET);
+	ASSERT_EQ(lexer.next().m_type,TokenType::OPEN_PARENTHESE);
+	ASSERT_EQ(lexer.next().m_type,TokenType::CLOSE_PARENTHESE);
+	ASSERT_EQ(lexer.next().m_type,TokenType::COMMA);
+	ASSERT_EQ(lexer.next().m_type,TokenType::DOT);
+	ASSERT_EQ(lexer.next().m_type,TokenType::NOT);
+	
+	
 }

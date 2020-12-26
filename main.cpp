@@ -13,9 +13,9 @@ using namespace std;
 /* Starts a repl. or in other words
  * Continuously executes users input as the program runs
  */
-int repl(){
+int repl() {
     string input;
-    do{
+    do {
        cout << ">>";
        getline(cin , input);
        cout << input << endl;
@@ -27,23 +27,23 @@ int repl(){
  * interprets ABlaze programs contained inside
  * files
  */
-int file(string path){
+int file(string path) {
     string wholeFile;
     string line;
 
-    //read entire file
+    // read entire file
     ifstream reader(path);
 
-    if(!reader.good()){
+    if ( !reader.good() ) {
         perror(string("No file with name "+path+" Found").c_str());
         return 1;
     }
-    while(getline(reader,line)){
+    while ( getline ( reader , line ) ) {
         wholeFile += line;
     }
     reader.close();
 
-   cout<<wholeFile;
+	cout << wholeFile;
    return 0;
 }
 
