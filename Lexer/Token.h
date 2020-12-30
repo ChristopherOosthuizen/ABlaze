@@ -8,11 +8,9 @@
 
 #ifndef ABLAZE_TOKEN_H
 #define ABLAZE_TOKEN_H
-#include <string>
 #include "TokenType.h"
+#include <string>
 using namespace std;
-
-
 
 class Token {
 public:
@@ -20,17 +18,17 @@ public:
     int m_line;
     string m_symbol;
 
-    Token(TokenType type, string symbol, int line){
-        m_type = type;
-        m_symbol = symbol;
-        m_line = line;
-
+    Token(TokenType type, string symbol, int line)
+    {
+	m_type = type;
+	m_symbol = symbol;
+	m_line = line;
     }
 
-    string toString(){
-        return to_string((int)m_type) +" "+ m_symbol+ " "+ to_string(m_line);
+    string toString()
+    {
+	return to_string((int)m_type) + " " + m_symbol + " " + to_string(m_line);
     }
 };
-
 
 #endif //ABLAZE_TOKEN_H

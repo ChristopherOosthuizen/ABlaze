@@ -96,3 +96,15 @@ TEST(Lexer,Two){
 	ASSERT_EQ(lexer.next().m_type,TokenType::MORE_EQUAL);
 	
 }
+
+/*
+ * Test weather the lexer can take 
+ * Strings and weather at all 
+ */
+TEST(String,basic){
+	string str= "\"hello ther how are you\"";
+	Lexer lexer(str);
+	Token token = lexer.next();
+	ASSERT_EQ(token.m_type, TokenType::STRING);
+	ASSERT_EQ(token.m_symbol, "hello ther how are you");
+}

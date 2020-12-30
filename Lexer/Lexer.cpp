@@ -121,7 +121,7 @@ Token Lexer::next() {
  
         case ':':return Token(TokenType::COLON,":",m_line);
         case ';':return Token(TokenType::SEMI_COLON,";",m_line);
-       case '{':return Token(TokenType::OPEN_BRACE,"{",m_line);
+	case '{':return Token(TokenType::OPEN_BRACE,"{",m_line);
         case '}':return Token(TokenType::CLOSE_BRACE,"}",m_line);
         case '[':return Token(TokenType::OPEN_BRACKET,"[",m_line);
         case ']':return Token(TokenType::CLOSE_BRACKET,"]",m_line);
@@ -130,6 +130,7 @@ Token Lexer::next() {
         case ',':return Token(TokenType::COMMA,",",m_line);
         case '.':return Token(TokenType::DOT,".",m_line);
         case ' ':return next();
+	case '"': return strings();
         default: return Token(TokenType::END, "", m_line);
     }
 
@@ -152,4 +153,19 @@ char Lexer::peek() {
  */
 bool Lexer::isAtEnd() {
    return m_input.length() <= m_pos || m_input.at(m_pos) == '\0';
+}
+
+/*
+ * Convert next string into a token 
+ * ending once a non excaped sequenced quote 
+ * it given
+ */
+Token Lexer::strings(){
+	int start = m_pos;	
+	while(m_pos < m_input.length() && peek() != '"'){
+		if(peek() == '\n')
+			m_line++;
+		m_pos++;
+	}
+	return Token(TokenType::STRING,m_input.substr(start, m_pos-start),m_line);
 }
