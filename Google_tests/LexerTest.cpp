@@ -4,8 +4,7 @@
 //
 
 #include "gtest/gtest.h"
-#include "../Lexer/Lexer.h"
-#include "../Lexer/Lexer.cpp"
+#include "Lexer.h"
 #include <map>
 
 /*

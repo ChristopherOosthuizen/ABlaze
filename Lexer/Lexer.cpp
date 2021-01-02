@@ -3,7 +3,7 @@
 //
 
 #include "Lexer.h"
-
+#include "ErrorThrower.h"
 Lexer::Lexer(const string& input) {
     m_line =0;
     m_pos =0;
@@ -131,7 +131,8 @@ Token Lexer::next() {
         case '.':return Token(TokenType::DOT,".",m_line);
         case ' ':return next();
 	case '"': return strings();
-        default: return Token(TokenType::END, "", m_line);
+	default: ErrorThrower::invalidToken(current,m_line);
+		  return Token(TokenType::END, "", m_line);
     }
 
 }
