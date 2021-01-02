@@ -15,7 +15,7 @@ Lexer::Lexer(const string& input) {
  * in the constructor.
  */
 vector<Token*> Lexer::readAllTokens(){
-    vector<Token> tokens;
+    vector<Token*> tokens;
     while(!isAtEnd()){
        tokens.push_back(next());
     }
@@ -29,7 +29,7 @@ vector<Token*> Lexer::readAllTokens(){
  */
 Token* Lexer::next() {
     if(isAtEnd()){
-        return Token(TokenType::END, "", m_line);
+        return new Token(TokenType::END, "", m_line);
     }
     char current = m_input.at(m_pos);
     m_pos++;
