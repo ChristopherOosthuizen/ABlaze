@@ -16,13 +16,13 @@ class Lexer {
 
 public:
     Lexer(const string& input);
-    vector<Token> readAllTokens(); //reads turns all of input into Tokens then returns.
-    Token next();		   //returns the token at pos and increments
+    vector<Token*> readAllTokens(); //reads turns all of input into Tokens then returns.
+    Token* next();		   //returns the token at pos and increments
 
 private:
     char peek();     // returns the character one in front of pos
     bool isAtEnd();  //tells weather pos is at the end
-    Token strings(); // extract all of next token;
+    Token* strings(); // extract all of next token;
 };
 
 #endif //ABLAZE_LEXER_H

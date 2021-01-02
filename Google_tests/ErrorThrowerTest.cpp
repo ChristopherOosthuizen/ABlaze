@@ -15,7 +15,10 @@
 TEST(ERRORS,invalidToken){
 	ErrorThrower::invalidToken('@',12);	
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),1);
+
+	ErrorThrower::hasError =false;
+	delete ErrorThrower::errors ;
+	ErrorThrower::errors = new vector<string>();	
 }
 
 

@@ -5,6 +5,7 @@
 
 #include "gtest/gtest.h"
 #include "Lexer.h"
+#include  "ErrorThrower.h"
 #include <map>
 
 /*
@@ -97,6 +98,22 @@ TEST(Lexer,Two){
 }
 
 /*
+ * Test weather a invalid character adds to the error stack
+ */
+
+TEST(Lexer,invalidCharacters){
+	string  str = "@#~";
+	Lexer lexer(str);
+	lexer.readAllTokens();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(3,ErrorThrower::errors->size());
+
+	ErrorThrower::hasError =false;
+	delete ErrorThrower::errors ;
+	ErrorThrower::errors = new vector<string>();
+}
+
+/*
  * Test weather the lexer can take 
  * Strings and weather at all 
  */
@@ -107,3 +124,6 @@ TEST(String,basic){
 	ASSERT_EQ(token.m_type, TokenType::STRING);
 	ASSERT_EQ(token.m_symbol, "hello ther how are you");
 }
+
+
+
