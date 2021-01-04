@@ -4,11 +4,20 @@
 
 #include "Lexer.h"
 #include "ErrorThrower.h"
+#include "TokenType.h"
+
 Lexer::Lexer(const string& input) {
     m_line =0;
     m_pos =0;
     m_input = input+"\0";
 }
+
+// return weather a char is between 0-9
+bool isNum(char c){
+	bool is =c >47 && c <=57;  
+	return is; 
+}
+
 
 /*
  * reads all the tokens from the inputted string
@@ -130,8 +139,14 @@ Token* Lexer::next() {
         case ',':return new Token(TokenType::COMMA,",",m_line);
         case '.':return new Token(TokenType::DOT,".",m_line);
         case ' ':return next();
+	case '\0': return new Token(TokenType::END,"\0",m_line);
 	case '"': return strings();
-	default: ErrorThrower::invalidToken(current,m_line);
+	
+	default: 
+		  if(isNum(current)){
+			  return number();
+		  }
+		  ErrorThrower::invalidToken(current,m_line);
 		  return new Token(TokenType::END, "", m_line);
     }
 
@@ -142,7 +157,7 @@ Token* Lexer::next() {
  * while not incrementing
  */
 char Lexer::peek() {
-    if(m_input.size() > m_pos){
+    if(m_input.length() > m_pos){
         return m_input.at(m_pos);
     }
     return '\0';
@@ -153,7 +168,7 @@ char Lexer::peek() {
  * at the end or past the end of the string
  */
 bool Lexer::isAtEnd() {
-   return m_input.length() <= m_pos || m_input.at(m_pos) == '\0';
+   return m_input.length() <= m_pos ;
 }
 
 /*
@@ -169,4 +184,19 @@ Token* Lexer::strings(){
 		m_pos++;
 	}
 	return new Token(TokenType::STRING,m_input.substr(start, m_pos-start),m_line);
+}
+
+/*
+ * distinguish between double and int
+ * and return there value
+ */
+Token* Lexer::number(){
+	int start = --m_pos;
+	char c = m_input.at(m_pos);
+	while( isNum(peek())){	
+			m_pos++;
+	}
+
+
+	return new Token(TokenType::INT,m_input.substr(start, m_pos-start),m_line);
 }

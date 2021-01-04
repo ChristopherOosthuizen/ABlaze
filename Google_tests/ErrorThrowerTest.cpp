@@ -5,7 +5,8 @@
 #include "gtest/gtest.h"
 
 #include "ErrorThrower.h"
-
+#include <string>
+#include <vector>
 /* 
  * checks to the invalidToken function
  * to see if it can report a error and add it to the errors list

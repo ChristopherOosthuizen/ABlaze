@@ -42,7 +42,6 @@ int file(string path) {
         wholeFile += line;
     }
     reader.close();
-
 	cout << wholeFile;
    return 0;
 }
@@ -62,5 +61,3 @@ int main(int argc , char** argv) {
     perror("to many parameters");
     return 2;
 }
-
-

@@ -23,6 +23,7 @@ private:
     char peek();     // returns the character one in front of pos
     bool isAtEnd();  //tells weather pos is at the end
     Token* strings(); // extract all of next token;
+    Token* number(); // distinguish between doubles and ints and return its value
 };
 
 #endif //ABLAZE_LEXER_H

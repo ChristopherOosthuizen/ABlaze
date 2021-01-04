@@ -125,5 +125,56 @@ TEST(String,basic){
 	ASSERT_EQ(token->m_symbol, "hello ther how are you");
 }
 
+/*
+ * This test is designed to check if the 
+ * compiler can accurately distinguish ints and not confuse them for doubles
+ */
+TEST(Inter,basic){
+	string str = "12 345 790 5678 5764589 8 2 3848";
+	Lexer lexer(str);
+	Token* token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+	ASSERT_EQ(token->m_symbol,"12");
+	delete token;
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+	ASSERT_EQ(token->m_symbol,"345");
+	delete token;
 
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+	ASSERT_EQ(token->m_symbol,"790");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+	ASSERT_EQ(token->m_symbol,"5678");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+	ASSERT_EQ(token->m_symbol,"5764589");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+	ASSERT_EQ(token->m_symbol,"8");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+	ASSERT_EQ(token->m_symbol,"2");
+	delete token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+	ASSERT_EQ(token->m_symbol,"3848");
+	delete token;
+
+
+
+
+
+}
 
