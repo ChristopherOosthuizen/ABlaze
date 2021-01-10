@@ -291,3 +291,51 @@ TEST(IDEN,basic){
 
 
 }
+
+/*
+ * TEST to make sure that all the 
+ * Reserved keywords work and are identified correctly
+ */
+
+TEST(IDEN,reserved){
+	Lexer lexer("print println import readFile writeFile input var");
+	
+	Token* token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::PRINT);
+	ASSERT_EQ(token->m_symbol,"print");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::PRINTLN);
+	ASSERT_EQ(token->m_symbol,"println");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IMPORT);
+	ASSERT_EQ(token->m_symbol,"import");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::READFILE);
+	ASSERT_EQ(token->m_symbol,"readFile");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::WRITEFILE);
+	ASSERT_EQ(token->m_symbol,"writeFile");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INPUT);
+	ASSERT_EQ(token->m_symbol,"input");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::VAR);
+	ASSERT_EQ(token->m_symbol,"var");
+	delete token;
+
+}

@@ -4810,6 +4810,7 @@ TEN_TESTS_	Google_tests/googletest/googletest/test/gtest_test_macro_stack_footpr
 TEST	Google_tests/ErrorThrowerTest.cpp	/^TEST(ERRORS,invalidToken){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Double,basic){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(IDEN,basic){$/;"	f
+TEST	Google_tests/LexerTest.cpp	/^TEST(IDEN,reserved){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Inter,basic){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Lexer,Operators){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Lexer,Two){$/;"	f
@@ -9645,6 +9646,7 @@ m	Google_tests/googletest/googlemock/test/gmock-matchers_test.cc	/^    int a, b,
 m	Google_tests/googletest/googlemock/test/gmock-matchers_test.cc	/^    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o;$/;"	m	struct:testing::gmock_matchers_test::__anonad0735fc0111::TEST::MyVarType15	typeref:typename:int	file:
 m	Google_tests/googletest/googlemock/test/gmock-matchers_test.cc	/^    int a, b, c, d, e, f, g, h, i, j, k, l, m, n;$/;"	m	struct:testing::gmock_matchers_test::__anonad0735fc0111::TEST::MyVarType14	typeref:typename:int	file:
 m	Google_tests/googletest/googlemock/test/gmock-matchers_test.cc	/^    int a, b, c, d, e, f, g, h, i, j, k, l, m;$/;"	m	struct:testing::gmock_matchers_test::__anonad0735fc0111::TEST::MyVarType13	typeref:typename:int	file:
+m_built_in_words	Lexer/Lexer.h	/^    map<string,TokenType> m_built_in_words;\/\/ idnetifes any bultin keywords and there type$/;"	m	class:Lexer	typeref:typename:map<string,TokenType>
 m_input	Lexer/Lexer.h	/^    string m_input;$/;"	m	class:Lexer	typeref:typename:string
 m_line	Lexer/Lexer.h	/^    int m_line;$/;"	m	class:Lexer	typeref:typename:int
 m_line	Lexer/Token.h	/^    int m_line;$/;"	m	class:Token	typeref:typename:int

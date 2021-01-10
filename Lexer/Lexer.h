@@ -7,12 +7,16 @@
 #ifndef ABLAZE_LEXER_H
 #define ABLAZE_LEXER_H
 #include "Token.h"
+#include "TokenType.h"
 #include <vector>
+#include <map>
 
 class Lexer {
+    map<string,TokenType> m_built_in_words;// idnetifes any bultin keywords and there type
     int m_pos;
     int m_line;
     string m_input;
+
 
 public:
     Lexer(const string& input);
