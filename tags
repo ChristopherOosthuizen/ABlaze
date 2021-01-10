@@ -2766,10 +2766,12 @@ IDEN	Lexer/TokenType.h	/^  INT,DOUBLE,CHAR,STRING,BOOL,IDEN,$/;"	e	enum:TokenTyp
 ID_REGEX	Google_tests/googletest/googlemock/scripts/pump.py	/^ID_REGEX = re.compile(r'[_A-Za-z]\\w*')$/;"	v
 ID_VOID_MAIN	build/CMakeFiles/3.19.2/CompilerIdC/CMakeCCompilerId.c	/^# define ID_VOID_MAIN$/;"	d	file:
 IGNORE_SHARDING_PROTOCOL	Google_tests/googletest/googletest/src/gtest-internal-inl.h	/^    IGNORE_SHARDING_PROTOCOL$/;"	e	enum:testing::internal::UnitTestImpl::ReactionToSharding
+IMPORT	Lexer/TokenType.h	/^  PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,$/;"	e	enum:TokenType
 INCLUDE_GMOCK_FILE_REGEX	Google_tests/googletest/googlemock/scripts/fuse_gmock_files.py	/^INCLUDE_GMOCK_FILE_REGEX = re.compile(r'^\\s*#\\s*include\\s*"(gmock\/.+)"')$/;"	v
 INCLUDE_GTEST_FILE_REGEX	Google_tests/googletest/googletest/scripts/fuse_gtest_files.py	/^INCLUDE_GTEST_FILE_REGEX = re.compile(r'^\\s*#\\s*include\\s*"(gtest\/.+)"')$/;"	v
 INCLUDE_SRC_FILE_REGEX	Google_tests/googletest/googletest/scripts/fuse_gtest_files.py	/^INCLUDE_SRC_FILE_REGEX = re.compile(r'^\\s*#\\s*include\\s*"(src\/.+)"')$/;"	v
 INCORRECT_FLAG_VARIANTS	Google_tests/googletest/googletest/test/gtest_help_test.py	/^INCORRECT_FLAG_VARIANTS = [re.sub('^--', '-', LIST_TESTS_FLAG),$/;"	v
+INPUT	Lexer/TokenType.h	/^  PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,$/;"	e	enum:TokenType
 INSTALL_GTEST	Google_tests/googletest/CMakeLists.txt	/^option(INSTALL_GTEST "Enable installation of googletest. (Projects embedding googletest may want/;"	D
 INSTANTIATE_TEST_CASE_P	Google_tests/googletest/googletest/include/gtest/gtest-param-test.h	/^#define INSTANTIATE_TEST_CASE_P /;"	d
 INSTANTIATE_TEST_SUITE_P	Google_tests/googletest/googletest/include/gtest/gtest-param-test.h	/^#define INSTANTIATE_TEST_SUITE_P(/;"	d
@@ -2796,6 +2798,7 @@ IS_WINDOWS	Google_tests/googletest/googletest/test/gtest_test_utils.py	/^IS_WIND
 IdMap	Google_tests/googletest/googletest/src/gtest.cc	/^  typedef std::map<std::string, size_t> IdMap;$/;"	t	class:testing::internal::edit_distance::__anon550837ed0411::InternalStrings	typeref:typename:std::map<std::string,size_t>	file:
 IdToKey	Google_tests/googletest/googletest/test/gtest_stress_test.cc	/^std::string IdToKey(int id, const char* suffix) {$/;"	f	namespace:testing::__anonafb1f2470111	typeref:typename:std::string
 IdToString	Google_tests/googletest/googletest/test/gtest_stress_test.cc	/^std::string IdToString(int id) {$/;"	f	namespace:testing::__anonafb1f2470111	typeref:typename:std::string
+Iden	Lexer/Lexer.cpp	/^Token* Lexer::Iden(){$/;"	f	class:Lexer	typeref:typename:Token *
 IfNode	Google_tests/googletest/googlemock/scripts/pump.py	/^class IfNode:$/;"	c
 Ignore	Google_tests/googletest/googletest/include/gtest/internal/gtest-internal.h	/^struct Ignore {$/;"	s	namespace:testing::internal
 IgnoreArgs	Google_tests/googletest/googlemock/include/gmock/gmock-actions.h	/^  struct IgnoreArgs {$/;"	s	class:testing::Action
@@ -3837,6 +3840,8 @@ PREFIX_WITH_MACRO	Google_tests/googletest/googletest/test/googletest-param-test-
 PREMATURE_EXIT_FILE_ENV_VAR	Google_tests/googletest/googlemock/test/gmock_test_utils.py	/^PREMATURE_EXIT_FILE_ENV_VAR = gtest_test_utils.PREMATURE_EXIT_FILE_ENV_VAR$/;"	v
 PREMATURE_EXIT_FILE_ENV_VAR	Google_tests/googletest/googletest/test/gtest_test_utils.py	/^PREMATURE_EXIT_FILE_ENV_VAR = 'TEST_PREMATURE_EXIT_FILE'$/;"	v
 PREPROCESSOR	Google_tests/googletest/googlemock/scripts/generator/cpp/tokenize.py	/^PREPROCESSOR = 'PREPROCESSOR'$/;"	v
+PRINT	Lexer/TokenType.h	/^  PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,$/;"	e	enum:TokenType
+PRINTLN	Lexer/TokenType.h	/^  PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,$/;"	e	enum:TokenType
 PROGRAM_PATH	Google_tests/googletest/googlemock/test/gmock_leak_test.py	/^PROGRAM_PATH = gmock_test_utils.GetTestExecutablePath('gmock_leak_test_')$/;"	v
 PROGRAM_PATH	Google_tests/googletest/googlemock/test/gmock_output_test.py	/^PROGRAM_PATH = gmock_test_utils.GetTestExecutablePath('gmock_output_test_')$/;"	v
 PROGRAM_PATH	Google_tests/googletest/googletest/test/googletest-output-test.py	/^PROGRAM_PATH = gtest_test_utils.GetTestExecutablePath('googletest-output-test_')$/;"	v
@@ -4156,6 +4161,7 @@ RE	Google_tests/googletest/googletest/include/gtest/internal/gtest-port.h	/^  RE
 RE	Google_tests/googletest/googletest/include/gtest/internal/gtest-port.h	/^  RE(const RE& other) { Init(other.pattern()); }$/;"	f	class:testing::internal::RE
 RE	Google_tests/googletest/googletest/include/gtest/internal/gtest-port.h	/^  RE(const char* regex) { Init(regex); }  \/\/ NOLINT$/;"	f	class:testing::internal::RE
 RE	Google_tests/googletest/googletest/include/gtest/internal/gtest-port.h	/^class GTEST_API_ RE {$/;"	c	namespace:testing::internal
+READFILE	Lexer/TokenType.h	/^  PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,$/;"	e	enum:TokenType
 REGISTER_TYPED_TEST_CASE_P	Google_tests/googletest/googletest/include/gtest/gtest-typed-test.h	/^#define REGISTER_TYPED_TEST_CASE_P /;"	d
 REGISTER_TYPED_TEST_SUITE_P	Google_tests/googletest/googletest/include/gtest/gtest-typed-test.h	/^#define REGISTER_TYPED_TEST_SUITE_P(/;"	d
 REST_OF_LINE_REGEX	Google_tests/googletest/googlemock/scripts/pump.py	/^REST_OF_LINE_REGEX = re.compile(r'.*?(?=$|\\$\\$)')$/;"	v
@@ -4803,6 +4809,7 @@ T	Google_tests/googletest/googletest/include/gtest/internal/gtest-port.h	/^  typ
 TEN_TESTS_	Google_tests/googletest/googletest/test/gtest_test_macro_stack_footprint_test.cc	/^#define TEN_TESTS_(/;"	d	file:
 TEST	Google_tests/ErrorThrowerTest.cpp	/^TEST(ERRORS,invalidToken){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Double,basic){$/;"	f
+TEST	Google_tests/LexerTest.cpp	/^TEST(IDEN,basic){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Inter,basic){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Lexer,Operators){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Lexer,Two){$/;"	f
@@ -8000,6 +8007,7 @@ Using pkg-config in a cross-compilation setting	Google_tests/googletest/googlete
 Using the ACTION Object's Type	Google_tests/googletest/googlemock/docs/cook_book.md	/^### Using the ACTION Object's Type$/;"	S
 Utf16ToAnsi	Google_tests/googletest/googletest/src/gtest.cc	/^const char* String::Utf16ToAnsi(LPCWSTR utf16_str)  {$/;"	f	class:testing::internal::String	typeref:typename:const char *
 VALID_IDENTIFIER_CHARS	Google_tests/googletest/googlemock/scripts/generator/cpp/tokenize.py	/^VALID_IDENTIFIER_CHARS = set(_letters + _letters.upper() + '_0123456789$')$/;"	v
+VAR	Lexer/TokenType.h	/^  VAR,$/;"	e	enum:TokenType
 VERIFY_CODE_LOCATION	Google_tests/googletest/googletest/test/gtest_unittest.cc	/^#define VERIFY_CODE_LOCATION /;"	d	file:
 VISIBILITY_PRIVATE	Google_tests/googletest/googlemock/scripts/generator/cpp/ast.py	/^VISIBILITY_PUBLIC, VISIBILITY_PROTECTED, VISIBILITY_PRIVATE = range(3)$/;"	v
 VISIBILITY_PROTECTED	Google_tests/googletest/googlemock/scripts/generator/cpp/ast.py	/^VISIBILITY_PUBLIC, VISIBILITY_PROTECTED, VISIBILITY_PRIVATE = range(3)$/;"	v
@@ -8080,6 +8088,7 @@ VoidUnary	Google_tests/googletest/googlemock/test/gmock-more-actions_test.cc	/^v
 WHENCE_QUEUE	Google_tests/googletest/googlemock/scripts/generator/cpp/tokenize.py	/^WHENCE_STREAM, WHENCE_QUEUE = range(2)$/;"	v
 WHENCE_STREAM	Google_tests/googletest/googlemock/scripts/generator/cpp/tokenize.py	/^WHENCE_STREAM, WHENCE_QUEUE = range(2)$/;"	v
 WHITE_SPACE_REGEX	Google_tests/googletest/googlemock/scripts/pump.py	/^WHITE_SPACE_REGEX = re.compile(r'\\s')$/;"	v
+WRITEFILE	Lexer/TokenType.h	/^  PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,$/;"	e	enum:TokenType
 Wait	Google_tests/googletest/googletest/src/gtest-death-test.cc	/^int ForkingDeathTest::Wait() {$/;"	f	class:testing::internal::ForkingDeathTest	typeref:typename:int
 Wait	Google_tests/googletest/googletest/src/gtest-death-test.cc	/^int FuchsiaDeathTest::Wait() {$/;"	f	class:testing::internal::FuchsiaDeathTest	typeref:typename:int
 Wait	Google_tests/googletest/googletest/src/gtest-death-test.cc	/^int WindowsDeathTest::Wait() {$/;"	f	class:testing::internal::WindowsDeathTest	typeref:typename:int
@@ -9373,6 +9382,7 @@ internal_stream_operator_without_lexical_name_lookup	Google_tests/googletest/goo
 invalidToken	ErrorThrower/ErrorThrower.cpp	/^void ErrorThrower::invalidToken(char symbol, int line){$/;"	f	class:ErrorThrower	typeref:typename:void
 invoked_	Google_tests/googletest/googletest/test/googletest-port-test.cc	/^  bool invoked_;$/;"	m	class:testing::internal::DestructorCall	typeref:typename:bool	file:
 isAtEnd	Lexer/Lexer.cpp	/^bool Lexer::isAtEnd() {$/;"	f	class:Lexer	typeref:typename:bool
+isLetter	Lexer/Lexer.cpp	/^bool isLetter(char c){$/;"	f	typeref:typename:bool
 isNum	Lexer/Lexer.cpp	/^bool isNum(char c){$/;"	f	typeref:typename:bool
 is_deleted_	Google_tests/googletest/googlemock/test/gmock-more-actions_test.cc	/^  bool* is_deleted_;$/;"	m	class:testing::gmock_more_actions_test::DeletionTester	typeref:typename:bool *	file:
 is_destroyed_	Google_tests/googletest/googletest/test/gtest_unittest.cc	/^  bool* is_destroyed_;$/;"	m	class:TestListener	typeref:typename:bool *	file:

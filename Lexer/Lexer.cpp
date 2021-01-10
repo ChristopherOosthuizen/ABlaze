@@ -18,6 +18,11 @@ bool isNum(char c){
 	return is; 
 }
 
+// check if weather a char is a letter
+bool isLetter(char c){
+	bool is = c== '_'|| (c >=65 && c< 91) || (c >= 97 && c < 122);
+	return is;
+}
 
 /*
  * reads all the tokens from the inputted string
@@ -150,7 +155,9 @@ Token* Lexer::next() {
 	default: 
 		  if(isNum(current)){
 			  return number();
-		  }
+			}else if(isLetter(current)){
+				return Iden();
+			}
 		  ErrorThrower::invalidToken(current,m_line);
 		  return new Token(TokenType::END, "", m_line);
     }
@@ -237,4 +244,15 @@ Token* Lexer::Integer(){
 
 	return new Token(TokenType::INT,m_input.substr(start, m_pos-start),m_line);
 
+}
+
+Token* Lexer::Iden(){
+	int start = --m_pos;
+	char c = m_input.at(m_pos);
+	while( isLetter(peek())){	
+			m_pos++;
+	}
+
+
+	return new Token(TokenType::IDEN,m_input.substr(start, m_pos-start),m_line);
 }

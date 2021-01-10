@@ -26,6 +26,7 @@ private:
     Token* number(); // distinguish between doubles and ints and return its value
     Token* Double(); // convert a double to a token
     Token* Integer(); // convert a integer to a token
+    Token* Iden(); // convert identifiers and reserved keywords to correct token type
 };
 
 #endif //ABLAZE_LEXER_H

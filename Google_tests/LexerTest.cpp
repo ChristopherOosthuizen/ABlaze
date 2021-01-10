@@ -238,3 +238,56 @@ TEST(Double,basic){
 
 }
 
+/*
+ * Test just to see if the Lexer can detect basic 
+ * characters 
+ */
+
+TEST(IDEN,basic){
+	Lexer lexer("hello there great nice right vars like");
+	
+	Token* token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+	ASSERT_EQ(token->m_symbol,"hello");
+	delete token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+	ASSERT_EQ(token->m_symbol,"there");
+	delete token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+	ASSERT_EQ(token->m_symbol,"great");
+	delete token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+	ASSERT_EQ(token->m_symbol,"nice");
+	delete token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+	ASSERT_EQ(token->m_symbol,"right");
+	delete token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+	ASSERT_EQ(token->m_symbol,"vars");
+	delete token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+	ASSERT_EQ(token->m_symbol,"like");
+	delete token;
+
+
+}
