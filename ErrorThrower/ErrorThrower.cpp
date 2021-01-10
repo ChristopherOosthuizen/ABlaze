@@ -24,7 +24,7 @@ void ErrorThrower::doubleDot(int line){
 }
 
 void ErrorThrower::unterminatedString(int line){
-	string error = "unterminated string starting on line "+ to_string(line) ;
+	string error = "unterminated string starting on line "+ to_string(line);
 	hasError = true;
 
 	errors->push_back(error);

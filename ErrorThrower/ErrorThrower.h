@@ -15,8 +15,8 @@ class ErrorThrower{
 public:
 	static bool hasError;
 	static vector<string>* errors; //note varible gets deleted in the main function 
-	static void invalidToken(char symbol, int line);
-	static void doubleDot(int line);
-	static void unterminatedString(int line);
+	static void invalidToken(char symbol, int line); // meant to be thrown when a token is not recognized
+	static void doubleDot(int line); // thrown when a double has two dots
+	static void unterminatedString(int line); // thrown when a string does not have a closing "
 };
 #endif

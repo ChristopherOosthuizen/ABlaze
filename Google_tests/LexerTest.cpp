@@ -365,3 +365,4 @@ TEST(ERRORS, unterminated){
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
 }
+
