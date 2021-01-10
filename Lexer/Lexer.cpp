@@ -137,7 +137,12 @@ Token* Lexer::next() {
         case '(':return new Token(TokenType::OPEN_PARENTHESE,"(",m_line);
         case ')':return new Token(TokenType::CLOSE_PARENTHESE,")",m_line);
         case ',':return new Token(TokenType::COMMA,",",m_line);
-        case '.':return new Token(TokenType::DOT,".",m_line);
+        case '.': if(isNum(peek())){
+											m_pos--;
+											return Double();
+										}
+								 return new Token(TokenType::DOT,".",m_line);
+
         case ' ':return next();
 	case '\0': return new Token(TokenType::END,"\0",m_line);
 	case '"': return strings();
@@ -178,10 +183,14 @@ bool Lexer::isAtEnd() {
  */
 Token* Lexer::strings(){
 	int start = m_pos;	
-	while(m_pos < m_input.length() && peek() != '"'){
-		if(peek() == '\n')
+	bool isEsc = false;
+	char peeked = peek();
+	while(m_pos < m_input.length() && (peeked != '"' || isEsc)){ 
+		if(peeked == '\n')
 			m_line++;
 		m_pos++;
+		isEsc = m_input.at(m_pos-1) == '\\';
+		peeked = peek();
 	}
 	return new Token(TokenType::STRING,m_input.substr(start, m_pos-start),m_line);
 }
@@ -191,12 +200,41 @@ Token* Lexer::strings(){
  * and return there value
  */
 Token* Lexer::number(){
+	return Integer();
+}
+
+/*
+ * Starting at pos this function converts 
+ * a double to a token
+ */
+Token* Lexer::Double(){
+	int start = m_pos;
+	char c = m_input.at(m_pos);
+	while( peek() == '.'||isNum(peek())){	
+			m_pos++;
+	}
+
+
+	return new Token(TokenType::DOUBLE,m_input.substr(start, m_pos-start),m_line);
+	
+}
+
+/*
+ * Starting at pos return this function returns
+ * a int turned into a token
+ */
+Token* Lexer::Integer(){
 	int start = --m_pos;
 	char c = m_input.at(m_pos);
 	while( isNum(peek())){	
 			m_pos++;
 	}
+	if(peek() == '.'){
+		m_pos = start;
+		return  Double();
+	}
 
 
 	return new Token(TokenType::INT,m_input.substr(start, m_pos-start),m_line);
+
 }

@@ -24,6 +24,8 @@ private:
     bool isAtEnd();  //tells weather pos is at the end
     Token* strings(); // extract all of next token;
     Token* number(); // distinguish between doubles and ints and return its value
+    Token* Double(); // convert a double to a token
+    Token* Integer(); // convert a integer to a token
 };
 
 #endif //ABLAZE_LEXER_H

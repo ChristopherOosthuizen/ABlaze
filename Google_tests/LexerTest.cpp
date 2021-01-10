@@ -126,6 +126,20 @@ TEST(String,basic){
 }
 
 /*
+ * This Tests weather the string function can handle 
+ * \\" without breaking
+ */
+TEST(String,excape){
+	string str= "\"hello ther \\\"how are you\"";
+	Lexer lexer(str);
+	Token* token = lexer.next();
+	ASSERT_EQ(token->m_type, TokenType::STRING);
+	ASSERT_EQ(token->m_symbol, "hello ther \\\"how are you");
+
+}
+
+
+/*
  * This test is designed to check if the 
  * compiler can accurately distinguish ints and not confuse them for doubles
  */
@@ -172,9 +186,55 @@ TEST(Inter,basic){
 	ASSERT_EQ(token->m_symbol,"3848");
 	delete token;
 
+}
 
 
+/*
+ * This is to test weather the number function
+ * can handle doubles
+ */
+TEST(Double,basic){
+	string str = "12.0 0.345 7.90 .5678 57.64589 8.63434 2.0 3848.1";
+	Lexer lexer(str);
+	Token* token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::DOUBLE);
+	ASSERT_EQ(token->m_symbol,"12.0");
+	delete token;
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::DOUBLE);
+	ASSERT_EQ(token->m_symbol,"0.345");
+	delete token;
 
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::DOUBLE);
+	ASSERT_EQ(token->m_symbol,"7.90");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::DOUBLE);
+	ASSERT_EQ(token->m_symbol,".5678");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::DOUBLE);
+	ASSERT_EQ(token->m_symbol,"57.64589");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::DOUBLE);
+	ASSERT_EQ(token->m_symbol,"8.63434");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::DOUBLE);
+	ASSERT_EQ(token->m_symbol,"2.0");
+	delete token;
+
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::DOUBLE);
+	ASSERT_EQ(token->m_symbol,"3848.1");
+	delete token;
 
 }
 
