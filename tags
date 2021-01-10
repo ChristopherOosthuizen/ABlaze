@@ -4809,6 +4809,8 @@ T	Google_tests/googletest/googletest/include/gtest/internal/gtest-port.h	/^  typ
 TEN_TESTS_	Google_tests/googletest/googletest/test/gtest_test_macro_stack_footprint_test.cc	/^#define TEN_TESTS_(/;"	d	file:
 TEST	Google_tests/ErrorThrowerTest.cpp	/^TEST(ERRORS,invalidToken){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Double,basic){$/;"	f
+TEST	Google_tests/LexerTest.cpp	/^TEST(ERRORS, unterminated){$/;"	f
+TEST	Google_tests/LexerTest.cpp	/^TEST(ERRORS,doubleDot){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(IDEN,basic){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(IDEN,reserved){$/;"	f
 TEST	Google_tests/LexerTest.cpp	/^TEST(Inter,basic){$/;"	f
@@ -8804,6 +8806,7 @@ disabled_test_count	Google_tests/googletest/googletest/src/gtest.cc	/^int UnitTe
 disjunction	Google_tests/googletest/googlemock/include/gmock/gmock-actions.h	/^using disjunction = typename ::std::conditional<P::value, P, Q>::type;$/;"	t	namespace:testing::internal	typeref:typename:::std::conditional<P::value,P,Q>::type
 divider	Google_tests/googletest/googlemock/test/gmock-matchers_test.cc	/^  int divider() const { return divider_; }$/;"	f	class:testing::gmock_matchers_test::__anonad0735fc0111::DivisibleByImpl	typeref:typename:int	file:
 divider_	Google_tests/googletest/googlemock/test/gmock-matchers_test.cc	/^  int divider_;$/;"	m	class:testing::gmock_matchers_test::__anonad0735fc0111::DivisibleByImpl	typeref:typename:int	file:
+doubleDot	ErrorThrower/ErrorThrower.cpp	/^void ErrorThrower::doubleDot(int line){$/;"	f	class:ErrorThrower	typeref:typename:void
 dtor_calls	Google_tests/googletest/googletest/test/gtest_unittest.cc	/^  static int dtor_calls;$/;"	m	struct:ConstructionCounting	typeref:typename:int	file:
 dtor_calls	Google_tests/googletest/googletest/test/gtest_unittest.cc	/^int ConstructionCounting::dtor_calls = 0;$/;"	m	class:ConstructionCounting	typeref:typename:int
 dummy_	Google_tests/googletest/googletest/include/gtest/internal/gtest-internal.h	/^  static bool dummy_;$/;"	m	class:testing::internal::TypeIdHelper	typeref:typename:bool
@@ -10750,6 +10753,7 @@ unit_test_	Google_tests/googletest/googletest/src/gtest-internal-inl.h	/^  UnitT
 unit_test_	Google_tests/googletest/googletest/test/gtest_unittest.cc	/^  UnitTest unit_test_;$/;"	m	class:testing::internal::StreamingListenerTest	typeref:typename:UnitTest	file:
 unit_test_	Google_tests/googletest/googletest/test/gtest_unittest.cc	/^  UnitTest unit_test_;$/;"	m	class:testing::internal::UnitTestRecordPropertyTestHelper	typeref:typename:UnitTest	file:
 unit_test_impl_	Google_tests/googletest/googletest/test/googletest-death-test-test.cc	/^  UnitTestImpl* unit_test_impl_;$/;"	m	class:testing::internal::ReplaceDeathTestFactory	typeref:typename:UnitTestImpl *	file:
+unterminatedString	ErrorThrower/ErrorThrower.cpp	/^void ErrorThrower::unterminatedString(int line){$/;"	f	class:ErrorThrower	typeref:typename:void
 untyped_actions_	Google_tests/googletest/googlemock/include/gmock/gmock-spec-builders.h	/^  UntypedActions untyped_actions_;$/;"	m	class:testing::internal::ExpectationBase	typeref:typename:UntypedActions
 untyped_expectations_	Google_tests/googletest/googlemock/include/gmock/gmock-spec-builders.h	/^  UntypedExpectations untyped_expectations_;$/;"	m	class:testing::internal::UntypedFunctionMockerBase	typeref:typename:UntypedExpectations
 untyped_on_call_specs_	Google_tests/googletest/googlemock/include/gmock/gmock-spec-builders.h	/^  UntypedOnCallSpecs untyped_on_call_specs_;$/;"	m	class:testing::internal::UntypedFunctionMockerBase	typeref:typename:UntypedOnCallSpecs

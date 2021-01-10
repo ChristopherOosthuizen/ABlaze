@@ -209,6 +209,9 @@ Token* Lexer::strings(){
 		isEsc = m_input.at(m_pos-1) == '\\';
 		peeked = peek();
 	}
+	if(m_pos >= m_input.length() ){
+		ErrorThrower::unterminatedString(m_line);
+	}
 	return new Token(TokenType::STRING,m_input.substr(start, m_pos-start),m_line);
 }
 
@@ -227,8 +230,14 @@ Token* Lexer::number(){
 Token* Lexer::Double(){
 	int start = m_pos;
 	char c = m_input.at(m_pos);
+	bool hasDot = false;
 	while( peek() == '.'||isNum(peek())){	
 			m_pos++;
+			if(peek() == '.' && hasDot)
+				ErrorThrower::doubleDot(m_line);
+			else if(peek() == '.')
+				hasDot =true;
+
 	}
 
 

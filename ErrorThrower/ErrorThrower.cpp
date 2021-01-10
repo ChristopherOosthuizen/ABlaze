@@ -15,3 +15,18 @@ void ErrorThrower::invalidToken(char symbol, int line){
 	errors->push_back(error);
 }
 
+void ErrorThrower::doubleDot(int line){
+
+	string error = "unreadable double on line: "+ to_string(line)+" becuase of multiple dots";
+	hasError = true;
+
+	errors->push_back(error);
+}
+
+void ErrorThrower::unterminatedString(int line){
+	string error = "unterminated string starting on line "+ to_string(line) ;
+	hasError = true;
+
+	errors->push_back(error);
+
+}

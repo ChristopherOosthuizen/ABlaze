@@ -339,3 +339,29 @@ TEST(IDEN,reserved){
 	delete token;
 
 }
+
+/*
+ * Make sure the lexer throws a error
+ * when there is a double with two dots
+ */
+TEST(ERRORS,doubleDot){
+	Lexer lexer("8..9");
+	lexer.next();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+}
+
+/*
+ * Throw a error on unterminated string 
+ */
+
+TEST(ERRORS, unterminated){
+	Lexer lexer("\" hello there ");
+	lexer.next();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ErrorThrower::hasError = false; 
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+}

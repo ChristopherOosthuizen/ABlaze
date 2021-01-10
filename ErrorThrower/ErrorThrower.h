@@ -16,5 +16,7 @@ public:
 	static bool hasError;
 	static vector<string>* errors; //note varible gets deleted in the main function 
 	static void invalidToken(char symbol, int line);
+	static void doubleDot(int line);
+	static void unterminatedString(int line);
 };
 #endif
