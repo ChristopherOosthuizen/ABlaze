@@ -11,7 +11,7 @@
 
 enum class TokenType{
   // Operators
-  PLUS , MINUS , TIMES , DIVIDE ,
+  PLUS , MINUS , TIMES , DIVIDE , REMAND,
 
   // DOUBLE Operators
   PLUS_PLUS , MINUS_MINUS , TIMES_TIMES, DIVIDE_DIVIDE,

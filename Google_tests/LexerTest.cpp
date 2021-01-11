@@ -47,8 +47,9 @@ TEST(Lexer,Operators){
  *
  */ 
 TEST(Lexer,characters){
-	string str  = "+-*/&|:;<>{}[](),.! =";
+	string str  = "%+-*/&|:;<>{}[](),.! =";
 	Lexer lexer(str);
+	ASSERT_EQ(lexer.next()->m_type,TokenType::REMAND);
 	ASSERT_EQ(lexer.next()->m_type,TokenType::PLUS); 
 	ASSERT_EQ(lexer.next()->m_type,TokenType::MINUS);
 	ASSERT_EQ(lexer.next()->m_type,TokenType::TIMES);

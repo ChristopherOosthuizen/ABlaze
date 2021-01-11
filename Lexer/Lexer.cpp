@@ -58,6 +58,8 @@ Token* Lexer::next() {
     char current = m_input.at(m_pos);
     m_pos++;
     switch (current) {
+			case '%':
+				return new Token(TokenType::REMAND,"%",m_line);
         case '+':
 		if(peek() == '+'){
 			m_pos++;
