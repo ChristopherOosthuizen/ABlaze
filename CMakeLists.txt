@@ -8,3 +8,4 @@ add_executable(ABlaze main.cpp   ErrorThrower/ErrorThrower.h ErrorThrower/ErrorT
 add_subdirectory(Google_tests)
 add_subdirectory(Lexer)
 add_subdirectory(ErrorThrower)
+add_subdirectory(AST)
