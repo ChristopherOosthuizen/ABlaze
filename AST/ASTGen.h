@@ -22,7 +22,6 @@ class ASTGen{
         bool equals(Token* token, TokenType type); // returns weather a a token's type matches a type
         Expression* constructOP(Expression* left); // Constructed a binOP AST 
 
-
 };
 
 #endif

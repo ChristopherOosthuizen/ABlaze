@@ -14,8 +14,12 @@ ASTGen::ASTGen(vector<Token*> tokens){
  * the construction
  */
 Expression* ASTGen::generateAST(){
-     
-    return constructOP(new Literal(next()));
+    Token* m_next = next(); 
+    if(equals(next(),TokenType::OPEN_PARENTHESE)){
+        next();
+        return constructOP(new Literal(m_next));
+    }
+    return constructOP(new Literal(m_next));
 }
 
 /*
@@ -54,12 +58,21 @@ bool ASTGen::equals(Token* token, TokenType type){
  * such as +-,*
  */
 Expression* ASTGen::constructOP(Expression* left){
-    if(peek() == NULL)
+    if(equals(peek(),TokenType::CLOSE_PARENTHESE)){
+       next();
+       return left; 
+    }
+    if(peek() == NULL )
         return left;
     Token* op = next();
-    if(equals(op,TokenType::PLUS)|| equals(op, TokenType::MINUS)){
-       return new BinOP(left,op,constructOP(new Literal(next()))); 
-    }else if(equals(op,TokenType::TIMES) || equals(op,TokenType::DIVIDE)){
-       return constructOP(new BinOP(left,op,new Literal(next())));
-    }
+    switch(op->m_type){
+        case TokenType::PLUS:
+        case TokenType::MINUS: return new BinOP(left,op,constructOP(new Literal(next()))); 
+        case TokenType::OPEN_PARENTHESE: next();
+        case TokenType::TIMES:
+        case TokenType::DIVIDE: return constructOP(new BinOP(left,op,new Literal(next())));
+
+    }   
 }
+
+

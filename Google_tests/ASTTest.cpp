@@ -48,5 +48,44 @@ TEST(ASTbasic,pemdas){
  * based of equations with no parans
  */
 TEST(ASTGen,equations){
-	Lexer* lexer = new Lexer(" ")
+	Lexer* lexer = new Lexer("6+6*2 ");
+    ASTGen* gen = new ASTGen(lexer->readAllTokens());
+    BinOP* expr = (BinOP*)gen->generateAST(); 
+    ASSERT_EQ(expr->m_op->m_type, TokenType::PLUS);
+    ASSERT_EQ(((BinOP*)expr->m_right)->m_op->m_type,TokenType::TIMES);
+    delete lexer;
+    delete gen;
+    delete expr;
+
+    Lexer* lex = new Lexer("6*8+12*9+10/2-6 ");
+    ASTGen* gene = new ASTGen(lex->readAllTokens());
+    BinOP* exp = (BinOP*)gene->generateAST(); 
+    ASSERT_EQ(exp->m_op->m_type, TokenType::PLUS);
+    ASSERT_EQ(((BinOP*)exp->m_left)->m_op->m_type,TokenType::TIMES);
+    BinOP* right = (BinOP*)exp->m_right;
+    ASSERT_EQ(right->m_op->m_type,TokenType::PLUS);
+    ASSERT_EQ(  ((BinOP*)right->m_left)->m_op->m_type,TokenType::TIMES);
+    ASSERT_EQ(((BinOP*)right->m_right)->m_op->m_type,TokenType::MINUS);
+    ASSERT_EQ(((BinOP*)((BinOP*)right->m_right)->m_left)->m_op->m_type,TokenType::DIVIDE);
+
+    delete lexer;
+    delete gen;
+    delete expr;
 }
+
+/*
+ * testing weather the ASTGen can handle paretheses
+ */
+ TEST(ASTGen,Paretheses){
+	Lexer* lexer = new Lexer("(6+6)*2 ");
+    ASTGen* gen = new ASTGen(lexer->readAllTokens());
+    BinOP* expr = (BinOP*)gen->generateAST(); 
+    ASSERT_EQ(expr->m_op->m_type, TokenType::PLUS);
+    ASSERT_EQ(((BinOP*)expr->m_right)->m_op->m_type,TokenType::TIMES);
+    delete lexer;
+    delete gen;
+    delete expr;
+
+    
+ }
+
