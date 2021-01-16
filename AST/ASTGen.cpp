@@ -1,6 +1,6 @@
 // Created by Christopher Oosthuizen on 01/11/2021
 // The AST generator is meant to return 
-// A based off a list of tokens consturcted by a lexer
+// A based off a list of tokens constructed by a lexer
 #include "ASTGen.h"
 #include "AST.h"
 
@@ -14,12 +14,7 @@ ASTGen::ASTGen(vector<Token*> tokens){
  * the construction
  */
 Expression* ASTGen::generateAST(){
-    Token* m_next = next(); 
-    if(equals(next(),TokenType::OPEN_PARENTHESE)){
-        next();
-        return constructOP(new Literal(m_next));
-    }
-    return constructOP(new Literal(m_next));
+    return constructEx();
 }
 
 /*
@@ -27,12 +22,20 @@ Expression* ASTGen::generateAST(){
  * without incrementing
  */
 Token* ASTGen::peek(){
-    if(m_pos < m_tokens.size()){
-        return m_tokens.at(m_pos); 
-    } 
-    return NULL;
+        return peek(0);
 }
 
+/*
+ * check the token that is dist
+ * number ahead of the current 
+ * token
+ */
+Token* ASTGen::peek(int dist){
+        if(m_pos+dist < m_tokens.size()){
+                return m_tokens.at(m_pos+dist);
+        }
+        return NULL;
+}
 /*
  * return next token and if out of bounds return 
  * null and increase m_pos
@@ -50,7 +53,38 @@ Token* ASTGen::next(){
  * equals type 
  */
 bool ASTGen::equals(Token* token, TokenType type){
+    if(token == NULL)
+        return false; 
     return token->m_type == type;
+}
+
+/*
+ * Decide how a AST 
+ * should be constructed
+ */
+Expression* ASTGen::constructEx(){
+    Token* curr = next();
+    switch(curr->m_type){
+        case TokenType::VAR: return constructDec(true);
+        case TokenType::OPEN_PARENTHESE: return constructOP(new Literal(next()));
+        case TokenType::INT: 
+        case TokenType::IDEN:return constructOP(new Literal(curr)); 
+
+    }
+    return NULL; 
+}
+
+/*
+ * Construct dec constructs declarations such as
+ * var name = 12
+ * or name =12
+ */
+Decleration* ASTGen::constructDec(bool initalize){
+    Literal* name = new Literal(next());
+    Token* ex = next();
+    if(equals(ex,TokenType::SEMI_COLON))
+        return new Decleration(name, NULL,initalize);
+    return new Decleration(name, constructEx(),initalize);
 }
 
 /*
@@ -58,21 +92,30 @@ bool ASTGen::equals(Token* token, TokenType type){
  * such as +-,*
  */
 Expression* ASTGen::constructOP(Expression* left){
-    if(equals(peek(),TokenType::CLOSE_PARENTHESE)){
-       next();
-       return left; 
-    }
-    if(peek() == NULL )
-        return left;
+
     Token* op = next();
+    if(equals(op,TokenType::SEMI_COLON)){
+        return left;
+    }
+
+
+    if(equals(peek(1),TokenType::CLOSE_PARENTHESE) ){
+       Literal* right = new Literal(next());
+       next();
+       return constructOP(new BinOP(left,op,right)); 
+    }
+
+
     switch(op->m_type){
         case TokenType::PLUS:
         case TokenType::MINUS: return new BinOP(left,op,constructOP(new Literal(next()))); 
         case TokenType::OPEN_PARENTHESE: next();
         case TokenType::TIMES:
+        case TokenType::REMAND:
         case TokenType::DIVIDE: return constructOP(new BinOP(left,op,new Literal(next())));
 
     }   
+    return NULL;
 }
 
 

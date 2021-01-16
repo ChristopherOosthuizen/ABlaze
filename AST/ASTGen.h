@@ -15,12 +15,15 @@ class ASTGen{
     int m_pos;
     public:
         ASTGen(vector<Token*> tokens);
-        Expression* generateAST(); //return a ast basedo nthe inputted toekens
+        Expression* generateAST(); //return a ast based on nthe inputed tokens
     private:
         Token* peek();// check the token infront of the current
+        Token* peek(int dist); // check the token dist number ahead
         Token* next(); // return the next token
         bool equals(Token* token, TokenType type); // returns weather a a token's type matches a type
         Expression* constructOP(Expression* left); // Constructed a binOP AST 
+        Expression* constructEx(); // construct a AST based on Predefined paramaters
+        Decleration* constructDec(bool initalize); // constucts a decleration AST type
 
 };
 

@@ -8,14 +8,17 @@
 #ifndef ABLAZE_AST_H
 #define ABLAZE_AST_H
 #include "Token.h"
-
+#include <string>
+#include <vector>
 
 class Expression{
-
+public:
+    virtual string name(){return "Expression";}
 };
 
 class Literal: public Expression{
     public:
+        string name() override;
         Literal(Token* token);
         Token* m_token;
 };
@@ -24,6 +27,7 @@ class Literal: public Expression{
 
 class Unary: public Expression{
     public:
+        string name() override;
         Unary(Token* unaryEpression, Token* expression);
         Token* m_unaryEpression;
         Token* m_expression;
@@ -32,6 +36,7 @@ class Unary: public Expression{
     
 class BinOP: public Expression{
     public:
+        string name() override;
         BinOP(Expression* left, Token* op, Expression* right);
         Token* m_op;
         Expression* m_left;
@@ -39,5 +44,22 @@ class BinOP: public Expression{
 
 };
 
+class Decleration: public Expression{
 
+    public:
+        string name() override;
+        Decleration(Literal* name,Expression* value, bool initalize);
+        Literal* m_name;
+        Expression* m_value;
+        bool m_initalize;
+};
+
+class Body: public Expression{
+        public:
+                string name() override;
+                Body(Expression* control, vector<Expression*>* expressions);
+                Expression* m_control;
+                vector<Expression*>* m_lines;
+
+};
 #endif

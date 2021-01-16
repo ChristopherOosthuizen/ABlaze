@@ -1,9 +1,9 @@
 //
 // Created by chris on 12/20/20.
 // The specific types of a Token
-// ex: '+' is PLUS
-// ex: '&' is a and
-// ex: '+=' is a PLUS_EQUAL
+// ex: + is PLUS
+// ex: & is a and
+// ex: += is a PLUS_EQUAL
 //
 
 #ifndef ABLAZE_TOKENTYPE_H
@@ -35,7 +35,7 @@ enum class TokenType{
 
   //built in functions
   PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,
-  VAR,
+  VAR
 
 
 
