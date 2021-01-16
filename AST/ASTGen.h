@@ -15,7 +15,7 @@ class ASTGen{
     int m_pos;
     public:
         ASTGen(vector<Token*> tokens);
-        Expression* generateAST(); //return a ast based on nthe inputed tokens
+        Body* generateAST(); //return a ast based on nthe inputed tokens
     private:
         Token* peek();// check the token infront of the current
         Token* peek(int dist); // check the token dist number ahead

@@ -13,8 +13,12 @@ ASTGen::ASTGen(vector<Token*> tokens){
  * return a AST based on the tokens given in
  * the construction
  */
-Expression* ASTGen::generateAST(){
-    return constructEx();
+Body* ASTGen::generateAST(){
+        vector<Expression*>* lines = new vector<Expression*>;
+        while(peek() != NULL){
+                lines->push_back(constructEx());
+        }
+        return new Body(NULL,lines);
 }
 
 /*
@@ -82,8 +86,10 @@ Expression* ASTGen::constructEx(){
 Decleration* ASTGen::constructDec(bool initalize){
     Literal* name = new Literal(next());
     Token* ex = next();
-    if(equals(ex,TokenType::SEMI_COLON))
+    if(equals(ex,TokenType::SEMI_COLON)){
+        next();
         return new Decleration(name, NULL,initalize);
+    }
     return new Decleration(name, constructEx(),initalize);
 }
 
@@ -95,6 +101,7 @@ Expression* ASTGen::constructOP(Expression* left){
 
     Token* op = next();
     if(equals(op,TokenType::SEMI_COLON)){
+        next();
         return left;
     }
 

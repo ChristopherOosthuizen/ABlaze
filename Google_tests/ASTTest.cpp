@@ -16,7 +16,7 @@
 TEST(ASTbasic,operations){
 	Lexer lexer("5+8*2;");
 	ASTGen astgen(lexer.readAllTokens());
-	BinOP* expr = (BinOP*)astgen.generateAST();	
+	BinOP* expr = (BinOP*)astgen.generateAST()->m_lines->at(0);	
 	Token* token = expr->m_op;
 	ASSERT_EQ(token->m_type,TokenType::PLUS);
 	ASSERT_EQ(((BinOP*)expr->m_right)->m_op->m_type,TokenType::TIMES);
@@ -33,7 +33,7 @@ TEST(ASTbasic,operations){
 TEST(ASTbasic,pemdas){
 	Lexer lexer("5*8+2;");
 	ASTGen astgen(lexer.readAllTokens());
-	BinOP* expr = (BinOP*)astgen.generateAST();	
+	BinOP* expr = (BinOP*)astgen.generateAST()->m_lines->at(0);	
 	Token* token = expr->m_op;
 	ASSERT_EQ(token->m_type,TokenType::PLUS);
 	ASSERT_EQ(((BinOP*)expr->m_left)->m_op->m_type,TokenType::TIMES);
@@ -47,16 +47,16 @@ TEST(ASTbasic,pemdas){
  */
 TEST(ASTGen,equations){
 
-    Lexer lex("6*8+12*9+10/2-6 ;");
-    ASTGen gene(lex.readAllTokens());
-    BinOP* exp =(BinOP*)gene.generateAST(); 
-    ASSERT_EQ(exp->m_op->m_type, TokenType::PLUS);
-    ASSERT_EQ(((BinOP*)exp->m_left)->m_op->m_type,TokenType::TIMES);
-    BinOP* right = (BinOP*)exp->m_right;
-    ASSERT_EQ(right->m_op->m_type,TokenType::PLUS);
-    ASSERT_EQ(  ((BinOP*)right->m_left)->m_op->m_type,TokenType::TIMES);
-    ASSERT_EQ(((BinOP*)right->m_right)->m_op->m_type,TokenType::MINUS);
-    ASSERT_EQ(((BinOP*)((BinOP*)right->m_right)->m_left)->m_op->m_type,TokenType::DIVIDE);
+        Lexer lex("6*8+12*9+10/2-6 ;");
+        ASTGen gene(lex.readAllTokens());
+        BinOP* exp = (BinOP*)gene.generateAST()->m_lines->at(0);	
+        ASSERT_EQ(exp->m_op->m_type, TokenType::PLUS);
+        ASSERT_EQ(((BinOP*)exp->m_left)->m_op->m_type,TokenType::TIMES);
+        BinOP* right = (BinOP*)exp->m_right;
+        ASSERT_EQ(right->m_op->m_type,TokenType::PLUS);
+        ASSERT_EQ(  ((BinOP*)right->m_left)->m_op->m_type,TokenType::TIMES);
+        ASSERT_EQ(((BinOP*)right->m_right)->m_op->m_type,TokenType::MINUS);
+        ASSERT_EQ(((BinOP*)((BinOP*)right->m_right)->m_left)->m_op->m_type,TokenType::DIVIDE);
 
 }
 
@@ -65,14 +65,14 @@ TEST(ASTGen,equations){
  * 
  */
  TEST(ASTGen,Paretheses){
-	Lexer lexer("(6+6)*2 ;");
-    ASTGen gen (lexer.readAllTokens());
-    BinOP* expr = (BinOP*)gen.generateAST(); 
-    ASSERT_TRUE(expr!=nullptr);
-    ASSERT_EQ(expr->m_op->m_type, TokenType::TIMES);
-    
-    ASSERT_TRUE(expr->m_left !=nullptr);
-    ASSERT_EQ(((BinOP*)expr->m_left)->m_op->m_type,TokenType::PLUS);
+        Lexer lexer("(6+6)*2 ;");
+        ASTGen gen (lexer.readAllTokens());
+        BinOP* expr = (BinOP*)gen.generateAST()->m_lines->at(0);	
+        ASSERT_TRUE(expr!=nullptr);
+        ASSERT_EQ(expr->m_op->m_type, TokenType::TIMES);
+
+        ASSERT_TRUE(expr->m_left !=nullptr);
+        ASSERT_EQ(((BinOP*)expr->m_left)->m_op->m_type,TokenType::PLUS);
 
     
  }
@@ -82,11 +82,12 @@ TEST(ASTGen,equations){
  * 
  */
 TEST(ASTGen, Decleration){
-    Lexer lexer("var hello = right;");
-    ASTGen gen(lexer.readAllTokens());
-    Decleration*  dec =(Decleration*)gen.generateAST();
-    ASSERT_EQ(dec->m_name->m_token->m_symbol,"hello");
-    ASSERT_EQ(((Literal*)dec->m_value)->m_token->m_symbol,"right");
+        Lexer lexer("var hello = right;");
+        ASTGen gen(lexer.readAllTokens());
+        Decleration* dec = (Decleration*)gen.generateAST()->m_lines->at(0);	
+        ASSERT_EQ(dec->m_name->m_token->m_symbol,"hello");
+        ASSERT_EQ(((Literal*)dec->m_value)->m_token->m_symbol,"right");
+
 }
 
 
