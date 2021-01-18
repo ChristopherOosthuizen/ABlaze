@@ -103,7 +103,7 @@ TEST(ASTGen, functionscall){
         ASSERT_TRUE(expr !=NULL);
         ASSERT_EQ(expr->name(),"FunctionCall");
         FunctionCall* call = (FunctionCall*) expr;
-        ASSERT_EQ(call->m_name,"hello");
+        ASSERT_EQ(call->m_name->m_token->m_symbol,"hello");
         ASSERT_EQ(call->m_args->size(),0);
 
 }
@@ -117,7 +117,7 @@ TEST(ASTGen, functionOne){
         Expression* expr = (Expression*)gen.generateAST()->m_lines->at(0);
         ASSERT_EQ(expr->name(),"FunctionCall");
         FunctionCall* call = (FunctionCall*)  expr;
-        ASSERT_EQ(call->m_name,"func");
+        ASSERT_EQ(call->m_name->m_token->m_symbol,"func");
         ASSERT_EQ(call->m_args->size(),1);
         ASSERT_TRUE(call->m_args->at(0) != nullptr);
         ASSERT_EQ(((Literal*)call->m_args->at(0))->m_token->m_symbol,"12");
@@ -135,7 +135,7 @@ TEST(ASTGen ,patamtersMultiple){
         ASSERT_TRUE(expr != nullptr);
         ASSERT_EQ(expr->name(),"FunctionCall");
         FunctionCall* call = (FunctionCall*)expr;
-        ASSERT_EQ(call->m_name,"function");
+        ASSERT_EQ(call->m_name->m_token->m_symbol,"function");
         ASSERT_EQ(call->m_args->size(),4);
         ASSERT_TRUE(call->m_args->at(0) != nullptr);
         ASSERT_EQ(((Literal*)call->m_args->at(0))->m_token->m_symbol,"12");
@@ -154,3 +154,22 @@ TEST(ASTGen ,patamtersMultiple){
 
 }
 
+/*
+ * Test weather a function call can be reconginzed within a binaryOP
+ */
+TEST(ASTGen , functionWithin){
+        Lexer lexer("6+func(12));");
+        ASTGen gen(lexer.readAllTokens());
+        Expression* expr = (Expression*)gen.generateAST()->m_lines->at(0);
+        ASSERT_TRUE(expr != nullptr);
+        ASSERT_EQ(expr->name(),"BinOP");
+        BinOP* op = (BinOP*) expr;
+        ASSERT_EQ(op->m_op->m_type,TokenType::PLUS);
+        ASSERT_TRUE(op->m_left != nullptr);
+        ASSERT_EQ(op->m_left->name(), "Literal");
+        ASSERT_TRUE(op->m_right !=nullptr);
+        ASSERT_EQ(op->m_right->name() ,"FunctionCall");
+        FunctionCall* call = (FunctionCall*)op->m_right;
+        ASSERT_EQ(call->m_name->m_token->m_symbol ,"func");
+        ASSERT_EQ(call->m_args->size(),1);
+}

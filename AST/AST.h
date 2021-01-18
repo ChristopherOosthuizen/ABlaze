@@ -66,8 +66,8 @@ class Body: public Expression{
 class FunctionCall: public Expression{
         public:
                 string name() override;
-                FunctionCall(string name,  vector<Expression*>* args);
-                string m_name;
+                FunctionCall(Literal* name,  vector<Expression*>* args);
+                Literal* m_name;
                 vector<Expression*>* m_args;
 };
 

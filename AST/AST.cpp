@@ -35,7 +35,7 @@ Body::Body(Expression* control, vector<Expression*>* expressions){
 
 string Body::name(){return "Body";}
 
-FunctionCall::FunctionCall(string name, vector<Expression*>* args){
+FunctionCall::FunctionCall(Literal* name, vector<Expression*>* args){
         m_name= name;
         m_args = args;
 }

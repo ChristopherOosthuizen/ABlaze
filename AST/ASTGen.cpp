@@ -14,7 +14,7 @@ ASTGen::ASTGen(vector<Token*> tokens){
  * construct a fucntion call 
  * object based on parmaters
  */
-FunctionCall* ASTGen::constructFunctionCall(Token* name){
+FunctionCall* ASTGen::constructFunctionCall(Literal* name){
         next();
         vector<Expression*>* args = new vector<Expression*>;
         if(!equals(peek(),TokenType::CLOSE_PARENTHESE)){
@@ -24,7 +24,7 @@ FunctionCall* ASTGen::constructFunctionCall(Token* name){
         }else{
                 next();
         }
-        return new FunctionCall(name->m_symbol,args);
+        return new FunctionCall(name,args);
 }
 
 
@@ -91,10 +91,7 @@ Expression* ASTGen::constructEx(){
         case TokenType::VAR: return constructDec(true);
         case TokenType::OPEN_PARENTHESE: return constructOP(new Literal(next()));
         case TokenType::INT: 
-        case TokenType::IDEN:
-                if(equals(peek(),TokenType::OPEN_PARENTHESE))
-                                return constructFunctionCall(curr);
-                return constructOP(new Literal(curr)); 
+        case TokenType::IDEN:return constructOP(new Literal(curr)); 
 
     }
     return NULL; 
@@ -120,6 +117,11 @@ Decleration* ASTGen::constructDec(bool initalize){
  * such as +-,*
  */
 Expression* ASTGen::constructOP(Expression* left){
+
+        if(left->name() == "Literal" && equals(((Literal*)left)->m_token,TokenType::IDEN)&&equals(peek(), TokenType::OPEN_PARENTHESE))
+                        return constructFunctionCall((Literal*)left);
+
+
         if(equals(peek(),TokenType::COMMA) || equals(peek(),TokenType::CLOSE_PARENTHESE))
                 return left;
 

@@ -24,7 +24,7 @@ class ASTGen{
         Expression* constructOP(Expression* left); // Constructed a binOP AST 
         Expression* constructEx(); // construct a AST based on Predefined paramaters
         Decleration* constructDec(bool initalize); // constucts a decleration AST type
-        FunctionCall* constructFunctionCall(Token* name); // construct a function call object
+        FunctionCall* constructFunctionCall(Literal* name); // construct a function call object
 };
 
 #endif
