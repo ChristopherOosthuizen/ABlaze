@@ -91,3 +91,66 @@ TEST(ASTGen, Decleration){
 }
 
 
+/*
+ * Test weather you can call a function without it breaking
+ */
+TEST(ASTGen, functionscall){
+        Lexer lexer("hello();");
+        ASTGen gen(lexer.readAllTokens());
+        Body* bas = gen.generateAST();
+        ASSERT_TRUE(bas != nullptr);
+        Expression* expr = (Expression*)bas->m_lines->at(0);
+        ASSERT_TRUE(expr !=NULL);
+        ASSERT_EQ(expr->name(),"FunctionCall");
+        FunctionCall* call = (FunctionCall*) expr;
+        ASSERT_EQ(call->m_name,"hello");
+        ASSERT_EQ(call->m_args->size(),0);
+
+}
+
+/*
+ * Test weather function call can handle one paramter
+ */
+TEST(ASTGen, functionOne){
+        Lexer lexer("func(12);");
+        ASTGen gen(lexer.readAllTokens());
+        Expression* expr = (Expression*)gen.generateAST()->m_lines->at(0);
+        ASSERT_EQ(expr->name(),"FunctionCall");
+        FunctionCall* call = (FunctionCall*)  expr;
+        ASSERT_EQ(call->m_name,"func");
+        ASSERT_EQ(call->m_args->size(),1);
+        ASSERT_TRUE(call->m_args->at(0) != nullptr);
+        ASSERT_EQ(((Literal*)call->m_args->at(0))->m_token->m_symbol,"12");
+
+}
+
+/*
+ * Test weather a call can handle multiple 
+ * paramaters 
+ */
+TEST(ASTGen ,patamtersMultiple){
+        Lexer lexer("function(12,14,right, 12+4);");
+        ASTGen gen(lexer.readAllTokens());
+        Expression* expr = (Expression*)gen.generateAST()->m_lines->at(0);
+        ASSERT_TRUE(expr != nullptr);
+        ASSERT_EQ(expr->name(),"FunctionCall");
+        FunctionCall* call = (FunctionCall*)expr;
+        ASSERT_EQ(call->m_name,"function");
+        ASSERT_EQ(call->m_args->size(),4);
+        ASSERT_TRUE(call->m_args->at(0) != nullptr);
+        ASSERT_EQ(((Literal*)call->m_args->at(0))->m_token->m_symbol,"12");
+
+        ASSERT_TRUE(call->m_args->at(1) != nullptr);
+        ASSERT_EQ(((Literal*)call->m_args->at(1))->m_token->m_symbol,"14");
+
+        ASSERT_TRUE(call->m_args->at(2) != nullptr);
+        ASSERT_EQ(((Literal*)call->m_args->at(2))->m_token->m_symbol,"right");
+
+        ASSERT_TRUE(call->m_args->at(3) != nullptr);
+        ASSERT_EQ(call->m_args->at(3)->name(),"BinOP");
+        ASSERT_EQ(((BinOP*)call->m_args->at(3))->m_op->m_type,TokenType::PLUS);
+
+
+
+}
+

@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/chris/Projects/ABlaze/AST/AST.cpp
+AST.h
+/home/chris/Projects/ABlaze/AST/AST.h
+
+/home/chris/Projects/ABlaze/AST/AST.h
+Token.h
+/home/chris/Projects/ABlaze/AST/Token.h
+string
+-
+vector
+-
+
+/home/chris/Projects/ABlaze/AST/ASTGen.cpp
+ASTGen.h
+/home/chris/Projects/ABlaze/AST/ASTGen.h
+AST.h
+/home/chris/Projects/ABlaze/AST/AST.h
+
+/home/chris/Projects/ABlaze/AST/ASTGen.h
+Token.h
+/home/chris/Projects/ABlaze/AST/Token.h
+AST.h
+/home/chris/Projects/ABlaze/AST/AST.h
+vector
+-
+
+Lexer/Token.h
+TokenType.h
+Lexer/TokenType.h
+string
+-
+
+Lexer/TokenType.h
+

@@ -14,15 +14,14 @@ ASTGen::ASTGen(vector<Token*> tokens){
  * construct a fucntion call 
  * object based on parmaters
  */
-FunctionCall* ASTGen::constructFunctionCall(Token* name){
+FunctionCall* ASTGen::constructFunctionCall(){
+        Token* name = next();
         next();
         vector<Expression*>* args = new vector<Expression*>;
         if(!equals(peek(),TokenType::CLOSE_PARENTHESE)){
                do{
                         args->push_back(constructOP(new Literal(next())));          
-               }while(equals(next(),TokenType::COMMA));
-        }else{
-                next();
+               }while(equals(peek(),TokenType::COMMA));
         }
         return new FunctionCall(name->m_symbol,args);
 }
@@ -93,7 +92,7 @@ Expression* ASTGen::constructEx(){
         case TokenType::INT: 
         case TokenType::IDEN:
                 if(equals(peek(),TokenType::OPEN_PARENTHESE))
-                                return constructFunctionCall(curr);
+                                return constructFunctionCall();
                 return constructOP(new Literal(curr)); 
 
     }
@@ -120,34 +119,32 @@ Decleration* ASTGen::constructDec(bool initalize){
  * such as +-,*
  */
 Expression* ASTGen::constructOP(Expression* left){
-        if(equals(peek(),TokenType::COMMA) || equals(peek(),TokenType::CLOSE_PARENTHESE))
-                return left;
 
-        Token* op = next();
-        string type = left->name();
-        if(equals(op,TokenType::SEMI_COLON)  ){
-                return left;
-        }
+    Token* op = next();
+    string type = left->name();
+    if(equals(op,TokenType::SEMI_COLON) || equals(op,TokenType::COMMA)){
+        return left;
+    }
 
 
 
-        if(equals(peek(1),TokenType::CLOSE_PARENTHESE) ){
-                Literal* right = new Literal(next());
-                next();
-                return constructOP(new BinOP(left,op,right)); 
-        }
+    if(equals(peek(1),TokenType::CLOSE_PARENTHESE) ){
+       Literal* right = new Literal(next());
+       next();
+       return constructOP(new BinOP(left,op,right)); 
+    }
 
 
-        switch(op->m_type){
-                case TokenType::PLUS:
-                case TokenType::MINUS: return new BinOP(left,op,constructOP(new Literal(next()))); 
-                case TokenType::OPEN_PARENTHESE: next();
-                case TokenType::TIMES:
-                case TokenType::REMAND:
-                case TokenType::DIVIDE: return constructOP(new BinOP(left,op,new Literal(next())));
+    switch(op->m_type){
+        case TokenType::PLUS:
+        case TokenType::MINUS: return new BinOP(left,op,constructOP(new Literal(next()))); 
+        case TokenType::OPEN_PARENTHESE: next();
+        case TokenType::TIMES:
+        case TokenType::REMAND:
+        case TokenType::DIVIDE: return constructOP(new BinOP(left,op,new Literal(next())));
 
-        }   
-        return NULL;
+    }   
+    return NULL;
 }
 
 

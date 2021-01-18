@@ -62,4 +62,13 @@ class Body: public Expression{
                 vector<Expression*>* m_lines;
 
 };
+
+class FunctionCall: public Expression{
+        public:
+                string name() override;
+                FunctionCall(string name,  vector<Expression*>* args);
+                string m_name;
+                vector<Expression*>* m_args;
+};
+
 #endif

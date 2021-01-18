@@ -1,0 +1,2 @@
+/usr/bin/ar qc libErrorThrower.a  CMakeFiles/ErrorThrower.dir/ErrorThrower.cpp.o
+/usr/bin/ranlib libErrorThrower.a
