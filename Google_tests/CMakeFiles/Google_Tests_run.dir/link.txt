@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/Google_Tests_run.dir/LexerTest.cpp.o CMakeFiles/Google_Tests_run.dir/ErrorThrowerTest.cpp.o CMakeFiles/Google_Tests_run.dir/ASTTest.cpp.o  -o Google_Tests_run  ../lib/libgtestd.a ../lib/libgtest_maind.a ../Lexer/libLexer.a ../ErrorThrower/libErrorThrower.a ../AST/libAST.a ../lib/libgtestd.a -lpthread 
