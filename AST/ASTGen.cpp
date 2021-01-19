@@ -10,59 +10,61 @@ ASTGen::ASTGen(vector<Token*> tokens){
     m_pos = 0;
 }
 
-/*
- * construct a fucntion call 
- * object based on parmaters
- */
-FunctionCall* ASTGen::constructFunctionCall(Literal* name){
-        next();
-        vector<Expression*>* args = new vector<Expression*>;
-        if(!equals(peek(),TokenType::CLOSE_PARENTHESE)){
-               do{
-                        args->push_back(constructOP(new Literal(next())));          
-               }while(equals(next(),TokenType::COMMA));
-        }else{
-                next();
-        }
-        return new FunctionCall(name,args);
-}
-
-
-/*
- * return a AST based on the tokens given in
- * the construction
- */
+// return a AST based on the tokens given in
+// the construction
 Body* ASTGen::generateAST(){
         vector<Expression*>* lines = new vector<Expression*>;
         while(peek() != NULL){
-                lines->push_back(constructEx());
+                lines->push_back(expression(new Literal(next())));
+                next();
         }
         return new Body(NULL,lines);
 }
 
-/*
- * return the next token in the list 
- * without incrementing
- */
-Token* ASTGen::peek(){
-        return peek(0);
-}
 
-/*
- * check the token that is dist
- * number ahead of the current 
- * token
- */
+
+// check the token that is dist
+// number ahead of the current token
 Token* ASTGen::peek(int dist){
         if(m_pos+dist < m_tokens.size()){
                 return m_tokens.at(m_pos+dist);
         }
         return NULL;
 }
-/*
- * return next token and if out of bounds return 
- * null and increase m_pos
- */
+
+Token* ASTGen::peek(){
+        return peek(0);
+}
+
+
+// return true if the type of token
+// equals type 
+bool ASTGen::equals(Token* token, TokenType type){
+    if(token == NULL)
+        return false; 
+    return token->m_type == type;
+}
+
+
+// return true if 
+// the token type is a 
+// operators
+bool ASTGen::isOP(Token* token){
+        if(token ==nullptr)
+                return false;
+        switch(token->m_type){
+                case TokenType::REMAND:
+                case TokenType::DIVIDE:
+                case TokenType::TIMES:
+                case TokenType::MINUS:
+                case TokenType::PLUS:return true;
+
+        }
+        return false;
+}
+
+// return next token and if out of bounds return 
+// null and increase m_pos
 Token* ASTGen::next(){
    if(m_pos < m_tokens.size()){
         return m_tokens.at(m_pos++); 
@@ -71,85 +73,78 @@ Token* ASTGen::next(){
  
 }
 
-/*
- * return true if the type of token
- * equals type 
- */
-bool ASTGen::equals(Token* token, TokenType type){
-    if(token == NULL)
-        return false; 
-    return token->m_type == type;
-}
 
-/*
- * Decide how a AST 
- * should be constructed
- */
-Expression* ASTGen::constructEx(){
-    Token* curr = next();
-    switch(curr->m_type){
-        case TokenType::VAR: return constructDec(true);
-        case TokenType::OPEN_PARENTHESE: return constructOP(new Literal(next()));
-        case TokenType::INT: 
-        case TokenType::IDEN:return constructOP(new Literal(curr)); 
+// Decide how a AST 
+// should be constructed
+Expression* ASTGen::expression(Expression* expr){
 
-    }
-    return NULL; 
-}
-
-/*
- * Construct dec constructs declarations such as
- * var name = 12
- * or name =12
- */
-Decleration* ASTGen::constructDec(bool initalize){
-    Literal* name = new Literal(next());
-    Token* ex = next();
-    if(equals(ex,TokenType::SEMI_COLON)){
-        next();
-        return new Decleration(name, NULL,initalize);
-    }
-    return new Decleration(name, constructEx(),initalize);
-}
-
-/*
- * Construct a binOP based on specifically equations
- * such as +-,*
- */
-Expression* ASTGen::constructOP(Expression* left){
-
-        if(left->name() == "Literal" && equals(((Literal*)left)->m_token,TokenType::IDEN)&&equals(peek(), TokenType::OPEN_PARENTHESE))
-                        return constructFunctionCall((Literal*)left);
-
-
-        if(equals(peek(),TokenType::COMMA) || equals(peek(),TokenType::CLOSE_PARENTHESE))
-                return left;
-
-        Token* op = next();
-        string type = left->name();
-        if(equals(op,TokenType::SEMI_COLON)  ){
-                return left;
+        if(isOP(peek()))
+                return binaryOperation(expr);
+        if(expr->name() == "BinOP"){
+                if(!isOP(peek()))
+                        return expr;
+                return binaryOperation(expr);
         }
+        switch(((Literal*)expr)->m_token->m_type){
+                case TokenType::VAR: return decleration((Literal*)expr, true);
+                case TokenType::OPEN_PARENTHESE: return expression(new Literal(next()));
+                case TokenType::IDEN: if(equals(peek(),TokenType::OPEN_PARENTHESE))
+                                              return functionCall((Literal*)expr);
+                case TokenType::INT: return expr; 
+            }
+        return NULL; 
+}
 
 
+// Construct a binOP based on specifically equations
+// such as +-,*
+Expression* ASTGen::binaryOperation(Expression* left){
+
+       Token* op = next();
 
         if(equals(peek(1),TokenType::CLOSE_PARENTHESE) ){
                 Literal* right = new Literal(next());
                 next();
-                return constructOP(new BinOP(left,op,right)); 
+                return expression(new BinOP(left,op,right)); 
         }
 
 
         switch(op->m_type){
                 case TokenType::PLUS:
-                case TokenType::MINUS: return new BinOP(left,op,constructOP(new Literal(next()))); 
-                case TokenType::OPEN_PARENTHESE: next();
+                case TokenType::MINUS: return new BinOP(left,op,expression(new Literal(next()))); 
                 case TokenType::TIMES:
                 case TokenType::REMAND:
-                case TokenType::DIVIDE: return constructOP(new BinOP(left,op,new Literal(next())));
+                case TokenType::DIVIDE: return expression(new BinOP(left,op,new Literal(next())));
 
         }   
         return NULL;
 }
 
+// Construct dec constructs declarations such as
+// var name = 12
+Decleration* ASTGen::decleration(Literal* type, bool initalize){
+    Literal* name = new Literal(next());
+    Token* ex = next();
+    if(equals(ex,TokenType::SEMI_COLON)){
+        next();
+        return new Decleration(type, name, NULL,initalize);
+    }
+    return new Decleration(type, name, expression(new Literal(next())),initalize);
+}
+
+
+// construct a fucntion call 
+// object based on parmaters
+FunctionCall* ASTGen::functionCall(Literal* name){
+        next();
+        vector<Expression*>* args = new vector<Expression*>;
+        if(!equals(peek(),TokenType::CLOSE_PARENTHESE)){
+               do{
+                        args->push_back(expression(new Literal(next())));          
+               }while(equals(next(),TokenType::COMMA));
+        }else{
+                next();
+        }
+        return new FunctionCall(name,args);
+}
 

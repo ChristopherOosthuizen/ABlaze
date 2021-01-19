@@ -19,6 +19,7 @@ TEST(ASTbasic,operations){
 	BinOP* expr = (BinOP*)astgen.generateAST()->m_lines->at(0);	
 	Token* token = expr->m_op;
 	ASSERT_EQ(token->m_type,TokenType::PLUS);
+        ASSERT_TRUE(expr->m_right !=nullptr);
 	ASSERT_EQ(((BinOP*)expr->m_right)->m_op->m_type,TokenType::TIMES);
 
 	delete expr;

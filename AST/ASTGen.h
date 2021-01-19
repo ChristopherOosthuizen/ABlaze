@@ -17,14 +17,16 @@ class ASTGen{
         ASTGen(vector<Token*> tokens);
         Body* generateAST(); //return a ast based on nthe inputed tokens
     private:
-        Token* peek();// check the token infront of the current
         Token* peek(int dist); // check the token dist number ahead
-        Token* next(); // return the next token
+        Token* peek();// check the token infront of the current
+        Token* next(); 
         bool equals(Token* token, TokenType type); // returns weather a a token's type matches a type
-        Expression* constructOP(Expression* left); // Constructed a binOP AST 
-        Expression* constructEx(); // construct a AST based on Predefined paramaters
-        Decleration* constructDec(bool initalize); // constucts a decleration AST type
-        FunctionCall* constructFunctionCall(Literal* name); // construct a function call object
+        bool isOP(Token* token);  // returns weather a token is a op such as + - * /
+        Expression* expression(Expression* expr); // construct a AST based on Predefined paramaters
+        Expression* binaryOperation(Expression* left); // Constructed a binOP AST 
+        Decleration* decleration(Literal* type, bool initalize); // constucts a decleration AST type
+        FunctionCall* functionCall(Literal* name); // construct a function call object
+
 };
 
 #endif
