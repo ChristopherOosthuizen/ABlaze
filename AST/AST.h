@@ -71,4 +71,10 @@ class Unary: public Expression{
                 Literal* m_iden;
 };
 
+class IfStat: public Expression{
+        public:
+                string name() override;
+                IfStat(Expression* control);
+                Expression* m_control;
+};
 #endif

@@ -23,11 +23,11 @@ class ASTGen{
         bool equals(Token* token, TokenType type); // returns weather a a token's type matches a type
         bool isOP(Token* token);  // returns weather a token is a op such as + - * /
         bool isMulti(Token* token); // returns weather it is higher prority
-        bool isPow(Token* token); // returns true if the token type is equal to power or root
         Expression* expression(Expression* expr); // construct a AST based on Predefined paramaters
         Expression* binaryOperation(Expression* left); // Constructed a binOP AST 
         Decleration* decleration(Literal* type, bool initalize); // constucts a decleration AST type
         FunctionCall* functionCall(Literal* name); // construct a function call object
+        Body* body(Literal* type); // cosntruct a body such as if while for and def
 
 };
 

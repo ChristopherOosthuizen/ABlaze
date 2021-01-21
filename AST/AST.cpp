@@ -43,3 +43,9 @@ Unary::Unary(Literal* op, Literal* iden){
 }
 
 string Unary::name(){ return "UnOP";}
+
+IfStat::IfStat(Expression* control){
+        m_control = control;
+}
+
+string IfStat::name(){ return "If";}

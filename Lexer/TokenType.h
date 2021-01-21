@@ -35,7 +35,10 @@ enum class TokenType{
 
   //built in functions
   PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,
-  VAR
+  VAR,
+
+  //control stuctures
+  IF,FOR,WHILE,
 
 
 

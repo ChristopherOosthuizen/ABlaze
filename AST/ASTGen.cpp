@@ -86,18 +86,6 @@ bool ASTGen::isMulti(Token* token){
         return false;
 }
 
-//returns weather a token is
-// ** //and so on
-bool ASTGen::isPow(Token* token){
-        if(token == nullptr)
-                return false;
-        switch(token->m_type){
-                case TokenType::TIMES_TIMES:
-                case TokenType::DIVIDE_DIVIDE: return true;
-        }
-        return false;
-}
-
 
 // return next token and if out of bounds return 
 // null and increase m_pos
@@ -113,7 +101,7 @@ Token* ASTGen::next(){
 // Decide how a AST 
 // should be constructed
 Expression* ASTGen::expression(Expression* expr){
-        if(equals(peek(),TokenType::SEMI_COLON))
+        if(equals(peek(),TokenType::SEMI_COLON) || equals(peek(),TokenType::CLOSE_PARENTHESE))
                 return expr;
         if(isOP(peek())) 
                 return binaryOperation(expr);
@@ -129,6 +117,7 @@ Expression* ASTGen::expression(Expression* expr){
                                               return functionCall((Literal*)expr);
                 case TokenType::INT: return expr; 
 
+                case TokenType::IF: return body((Literal*)expr);
                 case TokenType::NOT: 
                 case TokenType::PLUS_PLUS:
                 case TokenType::MINUS_MINUS: return expression(new Unary((Literal*)expr,new Literal(next())));
@@ -197,3 +186,17 @@ FunctionCall* ASTGen::functionCall(Literal* name){
         return new FunctionCall(name,args);
 }
 
+//consturct a body based on
+//paramters such as if while for and def
+Body* ASTGen::body(Literal* type){
+        IfStat* bod = new IfStat(expression(new Literal(next())));
+        next();
+        next();
+        vector<Expression*>* lines = new vector<Expression*>();
+        while(!equals(peek(),TokenType::CLOSE_BRACE)){
+               lines->push_back(expression(new Literal(next())));
+                next();
+        }
+       return new Body(bod,lines); 
+
+}
