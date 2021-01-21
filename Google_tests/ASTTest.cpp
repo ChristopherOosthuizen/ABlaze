@@ -213,3 +213,27 @@ TEST(Unary, basic){
         ASSERT_EQ(body->m_lines->at(2)->name(),"UnOP");
 
 }
+
+//Test weather the ast parser can handle ** and // which represent power 
+TEST(Power, basic){
+        Lexer lexer("5*2**2//3+4;");
+        ASTGen gen(lexer.readAllTokens());
+        Expression* expression = (Expression*) gen.generateAST()->m_lines->at(0);
+        ASSERT_TRUE(expression != nullptr);
+        ASSERT_EQ(expression->name(),"BinOP");
+        BinOP* op = (BinOP*)expression;
+        ASSERT_EQ(op->m_op->m_type,TokenType::PLUS);
+        ASSERT_TRUE(op->m_left !=nullptr);
+        ASSERT_EQ(op->m_left->name(),"BinOP");
+        op = (BinOP*)op->m_left;
+        ASSERT_EQ(op->m_op->m_type,TokenType::DIVIDE_DIVIDE);
+        ASSERT_TRUE(op->m_left !=nullptr);
+        ASSERT_EQ(op->m_left->name(),"BinOP");
+        op = (BinOP*)op->m_left;
+        ASSERT_EQ(op->m_op->m_type,TokenType::TIMES_TIMES);
+        ASSERT_TRUE(op->m_left!= nullptr);
+        ASSERT_EQ(op->m_left->name(),"BinOP");
+        op = (BinOP*)op->m_left;
+        ASSERT_EQ(op->m_op->m_type,TokenType::TIMES);
+
+}

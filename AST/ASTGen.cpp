@@ -53,6 +53,8 @@ bool ASTGen::isOP(Token* token){
         if(token ==nullptr)
                 return false;
         switch(token->m_type){
+                case TokenType::TIMES_TIMES:
+                case TokenType::DIVIDE_DIVIDE:
                 case TokenType::EQUAL_EQUAL:
                 case TokenType::NOT_EQUAL:
                 case TokenType::OR_OR:
@@ -76,11 +78,26 @@ bool ASTGen::isMulti(Token* token){
                 case TokenType::TIMES:
                 case TokenType::REMAND:
                 case TokenType::DIVIDE:
-                case TokenType::EQUAL_EQUAL:
+                case TokenType::TIMES_TIMES:
+                case TokenType::DIVIDE_DIVIDE: 
+                 case TokenType::EQUAL_EQUAL:
                 case TokenType::NOT_EQUAL: return true;
         }
         return false;
 }
+
+//returns weather a token is
+// ** //and so on
+bool ASTGen::isPow(Token* token){
+        if(token == nullptr)
+                return false;
+        switch(token->m_type){
+                case TokenType::TIMES_TIMES:
+                case TokenType::DIVIDE_DIVIDE: return true;
+        }
+        return false;
+}
+
 
 // return next token and if out of bounds return 
 // null and increase m_pos
@@ -125,29 +142,31 @@ Expression* ASTGen::expression(Expression* expr){
 Expression* ASTGen::binaryOperation(Expression* left){
 
        Token* op = next();
+        Literal* right = new Literal(next());
 
-       if(equals(peek(1), TokenType::OPEN_PARENTHESE))
-                       return expression(new BinOP(left,op,expression(new Literal(next())))); 
+       if(equals(peek(), TokenType::OPEN_PARENTHESE))
+                       return expression(new BinOP(left,op,expression(right)));
 
+
+       if(equals(peek(),TokenType::CLOSE_PARENTHESE)){
+                        next();
+                       return expression(new BinOP(left,op,right)); 
+
+        }
  
-        if(isMulti(op)){
-              return expression(new BinOP(left,op,new Literal(next()))); 
+        else if(isMulti(op)){
+               return expression(new BinOP(left,op,right)); 
+
+
 
         }
 
         else{
-                if(equals(peek(1),TokenType::CLOSE_PARENTHESE)){
-                        Literal* right = new Literal(next());
-                        next();
+               if(!isMulti(peek()) )
                        return expression(new BinOP(left,op,right)); 
 
-                }
-                else if(!isMulti(peek(1))  )
-                       return expression(new BinOP(left,op,new Literal(next()))); 
-
-                return new BinOP(left,op,expression(new Literal(next()))); 
+                return new BinOP(left,op,expression(right));
         }
-        return NULL;
 }
 
 // Construct dec constructs declarations such as
