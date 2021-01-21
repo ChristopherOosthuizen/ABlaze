@@ -53,12 +53,31 @@ bool ASTGen::isOP(Token* token){
         if(token ==nullptr)
                 return false;
         switch(token->m_type){
+                case TokenType::EQUAL_EQUAL:
+                case TokenType::NOT_EQUAL:
+                case TokenType::OR_OR:
+                case TokenType::AND_AND:
                 case TokenType::REMAND:
                 case TokenType::DIVIDE:
                 case TokenType::TIMES:
                 case TokenType::MINUS:
                 case TokenType::PLUS:return true;
 
+        }
+        return false;
+}
+
+//returns weather a token is
+// */ != and so on
+bool ASTGen::isMulti(Token* token){
+        if(token == nullptr)
+                return false;
+        switch(token->m_type){
+                case TokenType::TIMES:
+                case TokenType::REMAND:
+                case TokenType::DIVIDE:
+                case TokenType::EQUAL_EQUAL:
+                case TokenType::NOT_EQUAL: return true;
         }
         return false;
 }
@@ -77,8 +96,9 @@ Token* ASTGen::next(){
 // Decide how a AST 
 // should be constructed
 Expression* ASTGen::expression(Expression* expr){
-
-        if(isOP(peek()))
+        if(equals(peek(),TokenType::SEMI_COLON))
+                return expr;
+        if(isOP(peek())) 
                 return binaryOperation(expr);
         if(expr->name() == "BinOP"){
                 if(!isOP(peek()))
@@ -91,6 +111,10 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::IDEN: if(equals(peek(),TokenType::OPEN_PARENTHESE))
                                               return functionCall((Literal*)expr);
                 case TokenType::INT: return expr; 
+
+                case TokenType::NOT: 
+                case TokenType::PLUS_PLUS:
+                case TokenType::MINUS_MINUS: return expression(new Unary((Literal*)expr,new Literal(next())));
             }
         return NULL; 
 }
@@ -102,21 +126,27 @@ Expression* ASTGen::binaryOperation(Expression* left){
 
        Token* op = next();
 
-        if(equals(peek(1),TokenType::CLOSE_PARENTHESE) ){
-                Literal* right = new Literal(next());
-                next();
-                return expression(new BinOP(left,op,right)); 
+       if(equals(peek(1), TokenType::OPEN_PARENTHESE))
+                       return expression(new BinOP(left,op,expression(new Literal(next())))); 
+
+ 
+        if(isMulti(op)){
+              return expression(new BinOP(left,op,new Literal(next()))); 
+
         }
 
+        else{
+                if(equals(peek(1),TokenType::CLOSE_PARENTHESE)){
+                        Literal* right = new Literal(next());
+                        next();
+                       return expression(new BinOP(left,op,right)); 
 
-        switch(op->m_type){
-                case TokenType::PLUS:
-                case TokenType::MINUS: return new BinOP(left,op,expression(new Literal(next()))); 
-                case TokenType::TIMES:
-                case TokenType::REMAND:
-                case TokenType::DIVIDE: return expression(new BinOP(left,op,new Literal(next())));
+                }
+                else if(!isMulti(peek(1))  )
+                       return expression(new BinOP(left,op,new Literal(next()))); 
 
-        }   
+                return new BinOP(left,op,expression(new Literal(next()))); 
+        }
         return NULL;
 }
 

@@ -6,12 +6,6 @@ Literal::Literal(Token* token){
 }
 string Literal::name(){return "Literal";}
 
-Unary::Unary(Token* unaryEpression,Token* expression){
-   m_unaryEpression = unaryEpression;
-   m_expression = expression;
-}
-string Unary::name(){return "Unary";}
-
 BinOP::BinOP(Expression* left, Token* op, Expression* right){
     m_op = op;
     m_left = left;
@@ -42,3 +36,10 @@ FunctionCall::FunctionCall(Literal* name, vector<Expression*>* args){
 }
 
 string FunctionCall::name(){ return "FunctionCall";}
+
+Unary::Unary(Literal* op, Literal* iden){
+        m_op = op;
+        m_iden = iden;
+}
+
+string Unary::name(){ return "UnOP";}

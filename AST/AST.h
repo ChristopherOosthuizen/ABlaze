@@ -24,15 +24,6 @@ class Literal: public Expression{
 };
 
     
-
-class Unary: public Expression{
-    public:
-        string name() override;
-        Unary(Token* unaryEpression, Token* expression);
-        Token* m_unaryEpression;
-        Token* m_expression;
-};
-
     
 class BinOP: public Expression{
     public:
@@ -70,6 +61,14 @@ class FunctionCall: public Expression{
                 FunctionCall(Literal* name,  vector<Expression*>* args);
                 Literal* m_name;
                 vector<Expression*>* m_args;
+};
+
+class Unary: public Expression{
+        public:
+                string name() override;
+                Unary(Literal* op, Literal* iden);
+                Literal* m_op;
+                Literal* m_iden;
 };
 
 #endif

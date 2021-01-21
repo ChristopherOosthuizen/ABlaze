@@ -159,7 +159,7 @@ TEST(ASTGen ,patamtersMultiple){
  * Test weather a function call can be reconginzed within a binaryOP
  */
 TEST(ASTGen , functionWithin){
-        Lexer lexer("6+func(12));");
+        Lexer lexer("6+func(12);");
         ASTGen gen(lexer.readAllTokens());
         Expression* expr = (Expression*)gen.generateAST()->m_lines->at(0);
         ASSERT_TRUE(expr != nullptr);
@@ -173,4 +173,43 @@ TEST(ASTGen , functionWithin){
         FunctionCall* call = (FunctionCall*)op->m_right;
         ASSERT_EQ(call->m_name->m_token->m_symbol ,"func");
         ASSERT_EQ(call->m_args->size(),1);
+}
+
+// Test basic boolean functions of the AST tree
+TEST(Boolean, basic){
+        Lexer lexer("right == left || true && left != right;");
+        ASTGen gen (lexer.readAllTokens());
+        Expression* expr = (Expression*)gen.generateAST()->m_lines->at(0);
+        ASSERT_TRUE(expr !=nullptr);
+        ASSERT_EQ(expr->name(), "BinOP");
+        BinOP* op = (BinOP*) expr;
+        ASSERT_EQ(op->m_op->m_type,TokenType::AND_AND);
+        ASSERT_TRUE(op->m_left !=nullptr);
+        ASSERT_EQ(op->m_left->name(),"BinOP");
+        BinOP* left= (BinOP*)op->m_left;
+        ASSERT_EQ(left->m_op->m_type,TokenType::OR_OR);
+        ASSERT_TRUE(left->m_right !=nullptr);
+        ASSERT_EQ(left->m_right->name(),"Literal");
+        ASSERT_TRUE(left->m_left !=nullptr);
+        ASSERT_EQ(left->m_left->name(),"BinOP");
+        ASSERT_EQ(((BinOP*)left->m_left)->m_op->m_type,TokenType::EQUAL_EQUAL);
+        ASSERT_TRUE(op->m_right !=nullptr);
+        ASSERT_EQ(op->m_right->name(),"BinOP");
+        ASSERT_EQ(((BinOP*)op->m_right)->m_op->m_type,TokenType::NOT_EQUAL);
+
+}
+
+//Unary operators
+TEST(Unary, basic){
+        Lexer lexer("++lets; --lets; !bool;");
+        ASTGen gen (lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),3);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"UnOP");
+        ASSERT_TRUE(body->m_lines->at(1) != nullptr);
+        ASSERT_EQ(body->m_lines->at(1)->name(),"UnOP");
+        ASSERT_TRUE(body->m_lines->at(2) != nullptr);
+        ASSERT_EQ(body->m_lines->at(2)->name(),"UnOP");
+
 }
