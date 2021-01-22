@@ -62,6 +62,10 @@ bool ASTGen::isOP(Token* token){
                 case TokenType::REMAND:
                 case TokenType::DIVIDE:
                 case TokenType::TIMES:
+                case TokenType::GREATER:
+                case TokenType::LESS:
+                case TokenType::LESS_EQUAL:
+                case TokenType::MORE_EQUAL:
                 case TokenType::MINUS:
                 case TokenType::PLUS:return true;
 
@@ -80,6 +84,10 @@ bool ASTGen::isMulti(Token* token){
                 case TokenType::DIVIDE:
                 case TokenType::TIMES_TIMES:
                 case TokenType::DIVIDE_DIVIDE: 
+                case TokenType::GREATER:
+                case TokenType::LESS:
+                case TokenType::LESS_EQUAL:
+                case TokenType::MORE_EQUAL:
                  case TokenType::EQUAL_EQUAL:
                 case TokenType::NOT_EQUAL: return true;
         }
@@ -218,7 +226,7 @@ Body* ASTGen::body(Literal* type){
         }
         next();
         vector<Expression*>* lines = new vector<Expression*>();
-        while(peek() !=nullptr && !equals(peek(),TokenType::CLOSE_BRACE)){
+        while(!equals(peek(),TokenType::CLOSE_BRACE)){
                lines->push_back(expression(new Literal(next())));
                 next();
         }

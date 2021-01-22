@@ -217,6 +217,17 @@ TEST(Boolean, basic){
 
 }
 
+//Test weather the ASTGen can handle <> <= >=
+TEST(Boolean, comparison){
+        Lexer lexer("var bools = 12< 14;");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_TRUE(body->m_lines->at(0) !=nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_EQ(((Decleration*)body->m_lines->at(0))->m_value->name(),"BinOP");
+}
+
 //Unary operators
 TEST(Unary, basic){
         Lexer lexer("++lets; --lets; !bool;");
