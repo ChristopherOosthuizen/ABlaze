@@ -217,7 +217,8 @@ Token* Lexer::strings(){
 	if(m_pos >= m_input.length() ){
 		ErrorThrower::unterminatedString(m_line);
 	}
-	return new Token(TokenType::STRING,m_input.substr(start, m_pos-start),m_line);
+        m_pos++;
+	return new Token(TokenType::STRING,m_input.substr(start, (m_pos-1)-start),m_line);
 }
 
 /*

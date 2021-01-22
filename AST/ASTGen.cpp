@@ -101,10 +101,15 @@ Token* ASTGen::next(){
 // Decide how a AST 
 // should be constructed
 Expression* ASTGen::expression(Expression* expr){
-        if(equals(peek(),TokenType::SEMI_COLON) || equals(peek(),TokenType::CLOSE_PARENTHESE))
-                return expr;
-        if(isOP(peek())) 
-                return binaryOperation(expr);
+        if(peek() !=nullptr){
+                switch(peek()->m_type){
+                        case TokenType::CLOSE_PARENTHESE:
+                        case TokenType::COMMA:
+                        case TokenType::SEMI_COLON: return expr;
+                }
+                if(isOP(peek())) 
+                        return binaryOperation(expr);
+        }
         if(expr->name() == "BinOP"){
                 if(!isOP(peek()))
                         return expr;
@@ -115,6 +120,9 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::OPEN_PARENTHESE: return expression(new Literal(next()));
                 case TokenType::IDEN: if(equals(peek(),TokenType::OPEN_PARENTHESE))
                                               return functionCall((Literal*)expr);
+                                      else if(equals(peek(),TokenType::EQUAL))
+                                                      return decleration((Literal*)expr,false);
+                case TokenType::STRING:
                 case TokenType::INT: return expr; 
                 case TokenType::FOR:
                 case TokenType::WHILE:
@@ -134,7 +142,7 @@ Expression* ASTGen::binaryOperation(Expression* left){
        Token* op = next();
         Literal* right = new Literal(next());
 
-       if(equals(peek(), TokenType::OPEN_PARENTHESE))
+       if(equals(peek(), TokenType::SEMI_COLON)||equals(peek(), TokenType::OPEN_PARENTHESE))
                        return expression(new BinOP(left,op,expression(right)));
 
 
@@ -162,12 +170,16 @@ Expression* ASTGen::binaryOperation(Expression* left){
 // Construct dec constructs declarations such as
 // var name = 12
 Decleration* ASTGen::decleration(Literal* type, bool initalize){
-    Literal* name = new Literal(next());
-    Token* ex = next();
-    if(equals(ex,TokenType::SEMI_COLON)){
-        next();
+    Literal* name ;
+    if(equals(type->m_token,TokenType::IDEN))
+            name= type;
+    else{
+        name=new Literal(next());
+    }
+    if(equals(peek(),TokenType::SEMI_COLON)){
         return new Decleration(type, name, NULL,initalize);
     }
+    next();
     return new Decleration(type, name, expression(new Literal(next())),initalize);
 }
 
@@ -191,15 +203,22 @@ FunctionCall* ASTGen::functionCall(Literal* name){
 //paramters such as if while for and def
 Body* ASTGen::body(Literal* type){
         Expression* bod; 
+        Expression* initial =expression(new Literal(next())); 
+        next();
         switch(type->m_token->m_type){
-                case TokenType::IF: bod =new IfStat(expression(new Literal(next()))); break;
-                case TokenType::WHILE: bod = new WhileStat(expression(new Literal(next()))); break;
+                case TokenType::IF: bod =new IfStat(initial); break;
+                case TokenType::WHILE: bod = new WhileStat(initial); break;
+                case TokenType::FOR: Expression* condition = expression(new Literal(next()));
+                                     next();
+                                     Expression* repitition= expression(new Literal(next()));
+                                     next();
+                                     bod = new ForStat(initial,condition,repitition);break;
+
 
         }
         next();
-        next();
         vector<Expression*>* lines = new vector<Expression*>();
-        while(!equals(peek(),TokenType::CLOSE_BRACE)){
+        while(peek() !=nullptr && !equals(peek(),TokenType::CLOSE_BRACE)){
                lines->push_back(expression(new Literal(next())));
                 next();
         }

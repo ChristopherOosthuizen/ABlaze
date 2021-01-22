@@ -55,3 +55,11 @@ WhileStat::WhileStat(Expression* control){
 }
 
 string WhileStat::name(){ return "While";}
+
+ForStat::ForStat(Expression* initial, Expression* condition, Expression* repitition){
+        m_initial = initial;
+        m_condition = condition;
+        m_repitition = repitition;
+}
+
+string ForStat::name(){ return "For";}

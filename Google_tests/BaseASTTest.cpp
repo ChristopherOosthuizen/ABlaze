@@ -36,3 +36,17 @@ TEST(ASTSTRUT,whiles){
         ASSERT_EQ(body->m_control->name(),"While");
         ASSERT_EQ(body->m_lines->size(),3);
 }
+
+TEST(ASTSTRUT, fors){
+        Lexer lexer("for(var i=0; i != 2; ++i){ printer(\"hello\");}");
+        ASTGen gen (lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_TRUE(body->m_lines->at(0) !=nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Body");
+        body= (Body*)body->m_lines->at(0);
+        ASSERT_EQ(body->m_control->name(),"For");
+        ASSERT_EQ(body->m_lines->size(),1);
+
+}
+

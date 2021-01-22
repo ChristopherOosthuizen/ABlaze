@@ -86,11 +86,29 @@ TEST(ASTGen, Decleration){
         Lexer lexer("var hello = right;");
         ASTGen gen(lexer.readAllTokens());
         Decleration* dec = (Decleration*)gen.generateAST()->m_lines->at(0);	
+        ASSERT_TRUE(dec !=nullptr);
         ASSERT_EQ(dec->m_name->m_token->m_symbol,"hello");
+        ASSERT_TRUE(dec->m_value !=nullptr);
         ASSERT_EQ(((Literal*)dec->m_value)->m_token->m_symbol,"right");
 
 }
+//Test multiple delclerations
+TEST(ASTGen, DecMulti){
+        Lexer lexer("var i= 12+9; var notT = i != 12; ++i; i = 6;");
+        ASTGen gen(lexer.readAllTokens()); 
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),4);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(1) != nullptr);
+        ASSERT_EQ(body->m_lines->at(1)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(2) != nullptr);
+        ASSERT_EQ(body->m_lines->at(2)->name(),"UnOP");
+        ASSERT_TRUE(body->m_lines->at(3) != nullptr);
+        ASSERT_EQ(body->m_lines->at(3)->name(),"Decleration");
 
+
+}
 
 /*
  * Test weather you can call a function without it breaking
@@ -237,4 +255,5 @@ TEST(Power, basic){
         ASSERT_EQ(op->m_op->m_type,TokenType::TIMES);
 
 }
+
 

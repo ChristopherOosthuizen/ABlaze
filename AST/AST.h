@@ -84,4 +84,14 @@ class WhileStat: public Expression{
                 WhileStat(Expression* control);
                 Expression* m_control;
 };
+
+class ForStat: public Expression{
+        public:
+                string name() override;
+                ForStat(Expression* initial, Expression* condition, Expression* repition);
+
+                Expression* m_condition;
+                Expression* m_repitition;
+                Expression* m_initial;
+};
 #endif

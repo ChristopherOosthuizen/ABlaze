@@ -384,3 +384,97 @@ TEST(ERRORS, unterminated){
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
 }
+
+//Test weather the parser can handle strings properly
+TEST(ASTSTRUT, mores){
+        Lexer lexer("for(var i=0; i != 2; ++i){ printer(\"hello\");}");
+        Token* token; 
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::FOR);
+        delete token;	  
+
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::OPEN_PARENTHESE);
+        delete token;	  
+
+       
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::VAR);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::EQUAL);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::SEMI_COLON);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::NOT_EQUAL);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::INT);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::SEMI_COLON);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::PLUS_PLUS);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::CLOSE_PARENTHESE);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::OPEN_BRACE);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::IDEN);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::OPEN_PARENTHESE);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::STRING);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::CLOSE_PARENTHESE);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::SEMI_COLON);
+        delete token;	  
+
+       	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::CLOSE_BRACE);
+        delete token;	  
+
+
+}
