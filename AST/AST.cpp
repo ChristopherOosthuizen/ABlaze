@@ -49,3 +49,9 @@ IfStat::IfStat(Expression* control){
 }
 
 string IfStat::name(){ return "If";}
+
+WhileStat::WhileStat(Expression* control){
+        m_control = control;
+}
+
+string WhileStat::name(){ return "While";}

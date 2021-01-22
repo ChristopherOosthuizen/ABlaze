@@ -237,3 +237,4 @@ TEST(Power, basic){
         ASSERT_EQ(op->m_op->m_type,TokenType::TIMES);
 
 }
+

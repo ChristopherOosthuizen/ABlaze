@@ -77,4 +77,11 @@ class IfStat: public Expression{
                 IfStat(Expression* control);
                 Expression* m_control;
 };
+
+class WhileStat: public Expression{
+        public:
+                string name() override;
+                WhileStat(Expression* control);
+                Expression* m_control;
+};
 #endif

@@ -116,7 +116,8 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::IDEN: if(equals(peek(),TokenType::OPEN_PARENTHESE))
                                               return functionCall((Literal*)expr);
                 case TokenType::INT: return expr; 
-
+                case TokenType::FOR:
+                case TokenType::WHILE:
                 case TokenType::IF: return body((Literal*)expr);
                 case TokenType::NOT: 
                 case TokenType::PLUS_PLUS:
@@ -189,7 +190,12 @@ FunctionCall* ASTGen::functionCall(Literal* name){
 //consturct a body based on
 //paramters such as if while for and def
 Body* ASTGen::body(Literal* type){
-        IfStat* bod = new IfStat(expression(new Literal(next())));
+        Expression* bod; 
+        switch(type->m_token->m_type){
+                case TokenType::IF: bod =new IfStat(expression(new Literal(next()))); break;
+                case TokenType::WHILE: bod = new WhileStat(expression(new Literal(next()))); break;
+
+        }
         next();
         next();
         vector<Expression*>* lines = new vector<Expression*>();
