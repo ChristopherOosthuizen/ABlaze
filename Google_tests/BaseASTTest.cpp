@@ -50,3 +50,26 @@ TEST(ASTSTRUT, fors){
 
 }
 
+// Test weather the ASTGen can handle functions
+TEST(ASTSTRUT, function){
+        Lexer lexer("var hello(var right, var left){ printer(); var like = 12; }");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Body");
+        ASSERT_EQ(((Body*)body->m_lines->at(0))->m_control->name(),"Function");
+        ASSERT_EQ(((Body*)body->m_lines->at(0))->m_lines->size(),2); 
+}
+
+// Test weather the ASTGen can handle void functions
+TEST(ASTSTRUT, voids){
+        Lexer lexer("void hello(var right, var left){ printer(); var like = 12; }");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Body");
+        ASSERT_EQ(((Body*)body->m_lines->at(0))->m_control->name(),"Function");
+        ASSERT_EQ(((Body*)body->m_lines->at(0))->m_lines->size(),2); 
+}

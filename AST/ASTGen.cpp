@@ -124,7 +124,11 @@ Expression* ASTGen::expression(Expression* expr){
                 return binaryOperation(expr);
         }
         switch(((Literal*)expr)->m_token->m_type){
-                case TokenType::VAR: return decleration((Literal*)expr, true);
+                case TokenType::VOID: return body((Literal*)expr);
+                case TokenType::VAR: 
+                        if(equals(peek(1),TokenType::OPEN_PARENTHESE))
+                                return body((Literal*)expr);
+                        return decleration((Literal*)expr, true);
                 case TokenType::OPEN_PARENTHESE: return expression(new Literal(next()));
                 case TokenType::IDEN: if(equals(peek(),TokenType::OPEN_PARENTHESE))
                                               return functionCall((Literal*)expr);
@@ -214,6 +218,9 @@ Body* ASTGen::body(Literal* type){
         Expression* initial =expression(new Literal(next())); 
         next();
         switch(type->m_token->m_type){
+                case TokenType::VOID:
+                case TokenType::VAR: 
+                        bod = new Function(type,(FunctionCall*)initial); break;
                 case TokenType::IF: bod =new IfStat(initial); break;
                 case TokenType::WHILE: bod = new WhileStat(initial); break;
                 case TokenType::FOR: Expression* condition = expression(new Literal(next()));

@@ -63,3 +63,11 @@ ForStat::ForStat(Expression* initial, Expression* condition, Expression* repitit
 }
 
 string ForStat::name(){ return "For";}
+
+Function::Function(Literal* type,FunctionCall* call){
+        m_type = type;
+        m_call = call;
+
+}
+
+string Function::name(){ return "Function";}

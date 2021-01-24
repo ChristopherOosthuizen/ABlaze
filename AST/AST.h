@@ -94,4 +94,12 @@ class ForStat: public Expression{
                 Expression* m_repitition;
                 Expression* m_initial;
 };
+
+class Function: public Expression{
+        public:
+                string name() override;
+                Function(Literal* type, FunctionCall* call);
+                Literal* m_type;
+                FunctionCall* m_call;
+};
 #endif
