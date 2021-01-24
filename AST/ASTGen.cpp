@@ -110,6 +110,18 @@ bool ASTGen::isEquals(Token* token){
         return false;        
 }
 
+//return true if the token is a assignment closer
+bool ASTGen::isCloser(Token* token){
+        if(token == nullptr)
+                return false;
+        switch(token->m_type){
+                case TokenType::COMMA:
+                case TokenType::SEMI_COLON:
+               case TokenType::CLOSE_PARENTHESE: return true;
+        }
+        return false;        
+}
+
 // return next token and if out of bounds return 
 // null and increase m_pos
 Token* ASTGen::next(){
@@ -124,12 +136,9 @@ Token* ASTGen::next(){
 // Decide how a AST 
 // should be constructed
 Expression* ASTGen::expression(Expression* expr){
+        if(isCloser(peek()))
+                return expr;
         if(peek() !=nullptr){
-                switch(peek()->m_type){
-                        case TokenType::CLOSE_PARENTHESE:
-                        case TokenType::COMMA:
-                        case TokenType::SEMI_COLON: return expr;
-                }
                 if(isOP(peek())) 
                         return binaryOperation(expr);
         }

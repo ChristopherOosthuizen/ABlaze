@@ -24,6 +24,7 @@ class ASTGen{
         bool isOP(Token* token);  // returns weather a token is a op such as + - * /
         bool isMulti(Token* token); // returns weather it is higher prority
         bool isEquals(Token* token); // returns weather a token is a equal = *=
+        bool isCloser(Token* token); // return weather the token is a expression closer
         Expression* expression(Expression* expr); // construct a AST based on Predefined paramaters
         Expression* binaryOperation(Expression* left); // Constructed a binOP AST 
         Decleration* decleration(Literal* type, bool initalize); // constucts a decleration AST type
