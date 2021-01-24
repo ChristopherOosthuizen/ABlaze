@@ -71,3 +71,9 @@ Function::Function(Literal* type,FunctionCall* call){
 }
 
 string Function::name(){ return "Function";}
+
+Return::Return(Expression* value){
+        m_value = value;
+}
+
+string Return::name(){ return "Return";}

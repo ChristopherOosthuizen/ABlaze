@@ -124,6 +124,7 @@ Expression* ASTGen::expression(Expression* expr){
                 return binaryOperation(expr);
         }
         switch(((Literal*)expr)->m_token->m_type){
+                case TokenType::RETURN: return new Return(expression(new Literal(next())));
                 case TokenType::VOID: return body((Literal*)expr);
                 case TokenType::VAR: 
                         if(equals(peek(1),TokenType::OPEN_PARENTHESE))

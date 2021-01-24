@@ -21,6 +21,7 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["for"] = TokenType::FOR;
 			m_built_in_words["if"] = TokenType::IF;
 			m_built_in_words["var"] = TokenType::VAR;
+			m_built_in_words["return"] = TokenType::RETURN;
 			m_built_in_words["void"] = TokenType::VOID;
 
 		}

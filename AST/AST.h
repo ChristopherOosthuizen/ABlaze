@@ -102,4 +102,11 @@ class Function: public Expression{
                 Literal* m_type;
                 FunctionCall* m_call;
 };
+
+class Return: public Expression{
+        public:
+                string name() override;
+                Return(Expression* value);
+                Expression* m_value;
+};
 #endif
