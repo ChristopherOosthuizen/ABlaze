@@ -84,3 +84,15 @@ TEST(ASTSTRUT, returns){
         ASSERT_EQ(body->m_lines->at(0)->name(),"Return");
         
 }
+
+//Test weather import works
+TEST(ASTSTRUT, Imports){
+        Lexer lexer("import \"hello\";");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Import");
+ 
+}
+

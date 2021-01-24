@@ -109,4 +109,11 @@ class Return: public Expression{
                 Return(Expression* value);
                 Expression* m_value;
 };
+
+class Import: public Expression{
+        public:
+                string name() override;
+                Import(Expression* value);
+                Expression* m_value;
+};
 #endif

@@ -77,3 +77,11 @@ Return::Return(Expression* value){
 }
 
 string Return::name(){ return "Return";}
+
+
+Import::Import(Expression* value){
+        m_value = value;
+}
+
+string Import::name(){ return "Import";}
+
