@@ -92,6 +92,24 @@ TEST(ASTGen, Decleration){
         ASSERT_EQ(((Literal*)dec->m_value)->m_token->m_symbol,"right");
 
 }
+
+// Test weather the dec can work on *= +=
+TEST(ASTGen, SpecilizedDec){
+        Lexer lexer("i +=12 ; l *=4; lets *=14;");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),3);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(1) != nullptr);
+        ASSERT_EQ(body->m_lines->at(1)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(2) != nullptr);
+        ASSERT_EQ(body->m_lines->at(2)->name(),"Decleration");
+
+
+}
+
+
 //Test multiple delclerations
 TEST(ASTGen, DecMulti){
         Lexer lexer("var i= 12+9; var notT = i != 12; ++i; i = 6;");

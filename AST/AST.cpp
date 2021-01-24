@@ -13,8 +13,9 @@ BinOP::BinOP(Expression* left, Token* op, Expression* right){
 }
 string BinOP::name(){return "BinOP";}
 
-Decleration::Decleration(Literal* type, Literal* name , Expression* value, bool initalize){
+Decleration::Decleration(Literal* type, Literal* name ,Literal* op, Expression* value, bool initalize){
     m_name = name; 
+    m_op = op;
     m_value = value;
     m_type = type;
     m_initalize= initalize;

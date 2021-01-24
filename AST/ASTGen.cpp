@@ -95,6 +95,21 @@ bool ASTGen::isMulti(Token* token){
 }
 
 
+//retrun if the token is a equal
+bool ASTGen::isEquals(Token* token){
+        if(token == nullptr)
+                return false;
+        switch(token->m_type){
+                case TokenType::PLUS_EQUAL:
+                case TokenType::DIVIDE_EQUAL:
+                case TokenType::TIMES_EQUAL:
+                case TokenType::MINUS_EQUAL:
+                case TokenType::MOD_EQUAL:
+               case TokenType::EQUAL: return true;
+        }
+        return false;        
+}
+
 // return next token and if out of bounds return 
 // null and increase m_pos
 Token* ASTGen::next(){
@@ -134,7 +149,7 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::OPEN_PARENTHESE: return expression(new Literal(next()));
                 case TokenType::IDEN: if(equals(peek(),TokenType::OPEN_PARENTHESE))
                                               return functionCall((Literal*)expr);
-                                      else if(equals(peek(),TokenType::EQUAL))
+                                      else if(isEquals(peek()))
                                                       return decleration((Literal*)expr,false);
                 case TokenType::STRING:
                 case TokenType::INT: return expr; 
@@ -191,10 +206,10 @@ Decleration* ASTGen::decleration(Literal* type, bool initalize){
         name=new Literal(next());
     }
     if(equals(peek(),TokenType::SEMI_COLON)){
-        return new Decleration(type, name, NULL,initalize);
+        return new Decleration(type, name,NULL, NULL,initalize);
     }
-    next();
-    return new Decleration(type, name, expression(new Literal(next())),initalize);
+        Literal* op = new Literal(next());
+    return new Decleration(type, name, op, expression(new Literal(next())),initalize);
 }
 
 

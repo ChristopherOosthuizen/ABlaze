@@ -39,8 +39,9 @@ class Decleration: public Expression{
 
     public:
         string name() override;
-        Decleration(Literal* type, Literal* name,Expression* value, bool initalize);
+        Decleration(Literal* type, Literal* name,Literal* op,Expression* value, bool initalize);
         Literal* m_name;
+        Literal* m_op;
         Expression* m_value;
         Literal* m_type;
         bool m_initalize;

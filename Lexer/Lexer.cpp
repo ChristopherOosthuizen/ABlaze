@@ -64,6 +64,10 @@ Token* Lexer::next() {
     m_pos++;
     switch (current) {
 			case '%':
+                        if(peek() == '='){
+                                m_pos++;
+                                return new Token(TokenType::PLUS_PLUS,"%=",m_line);
+		}
 				return new Token(TokenType::REMAND,"%",m_line);
         case '+':
 		if(peek() == '+'){
