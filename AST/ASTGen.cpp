@@ -160,7 +160,10 @@ Expression* ASTGen::expression(Expression* expr){
                                 return body((Literal*)expr);
                         return decleration((Literal*)expr, true);
                 case TokenType::OPEN_PARENTHESE: return expression(new Literal(next()));
-                case TokenType::IDEN: if(equals(peek(),TokenType::OPEN_PARENTHESE))
+                case TokenType::IDEN:
+                                        if(equals(peek(),TokenType::PLUS_PLUS) || equals(peek(),TokenType::MINUS_MINUS))
+                                                return expression(new Unary(new Literal(next()), (Literal*)expr,true)); 
+                                      else if(equals(peek(),TokenType::OPEN_PARENTHESE))
                                               return functionCall((Literal*)expr);
                                       else if(isEquals(peek()))
                                                       return decleration((Literal*)expr,false);
@@ -173,7 +176,7 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::IF: return body((Literal*)expr);
                 case TokenType::NOT: 
                 case TokenType::PLUS_PLUS:
-                case TokenType::MINUS_MINUS: return expression(new Unary((Literal*)expr,new Literal(next())));
+                case TokenType::MINUS_MINUS: return expression(new Unary((Literal*)expr,new Literal(next()),false));
             }
         return NULL; 
 }

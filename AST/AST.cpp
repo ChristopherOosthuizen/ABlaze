@@ -38,9 +38,10 @@ FunctionCall::FunctionCall(Literal* name, vector<Expression*>* args){
 
 string FunctionCall::name(){ return "FunctionCall";}
 
-Unary::Unary(Literal* op, Literal* iden){
+Unary::Unary(Literal* op, Literal* iden, bool post){
         m_op = op;
         m_iden = iden;
+        m_post = post;
 }
 
 string Unary::name(){ return "UnOP";}

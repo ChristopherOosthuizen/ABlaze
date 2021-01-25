@@ -67,9 +67,10 @@ class FunctionCall: public Expression{
 class Unary: public Expression{
         public:
                 string name() override;
-                Unary(Literal* op, Literal* iden);
+                Unary(Literal* op, Literal* iden, bool post);
                 Literal* m_op;
                 Literal* m_iden;
+                bool m_post;
 };
 
 class IfStat: public Expression{

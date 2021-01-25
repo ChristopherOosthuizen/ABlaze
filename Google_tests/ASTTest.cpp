@@ -261,6 +261,20 @@ TEST(Unary, basic){
 
 }
 
+//Unary operators
+TEST(Unary, postfix){
+        Lexer lexer("lets++; lets--;");
+        ASTGen gen (lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),2);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"UnOP");
+        ASSERT_TRUE(body->m_lines->at(1) != nullptr);
+        ASSERT_EQ(body->m_lines->at(1)->name(),"UnOP");
+
+}
+
+
 //Test weather the ast parser can handle ** and // which represent power
 TEST(Power, basic){
         Lexer lexer("5*2**2//3+4;");
