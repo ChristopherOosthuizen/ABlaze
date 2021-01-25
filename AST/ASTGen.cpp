@@ -151,6 +151,10 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::IMPORT:return new Import(expression(new Literal(next()))); 
                 case TokenType::RETURN: return new Return(expression(new Literal(next())));
                 case TokenType::VOID: return body((Literal*)expr);
+                case TokenType::IDEN_INT:
+                case TokenType::IDEN_BOOL:
+                case TokenType::IDEN_STRING:
+                case TokenType::IDEN_DOUBLE:
                 case TokenType::VAR: 
                         if(equals(peek(1),TokenType::OPEN_PARENTHESE))
                                 return body((Literal*)expr);
@@ -161,6 +165,8 @@ Expression* ASTGen::expression(Expression* expr){
                                       else if(isEquals(peek()))
                                                       return decleration((Literal*)expr,false);
                 case TokenType::STRING:
+                case TokenType::DOUBLE:
+                case TokenType::BOOL:
                 case TokenType::INT: return expr; 
                 case TokenType::FOR:
                 case TokenType::WHILE:

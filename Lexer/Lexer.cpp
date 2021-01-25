@@ -27,6 +27,8 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["double"] = TokenType::IDEN_DOUBLE;
 			m_built_in_words["bool"] = TokenType::IDEN_BOOL;
 			m_built_in_words["string"] = TokenType::IDEN_STRING;
+			m_built_in_words["true"] = TokenType::BOOL;
+			m_built_in_words["false"] = TokenType::BOOL;
 
 		}
 }

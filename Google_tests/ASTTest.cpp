@@ -284,3 +284,21 @@ TEST(Power, basic){
         ASSERT_EQ(op->m_op->m_type,TokenType::TIMES);
 
 }
+
+//test weather decleratiosn with spicific types works
+TEST(Dec, Type){
+        Lexer lexer("int i = 12; bool h = true; string hello =\"hello\"; double right = 12.0;");
+        ASTGen gen (lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),4);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(1) != nullptr);
+        ASSERT_EQ(body->m_lines->at(1)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(2) != nullptr);
+        ASSERT_EQ(body->m_lines->at(2)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(3) != nullptr);
+        ASSERT_EQ(body->m_lines->at(3)->name(),"Decleration");
+
+
+}
