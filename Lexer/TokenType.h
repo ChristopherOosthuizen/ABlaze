@@ -40,7 +40,8 @@ enum class TokenType{
   //control stuctures
   IF,FOR,WHILE,
 
-
+  //Primitve idententifers
+       IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE, 
 
 };
 #endif //ABLAZE_TOKENTYPE_H

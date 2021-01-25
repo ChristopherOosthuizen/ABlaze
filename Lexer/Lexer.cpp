@@ -23,6 +23,10 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["var"] = TokenType::VAR;
 			m_built_in_words["return"] = TokenType::RETURN;
 			m_built_in_words["void"] = TokenType::VOID;
+			m_built_in_words["int"] = TokenType::IDEN_INT;
+			m_built_in_words["double"] = TokenType::IDEN_DOUBLE;
+			m_built_in_words["bool"] = TokenType::IDEN_BOOL;
+			m_built_in_words["string"] = TokenType::IDEN_STRING;
 
 		}
 }
