@@ -148,6 +148,11 @@ Expression* ASTGen::expression(Expression* expr){
                 return binaryOperation(expr);
         }
         switch(((Literal*)expr)->m_token->m_type){
+                case TokenType::PRINT:
+                case TokenType::PRINTLN:
+                case TokenType::READFILE:
+                case TokenType::WRITEFILE:
+                case TokenType::INPUT: return functionCall((Literal*)expr);
                 case TokenType::IMPORT:return new Import(expression(new Literal(next()))); 
                 case TokenType::RETURN: return new Return(expression(new Literal(next())));
                 case TokenType::VOID: return body((Literal*)expr);

@@ -299,6 +299,11 @@ TEST(Power, basic){
 
 }
 
+//Built in functions
+TEST(Idens,builtinFUnctions){
+
+}
+
 //test weather decleratiosn with spicific types works
 TEST(Dec, Type){
         Lexer lexer("int i = 12; bool h = true; string hello =\"hello\"; double right = 12.0;");
