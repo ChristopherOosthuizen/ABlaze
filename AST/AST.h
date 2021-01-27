@@ -39,12 +39,13 @@ class Decleration: public Expression{
 
     public:
         string name() override;
-        Decleration(Literal* type, Literal* name,Literal* op,Expression* value, bool initalize);
-        Literal* m_name;
+        Decleration(Literal* type, Expression* name,Literal* op,Expression* value, bool initalize, bool m_isArray);
+        Expression* m_name;
         Literal* m_op;
         Expression* m_value;
         Literal* m_type;
         bool m_initalize;
+        bool m_isArray;
 };
 
 class Body: public Expression{
@@ -116,6 +117,15 @@ class Import: public Expression{
         public:
                 string name() override;
                 Import(Expression* value);
+                Expression* m_value;
+};
+
+class ArrayLiteral: public Expression{
+
+        public:
+                string name() override;
+                ArrayLiteral(Literal* iden, Expression* value);
+                Literal* m_iden;
                 Expression* m_value;
 };
 #endif

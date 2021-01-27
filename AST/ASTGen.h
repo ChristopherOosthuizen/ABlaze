@@ -30,6 +30,7 @@ class ASTGen{
         Decleration* decleration(Literal* type, bool initalize); // constucts a decleration AST type
         FunctionCall* functionCall(Literal* name); // construct a function call object
         Body* body(Literal* type); // cosntruct a body such as if while for and def
+        ArrayLiteral* arrayLiteral(Literal* name); // generate a arrayLiteral
 
 };
 

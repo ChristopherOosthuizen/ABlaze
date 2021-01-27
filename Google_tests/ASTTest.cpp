@@ -87,7 +87,7 @@ TEST(ASTGen, Decleration){
         ASTGen gen(lexer.readAllTokens());
         Decleration* dec = (Decleration*)gen.generateAST()->m_lines->at(0);
         ASSERT_TRUE(dec !=nullptr);
-        ASSERT_EQ(dec->m_name->m_token->m_symbol,"hello");
+        ASSERT_EQ(((Literal*)dec->m_name)->m_token->m_symbol,"hello");
         ASSERT_TRUE(dec->m_value !=nullptr);
         ASSERT_EQ(((Literal*)dec->m_value)->m_token->m_symbol,"right");
 
@@ -296,11 +296,6 @@ TEST(Power, basic){
         ASSERT_EQ(op->m_left->name(),"BinOP");
         op = (BinOP*)op->m_left;
         ASSERT_EQ(op->m_op->m_type,TokenType::TIMES);
-
-}
-
-//Built in functions
-TEST(Idens,builtinFUnctions){
 
 }
 

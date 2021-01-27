@@ -13,12 +13,13 @@ BinOP::BinOP(Expression* left, Token* op, Expression* right){
 }
 string BinOP::name(){return "BinOP";}
 
-Decleration::Decleration(Literal* type, Literal* name ,Literal* op, Expression* value, bool initalize){
+Decleration::Decleration(Literal* type, Expression* name ,Literal* op, Expression* value, bool initalize, bool isArray){
     m_name = name; 
     m_op = op;
     m_value = value;
     m_type = type;
     m_initalize= initalize;
+    m_isArray = isArray;
 }
 string Decleration::name(){return "Decleration";}
 
@@ -86,4 +87,11 @@ Import::Import(Expression* value){
 }
 
 string Import::name(){ return "Import";}
+
+ArrayLiteral::ArrayLiteral(Literal* iden, Expression* value){
+        m_value = value;
+        m_iden = iden;
+}
+
+string ArrayLiteral::name(){ return "ArrayLiteral";};
 

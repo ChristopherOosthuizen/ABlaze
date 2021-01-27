@@ -117,6 +117,7 @@ bool ASTGen::isCloser(Token* token){
         switch(token->m_type){
                 case TokenType::COMMA:
                 case TokenType::SEMI_COLON:
+                case TokenType::CLOSE_BRACKET:
                case TokenType::CLOSE_PARENTHESE: return true;
         }
         return false;        
@@ -142,6 +143,10 @@ Expression* ASTGen::expression(Expression* expr){
                 if(isOP(peek())) 
                         return binaryOperation(expr);
         }
+        if(expr->name() == "ArrayLiteral"){
+                if(isEquals(peek()))
+                        return new Decleration(NULL,expr,new Literal(next()),expression(new Literal(next())),false,false);
+        }
         if(expr->name() == "BinOP"){
                 if(!isOP(peek()))
                         return expr;
@@ -161,8 +166,13 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::IDEN_STRING:
                 case TokenType::IDEN_DOUBLE:
                 case TokenType::VAR: 
+                        if(equals(peek(),TokenType::OPEN_BRACKET))
+                                return expression(arrayLiteral((Literal*)expr));
+
+
                         if(equals(peek(1),TokenType::OPEN_PARENTHESE))
                                 return body((Literal*)expr);
+
                         return decleration((Literal*)expr, true);
                 case TokenType::OPEN_PARENTHESE: return expression(new Literal(next()));
                 case TokenType::IDEN:
@@ -172,6 +182,8 @@ Expression* ASTGen::expression(Expression* expr){
                                               return functionCall((Literal*)expr);
                                       else if(isEquals(peek()))
                                                       return decleration((Literal*)expr,false);
+                                        else if(equals(peek(),TokenType::OPEN_BRACKET))
+                                                return expression(arrayLiteral((Literal*)expr));
                 case TokenType::STRING:
                 case TokenType::DOUBLE:
                 case TokenType::BOOL:
@@ -223,16 +235,21 @@ Expression* ASTGen::binaryOperation(Expression* left){
 // var name = 12
 Decleration* ASTGen::decleration(Literal* type, bool initalize){
     Literal* name ;
+    bool isArray = false;
+    if(equals(peek(),TokenType::COLON)){
+        isArray = true;
+        next();
+    }
     if(equals(type->m_token,TokenType::IDEN))
             name= type;
     else{
         name=new Literal(next());
     }
     if(equals(peek(),TokenType::SEMI_COLON)){
-        return new Decleration(type, name,NULL, NULL,initalize);
+        return new Decleration(type, name,NULL, NULL,initalize,false);
     }
         Literal* op = new Literal(next());
-    return new Decleration(type, name, op, expression(new Literal(next())),initalize);
+    return new Decleration(type, name, op, expression(new Literal(next())),initalize,isArray);
 }
 
 
@@ -279,4 +296,11 @@ Body* ASTGen::body(Literal* type){
         }
        return new Body(bod,lines); 
 
+}
+
+ArrayLiteral* ASTGen::arrayLiteral(Literal* name){
+        next();
+        Expression* value = expression(new Literal(next()));
+        next();
+        return new ArrayLiteral(name,value);
 }

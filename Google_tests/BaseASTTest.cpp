@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 #include "Lexer.h"
 #include "ASTGen.h"
+#include "ErrorThrower.h"
 
 /*
  * Test weather the generator can 
@@ -95,4 +96,22 @@ TEST(ASTSTRUT, Imports){
         ASSERT_EQ(body->m_lines->at(0)->name(),"Import");
  
 }
+
+//Test whether arrays and be created by the ASTGen
+TEST(ASTSTRUT, array){
+        Lexer lexer("int: list = int[12]; int i = list[12]; list[i] = 12;");
+        ASTGen gen(lexer.readAllTokens());
+        ASSERT_TRUE(!ErrorThrower::hasError);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),3);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_TRUE((((Decleration*)body->m_lines->at(0))->m_isArray));
+        ASSERT_EQ((((Decleration*)body->m_lines->at(0))->m_value)->name(),"ArrayLiteral");
+        ASSERT_TRUE(body->m_lines->at(1) != nullptr);
+        ASSERT_EQ(body->m_lines->at(1)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(2) != nullptr);
+        ASSERT_EQ(body->m_lines->at(2)->name(),"Decleration");
+}
+
 
