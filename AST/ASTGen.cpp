@@ -16,7 +16,7 @@ Body* ASTGen::generateAST(){
         vector<Expression*>* lines = new vector<Expression*>;
         while(peek() != NULL){
                 lines->push_back(expression(new Literal(next())));
-                next();
+                delete next();
         }
         return new Body(NULL,lines);
 }
@@ -211,7 +211,7 @@ Expression* ASTGen::binaryOperation(Expression* left){
 
 
        if(equals(peek(),TokenType::CLOSE_PARENTHESE)){
-                        next();
+                        delete next();
                        return expression(new BinOP(left,op,right)); 
 
         }
@@ -238,7 +238,7 @@ Decleration* ASTGen::decleration(Literal* type, bool initalize){
     bool isArray = false;
     if(equals(peek(),TokenType::COLON)){
         isArray = true;
-        next();
+        delete next();
     }
     if(equals(type->m_token,TokenType::IDEN))
             name= type;
@@ -256,14 +256,14 @@ Decleration* ASTGen::decleration(Literal* type, bool initalize){
 // construct a fucntion call 
 // object based on parmaters
 FunctionCall* ASTGen::functionCall(Literal* name){
-        next();
+        delete next();
         vector<Expression*>* args = new vector<Expression*>;
         if(!equals(peek(),TokenType::CLOSE_PARENTHESE)){
                do{
                         args->push_back(expression(new Literal(next())));          
                }while(equals(next(),TokenType::COMMA));
         }else{
-                next();
+                delete next();
         }
         return new FunctionCall(name,args);
 }
@@ -273,7 +273,7 @@ FunctionCall* ASTGen::functionCall(Literal* name){
 Body* ASTGen::body(Literal* type){
         Expression* bod; 
         Expression* initial =expression(new Literal(next())); 
-        next();
+        delete next();
         switch(type->m_token->m_type){
                 case TokenType::VOID:
                 case TokenType::VAR: 
@@ -281,26 +281,26 @@ Body* ASTGen::body(Literal* type){
                 case TokenType::IF: bod =new IfStat(initial); break;
                 case TokenType::WHILE: bod = new WhileStat(initial); break;
                 case TokenType::FOR: Expression* condition = expression(new Literal(next()));
-                                     next();
+                                     delete next();
                                      Expression* repitition= expression(new Literal(next()));
-                                     next();
+                                     delete next();
                                      bod = new ForStat(initial,condition,repitition);break;
 
 
         }
-        next();
+        delete next();
         vector<Expression*>* lines = new vector<Expression*>();
         while(!equals(peek(),TokenType::CLOSE_BRACE)){
                lines->push_back(expression(new Literal(next())));
-                next();
+                delete next();
         }
        return new Body(bod,lines); 
 
 }
 
 ArrayLiteral* ASTGen::arrayLiteral(Literal* name){
-        next();
+        delete next();
         Expression* value = expression(new Literal(next()));
-        next();
+        delete next();
         return new ArrayLiteral(name,value);
 }

@@ -34,11 +34,13 @@ TEST(ASTbasic,operations){
 TEST(ASTbasic,pemdas){
 	Lexer lexer("5*8+2;");
 	ASTGen astgen(lexer.readAllTokens());
-	BinOP* expr = (BinOP*)astgen.generateAST()->m_lines->at(0);
+        Body* body = astgen.generateAST();
+	BinOP* expr = (BinOP*)body->m_lines->at(0);
 	Token* token = expr->m_op;
 	ASSERT_EQ(token->m_type,TokenType::PLUS);
 	ASSERT_EQ(((BinOP*)expr->m_left)->m_op->m_type,TokenType::TIMES);
 
+        delete  body;
 }
 
 
