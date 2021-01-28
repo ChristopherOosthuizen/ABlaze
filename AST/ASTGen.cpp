@@ -145,8 +145,9 @@ Expression* ASTGen::expression(Expression* expr){
                         return binaryOperation(expr);
         }
         if(expr->name() == "ArrayLiteral"){
-                if(isEquals(peek()))
+                if(isEquals(peek())){
                         return new Decleration(NULL,expr,new Literal(next()),expression(new Literal(next())),false,false);
+                }
         }
         if(expr->name() == "BinOP"){
                 if(!isOP(peek()))
@@ -159,8 +160,10 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::READFILE:
                 case TokenType::WRITEFILE:
                 case TokenType::INPUT: return functionCall((Literal*)expr);
-                case TokenType::IMPORT:return new Import(expression(new Literal(next()))); 
-                case TokenType::RETURN: return new Return(expression(new Literal(next())));
+                case TokenType::IMPORT: delete expr;
+                                       return new Import(expression(new Literal(next()))); 
+                case TokenType::RETURN:  delete expr;
+                                        return new Return(expression(new Literal(next())));
                 case TokenType::VOID: return body((Literal*)expr);
                 case TokenType::IDEN_INT:
                 case TokenType::IDEN_BOOL:
