@@ -30,3 +30,12 @@ void ErrorThrower::unterminatedString(int line){
 	errors->push_back(error);
 
 }
+
+
+void ErrorThrower::missingSemiColon(int line){
+	string error = "Error: missing semi colon on line "+ to_string(line);
+	hasError = true;
+
+	errors->push_back(error);
+
+}

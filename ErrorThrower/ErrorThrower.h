@@ -18,5 +18,6 @@ public:
 	static void invalidToken(char symbol, int line); // meant to be thrown when a token is not recognized
 	static void doubleDot(int line); // thrown when a double has two dots
 	static void unterminatedString(int line); // thrown when a string does not have a closing "
+        static void missingSemiColon(int line);
 };
 #endif

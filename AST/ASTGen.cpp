@@ -3,6 +3,7 @@
 // A based off a list of tokens constructed by a lexer
 #include "ASTGen.h"
 #include "AST.h"
+#include "ErrorThrower.h"
 
 
 ASTGen::ASTGen(vector<Token*> tokens){
@@ -245,7 +246,7 @@ Decleration* ASTGen::decleration(Literal* type, bool initalize){
     else{
         name=new Literal(next());
     }
-    if(equals(peek(),TokenType::SEMI_COLON)){
+    if(isCloser(peek())){
         return new Decleration(type, name,NULL, NULL,initalize,false);
     }
         Literal* op = new Literal(next());
@@ -288,11 +289,16 @@ Body* ASTGen::body(Literal* type){
 
 
         }
-        delete next();
+        if(equals(peek(),TokenType::OPEN_BRACE))
+                delete next();
         vector<Expression*>* lines = new vector<Expression*>();
         while(!equals(peek(),TokenType::CLOSE_BRACE)){
                lines->push_back(expression(new Literal(next())));
-                delete next();
+               if(equals(peek(),TokenType::SEMI_COLON)){
+                        delete next();
+               }else{
+                       ErrorThrower::missingSemiColon(peek()->m_line+1);
+               }
         }
        return new Body(bod,lines); 
 
