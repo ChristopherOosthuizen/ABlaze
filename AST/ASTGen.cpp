@@ -259,10 +259,14 @@ Decleration* ASTGen::decleration(Literal* type, bool initalize){
 FunctionCall* ASTGen::functionCall(Literal* name){
         delete next();
         vector<Expression*>* args = new vector<Expression*>;
+
         if(!equals(peek(),TokenType::CLOSE_PARENTHESE)){
+                bool isComma = false;
                do{
                         args->push_back(expression(new Literal(next())));          
-               }while(equals(next(),TokenType::COMMA));
+                        isComma = equals(peek(),TokenType::COMMA);
+                        delete next();
+               }while(isComma);
         }else{
                 delete next();
         }
