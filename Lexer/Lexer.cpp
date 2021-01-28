@@ -176,6 +176,8 @@ Token* Lexer::next() {
 								 return new Token(TokenType::DOT,".",m_line);
 
         case ' ':return next();
+        case '\n': m_line++;
+                   return next();
 	case '\0': return new Token(TokenType::END,"\0",m_line);
 	case '"': return strings();
 	

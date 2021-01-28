@@ -277,6 +277,11 @@ Body* ASTGen::body(Literal* type){
         delete next();
         switch(type->m_token->m_type){
                 case TokenType::VOID:
+                case TokenType::IDEN_INT:
+                case TokenType::IDEN_BOOL:
+                case TokenType::IDEN_STRING:
+                case TokenType::IDEN_DOUBLE:
+ 
                 case TokenType::VAR: 
                         bod = new Function(type,(FunctionCall*)initial); break;
                 case TokenType::IF: bod =new IfStat(initial); break;
