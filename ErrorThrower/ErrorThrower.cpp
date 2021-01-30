@@ -39,3 +39,10 @@ void ErrorThrower::missingSemiColon(int line){
 	errors->push_back(error);
 
 }
+
+void ErrorThrower::illgalIdentifier(int line){
+	string error = "Illigal identifer used in decleration "+ to_string(line);
+	hasError = true;
+
+	errors->push_back(error);
+}

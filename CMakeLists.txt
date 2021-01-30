@@ -10,4 +10,3 @@ add_subdirectory(Lexer)
 add_subdirectory(ErrorThrower)
 add_subdirectory(AST)
 add_subdirectory(Sematic)
-
