@@ -41,7 +41,14 @@ void ErrorThrower::missingSemiColon(int line){
 }
 
 void ErrorThrower::illgalIdentifier(int line){
-	string error = "Illigal identifer used in decleration "+ to_string(line);
+	string error = "Illigal identifer used in decleration on line: "+ to_string(line);
+	hasError = true;
+
+	errors->push_back(error);
+}
+
+void ErrorThrower::unIntiazlizedVarible(int line){
+	string error = "Uniniazlized varible on line: "+ to_string(line);
 	hasError = true;
 
 	errors->push_back(error);

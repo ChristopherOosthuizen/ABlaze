@@ -15,7 +15,7 @@ ASTGen::ASTGen(vector<Token*> tokens){
 // the construction
 Body* ASTGen::generateAST(){
         vector<Expression*>* lines = new vector<Expression*>;
-        while(peek() != NULL){
+        while(peek() != NULL&& peek()->m_type != TokenType::END){
                 lines->push_back(expression(new Literal(next())));
                 delete next();
         }
@@ -154,6 +154,9 @@ Expression* ASTGen::expression(Expression* expr){
                         return expr;
                 return binaryOperation(expr);
         }
+	if(isEquals(peek()))
+		return decleration((Literal*)expr,false);
+     
         switch(((Literal*)expr)->m_token->m_type){
                 case TokenType::PRINT:
                 case TokenType::PRINTLN:
@@ -184,9 +187,7 @@ Expression* ASTGen::expression(Expression* expr){
                                                 return expression(new Unary(new Literal(next()), (Literal*)expr,true)); 
                                       else if(equals(peek(),TokenType::OPEN_PARENTHESE))
                                               return functionCall((Literal*)expr);
-                                      else if(isEquals(peek()))
-                                                      return decleration((Literal*)expr,false);
-                                        else if(equals(peek(),TokenType::OPEN_BRACKET))
+                                       else if(equals(peek(),TokenType::OPEN_BRACKET))
                                                 return expression(arrayLiteral((Literal*)expr));
                 case TokenType::STRING:
                 case TokenType::DOUBLE:
@@ -244,7 +245,7 @@ Decleration* ASTGen::decleration(Literal* type, bool initalize){
         isArray = true;
         delete next();
     }
-    if(equals(type->m_token,TokenType::IDEN))
+    if(!initalize)
             name= type;
     else{
         name=new Literal(next());
@@ -252,6 +253,7 @@ Decleration* ASTGen::decleration(Literal* type, bool initalize){
     if(isCloser(peek())){
         return new Decleration(type, name,NULL, NULL,initalize,false);
     }
+
         Literal* op = new Literal(next());
     return new Decleration(type, name, op, expression(new Literal(next())),initalize,isArray);
 }

@@ -20,5 +20,6 @@ public:
 	static void unterminatedString(int line); // thrown when a string does not have a closing "
     static void missingSemiColon(int line);
 	static void illgalIdentifier(int line);
+	static void unIntiazlizedVarible(int line);
 };
 #endif
