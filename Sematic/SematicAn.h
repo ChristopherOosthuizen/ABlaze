@@ -11,6 +11,6 @@ class SematicAn{
 		void analize();
 		void checkForReservedKeywords(Body* body);
 		void checkVaribles(Body* body,map<string,TokenType>* variables);
-    
+		TokenType endType(Expression* expr);    
 };
 #endif

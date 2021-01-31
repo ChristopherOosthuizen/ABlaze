@@ -69,3 +69,25 @@ void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables)
 	}
 
 }
+
+//Determine the token type through a function
+TokenType SematicAn::endType(Expression* expr){
+	if(expr->name() == "Literal"){
+		return ((Literal*) expr)->m_token->m_type;
+	}
+	BinOP* oper = (BinOP*)expr;
+	TokenType left = endType(oper->m_left);
+	TokenType right = endType(oper->m_right);
+	if(left == TokenType::STRING || right == TokenType::STRING){
+		return TokenType::STRING;
+	}
+	if(left == TokenType::DOUBLE || right == TokenType::DOUBLE){
+		return TokenType::DOUBLE;
+	
+	}
+	if(left == TokenType::INT || right == TokenType::INT ){
+		return TokenType::INT;
+	
+	}
+	return TokenType::BOOL;
+}

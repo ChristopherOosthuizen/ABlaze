@@ -34,3 +34,34 @@ TEST(SematicAn, outOfScpoer){
 	ASSERT_TRUE(ErrorThrower::hasError);
 	ASSERT_EQ(ErrorThrower::errors->size(),1);
 }
+
+//check to see if the sematic anlisis will throw a error if the wrong type of decleration is used on a varible
+TEST(SematicAn,wrongUse){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	Lexer lexer("int i = 6.8; double it = 12; string itts = 12; bool bill= 5.3; string es = true;");
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),4);
+}
+
+//Test weather the Determine type functions can correctly deduce types
+TEST(SematicAn,typer){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	Lexer lexer("6.8; 12; 12+6.8; 5+\"hello\"; true; \"hello\"+6.8");
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	ASSERT_EQ(an.endType(body->m_lines->at(0)),TokenType::DOUBLE);
+	ASSERT_EQ(an.endType(body->m_lines->at(1)),TokenType::INT);
+	ASSERT_EQ(an.endType(body->m_lines->at(2)),TokenType::DOUBLE);
+	ASSERT_EQ(an.endType(body->m_lines->at(3)),TokenType::STRING);
+	ASSERT_EQ(an.endType(body->m_lines->at(4)),TokenType::BOOL);
+	ASSERT_EQ(an.endType(body->m_lines->at(5)),TokenType::STRING);
+}
