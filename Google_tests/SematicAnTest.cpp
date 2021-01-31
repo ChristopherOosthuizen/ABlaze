@@ -58,10 +58,10 @@ TEST(SematicAn,typer){
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
 	SematicAn an(body);
-	ASSERT_EQ(an.endType(body->m_lines->at(0)),TokenType::DOUBLE);
-	ASSERT_EQ(an.endType(body->m_lines->at(1)),TokenType::INT);
-	ASSERT_EQ(an.endType(body->m_lines->at(2)),TokenType::DOUBLE);
-	ASSERT_EQ(an.endType(body->m_lines->at(3)),TokenType::STRING);
-	ASSERT_EQ(an.endType(body->m_lines->at(4)),TokenType::BOOL);
-	ASSERT_EQ(an.endType(body->m_lines->at(5)),TokenType::STRING);
+	ASSERT_EQ(an.endType(body->m_lines->at(0),nullptr),TokenType::DOUBLE);
+	ASSERT_EQ(an.endType(body->m_lines->at(1),nullptr),TokenType::INT);
+	ASSERT_EQ(an.endType(body->m_lines->at(2),nullptr ),TokenType::DOUBLE);
+	ASSERT_EQ(an.endType(body->m_lines->at(3),nullptr),TokenType::STRING);
+	ASSERT_EQ(an.endType(body->m_lines->at(4),nullptr),TokenType::BOOL);
+	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr),TokenType::STRING);
 }

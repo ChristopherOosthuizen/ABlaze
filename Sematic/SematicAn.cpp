@@ -71,13 +71,18 @@ void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables)
 }
 
 //Determine the token type through a function
-TokenType SematicAn::endType(Expression* expr){
+TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars){
 	if(expr->name() == "Literal"){
-		return ((Literal*) expr)->m_token->m_type;
+		TokenType type =((Literal*) expr)->m_token->m_type; 
+		if(type != TokenType::IDEN)
+			return ((Literal*) expr)->m_token->m_type;
+		string name =((Literal*)expr)->m_token->m_symbol ;
+		TokenType str = (*vars)[name]; 
+		return str; 
 	}
 	BinOP* oper = (BinOP*)expr;
-	TokenType left = endType(oper->m_left);
-	TokenType right = endType(oper->m_right);
+	TokenType left = endType(oper->m_left,vars);
+	TokenType right = endType(oper->m_right,vars);
 	if(left == TokenType::STRING || right == TokenType::STRING){
 		return TokenType::STRING;
 	}
