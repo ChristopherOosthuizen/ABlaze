@@ -10,6 +10,7 @@ SematicAn::SematicAn(Body* body){
 
 void SematicAn::analize(){
 	checkForReservedKeywords(m_body);
+	checkVaribles(m_body,nullptr);
 }
 
 
@@ -39,8 +40,8 @@ void SematicAn::checkForReservedKeywords(Body* body){
 }
 
 //check to see if varibles are declared and idntified correctly
-void SematicAn::checkVaribles(Body* body, map<string,TokenType>* variables){
-	map<string,TokenType>* varibles = new map<string,TokenType>();
+void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables){
+	map<string,TokenType>* variables = new map<string,TokenType>();
 	for(Expression* expr: *(body->m_lines)){
 		if(expr->name() == "Decleration"){
 			Decleration* dec = (Decleration*)expr;
