@@ -53,3 +53,10 @@ void ErrorThrower::unIntiazlizedVarible(int line){
 
 	errors->push_back(error);
 }
+
+void ErrorThrower::mismatchType(int line){
+	string error = "Error: mismatch type in decleration on line: "+ to_string(line);
+	hasError = true;
+
+	errors->push_back(error);
+}

@@ -18,6 +18,7 @@ TEST(SematicAn, reservedKeywords){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
 
 }
 
@@ -46,7 +47,7 @@ TEST(SematicAn,wrongUse){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),4);
+	ASSERT_EQ(ErrorThrower::errors->size(),5);
 }
 
 //Test weather the Determine type functions can correctly deduce types
@@ -58,10 +59,10 @@ TEST(SematicAn,typer){
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
 	SematicAn an(body);
-	ASSERT_EQ(an.endType(body->m_lines->at(0),nullptr),TokenType::DOUBLE);
-	ASSERT_EQ(an.endType(body->m_lines->at(1),nullptr),TokenType::INT);
-	ASSERT_EQ(an.endType(body->m_lines->at(2),nullptr ),TokenType::DOUBLE);
-	ASSERT_EQ(an.endType(body->m_lines->at(3),nullptr),TokenType::STRING);
-	ASSERT_EQ(an.endType(body->m_lines->at(4),nullptr),TokenType::BOOL);
-	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr),TokenType::STRING);
+	ASSERT_EQ(an.endType(body->m_lines->at(0),nullptr),TokenType::IDEN_DOUBLE);
+	ASSERT_EQ(an.endType(body->m_lines->at(1),nullptr),TokenType::IDEN_INT);
+	ASSERT_EQ(an.endType(body->m_lines->at(2),nullptr ),TokenType::IDEN_DOUBLE);
+	ASSERT_EQ(an.endType(body->m_lines->at(3),nullptr),TokenType::IDEN_STRING);
+	ASSERT_EQ(an.endType(body->m_lines->at(4),nullptr),TokenType::IDEN_BOOL);
+	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr),TokenType::IDEN_STRING);
 }

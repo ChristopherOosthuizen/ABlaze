@@ -21,5 +21,6 @@ public:
     static void missingSemiColon(int line);
 	static void illgalIdentifier(int line);
 	static void unIntiazlizedVarible(int line);
+	static void mismatchType(int line);
 };
 #endif

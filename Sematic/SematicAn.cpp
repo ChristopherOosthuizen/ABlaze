@@ -47,13 +47,14 @@ void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables)
 			Decleration* dec = (Decleration*)expr;
 			string name;
 			TokenType type;
+			TokenType actual = endType(dec->m_value,variables);
 			int line;
 			if(dec->m_name->name() == "ArrayLiteral"){
-					type = ((ArrayLiteral*)dec->m_name)->m_iden->m_token->m_type;
+					type = ((ArrayLiteral*)dec->m_type)->m_iden->m_token->m_type;
 					name = ((ArrayLiteral*)dec->m_name)->m_iden->m_token->m_symbol;
 					line = ((ArrayLiteral*)dec->m_name)->m_iden->m_token->m_line;
 			}else{
-				type = ((Literal*)dec->m_name)->m_token->m_type;
+				type = ((Literal*)dec->m_type)->m_token->m_type;
 				name = ((Literal*)dec->m_name)->m_token->m_symbol;
 				line = ((Literal*)dec->m_name)->m_token->m_line;
 
@@ -63,7 +64,12 @@ void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables)
 			}else {
 				if(!variables->count(name)){
 					ErrorThrower::unIntiazlizedVarible(line);
+					continue;
 				}
+			}
+			if(actual != type ){
+				ErrorThrower::mismatchType(line);
+				continue;
 			}
 		}
 	}
@@ -74,8 +80,16 @@ void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables)
 TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars){
 	if(expr->name() == "Literal"){
 		TokenType type =((Literal*) expr)->m_token->m_type; 
-		if(type != TokenType::IDEN)
+		if( type != TokenType::IDEN){
+			switch(((Literal*) expr)->m_token->m_type){
+				case TokenType::DOUBLE: return TokenType::IDEN_DOUBLE;
+				case TokenType::BOOL: return TokenType::IDEN_BOOL;
+				case TokenType::STRING: return TokenType::IDEN_STRING;
+				case TokenType::INT: return TokenType::IDEN_INT;
+
+			}
 			return ((Literal*) expr)->m_token->m_type;
+		}
 		string name =((Literal*)expr)->m_token->m_symbol ;
 		TokenType str = (*vars)[name]; 
 		return str; 
@@ -83,16 +97,16 @@ TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars){
 	BinOP* oper = (BinOP*)expr;
 	TokenType left = endType(oper->m_left,vars);
 	TokenType right = endType(oper->m_right,vars);
-	if(left == TokenType::STRING || right == TokenType::STRING){
-		return TokenType::STRING;
+	if(left == TokenType::IDEN_STRING || right == TokenType::IDEN_STRING){
+		return TokenType::IDEN_STRING;
 	}
-	if(left == TokenType::DOUBLE || right == TokenType::DOUBLE){
-		return TokenType::DOUBLE;
+	if(left == TokenType::IDEN_DOUBLE || right == TokenType::IDEN_DOUBLE){
+		return TokenType::IDEN_DOUBLE;
 	
 	}
-	if(left == TokenType::INT || right == TokenType::INT ){
-		return TokenType::INT;
+	if(left == TokenType::IDEN_INT || right == TokenType::IDEN_INT ){
+		return TokenType::IDEN_INT;
 	
 	}
-	return TokenType::BOOL;
+	return TokenType::IDEN_BOOL;
 }
