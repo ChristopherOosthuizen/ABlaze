@@ -66,3 +66,17 @@ TEST(SematicAn,typer){
 	ASSERT_EQ(an.endType(body->m_lines->at(4),nullptr),TokenType::IDEN_BOOL);
 	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr),TokenType::IDEN_STRING);
 }
+
+//detemine wether the sematic can determine that varibles used within scope with structures are accurtly protrayed
+TEST(Sematic,structures){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	Lexer lexer("int fith = 6;for(int i =0; i<12;i++){i =6; fith = 12;}");
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(!ErrorThrower::hasError);
+
+}

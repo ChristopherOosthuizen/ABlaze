@@ -1,4 +1,4 @@
-//
+//printValue
 // Created by chris on 12/20/20.
 // The specific types of a Token
 // ex: + is PLUS
@@ -8,7 +8,9 @@
 
 #ifndef ABLAZE_TOKENTYPE_H
 #define ABLAZE_TOKENTYPE_H
-
+#include <string>
+#include <vector>
+using namespace std;
 enum class TokenType{
   // Operators
   PLUS , MINUS , TIMES , DIVIDE , REMAND,
@@ -41,7 +43,7 @@ enum class TokenType{
   IF,FOR,WHILE,
 
   //Primitve idententifers
-       IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE, 
-
+       IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,
+	  
 };
 #endif //ABLAZE_TOKENTYPE_H

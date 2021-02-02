@@ -57,6 +57,72 @@ vector<Token*> Lexer::readAllTokens(){
     return tokens;
 }
 
+string Lexer::typeToString(TokenType type){
+	switch(type){
+		case TokenType::PLUS:return "PLUS";
+		case TokenType::MINUS  :return "MINUS";
+		case TokenType::TIMES  :return "TIMES";
+		case TokenType::DIVIDE  :return "DIVIDE";
+		case TokenType::REMAND :return "REMAN";
+		case TokenType::PLUS_PLUS  :return "PLUS_PLUS";
+		case TokenType::MINUS_MINUS  :return "MINUS_MINUS";
+		case TokenType::TIMES_TIMES :return "TIMES_TIME";
+		case TokenType::DIVIDE_DIVIDE :return "DIVIDE_DIVID";
+		case TokenType::EQUAL :return "EQUAL";
+		case TokenType::EQUAL_EQUAL :return "EQUAL_EQUAL";
+		case TokenType::PLUS_EQUAL :return "PLUS_EQUAL";
+		case TokenType::MINUS_EQUAL :return "MINUS_EQUAL";
+		case TokenType::TIMES_EQUAL :return "TIMES_EQUAL";
+		case TokenType::DIVIDE_EQUAL :return "DIVIDE_EQUAL";
+		case TokenType::LESS_EQUAL :return "LESS_EQUAL";
+		case TokenType::MORE_EQUAL :return "MORE_EQUAL";
+		case TokenType::NOT_EQUAL :return "NOT_EQUAL";
+		case TokenType::MOD_EQUAL :return "MOD_EQUAL";
+		case TokenType::AND :return "AND";
+		case TokenType::OR :return "OR";
+		case TokenType::XOR :return "XOR";
+		case TokenType::NOT :return "NOT";
+		case TokenType::GREATER :return "GREATER";
+		case TokenType::LESS :return "LESS";
+		case TokenType::OR_OR :return "OR_OR";
+		case TokenType::AND_AND :return "AND_AND";
+		case TokenType::INT: return "INT";  
+		case TokenType::DOUBLE : return "DOUBLE";  
+		case TokenType::CHAR : return "CHAR";  
+		case TokenType::STRING : return "STRING";  
+		case TokenType::BOOL : return "BOOL";  
+		case TokenType::IDEN : return "IDEN";  
+		case TokenType::OPEN_PARENTHESE : return "OPEN_PARENTHESE";  
+		case TokenType::CLOSE_PARENTHESE : return "CLOSE_PARENTHESE";  
+		case TokenType::OPEN_BRACKET : return "OPEN_BRACKET";  
+		case TokenType::CLOSE_BRACKET : return "CLOSE_BRACKET";  
+		case TokenType::OPEN_BRACE : return "OPEN_BRACE";  
+		case TokenType::CLOSE_BRACE : return "CLOSE_BRACE";  
+		case TokenType::SEMI_COLON : return "SEMI_COLON";  
+		case TokenType::COLON : return "COLON";  
+		case TokenType::DOT : return "DOT";  
+		case TokenType::COMMA : return "COMMA";  
+		case TokenType::END : return "END";  
+		case TokenType::PRINT : return "PRINT";  
+		case TokenType::PRINTLN : return "PRINTLN";  
+		case TokenType::IMPORT : return "IMPORT";  
+		case TokenType::READFILE : return "READFILE";  
+		case TokenType::WRITEFILE : return "WRITEFILE";  
+		case TokenType::INPUT : return "INPUT";  
+		case TokenType::VAR : return "VAR";  
+		case TokenType::VOID : return "VOID";  
+		case TokenType::RETURN : return "RETURN";  
+		case TokenType::IF : return "IF";  
+		case TokenType::FOR : return "FOR";  
+		case TokenType::WHILE : return "WHILE";  
+		case TokenType::IDEN_INT : return "IDEN_INT";  
+		case TokenType::IDEN_BOOL : return "IDEN_BOOL";  
+		case TokenType::IDEN_STRING : return "IDEN_STRING";  
+		case TokenType::IDEN_DOUBLE : return "IDEN_DOUBLE";  
+	}
+	return "";
+}
+
 /*
  * converts the char at m_pos
  * into a Token and increments pos

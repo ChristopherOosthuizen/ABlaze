@@ -40,22 +40,23 @@ void ErrorThrower::missingSemiColon(int line){
 
 }
 
-void ErrorThrower::illgalIdentifier(int line){
-	string error = "Illigal identifer used in decleration on line: "+ to_string(line);
+void ErrorThrower::illgalIdentifier(int line,string symbol){
+	string error = "Error name:" +symbol +" on line: "+to_string(line) +" can not be used as a identifier because it is reserved"; 
 	hasError = true;
 
 	errors->push_back(error);
 }
 
-void ErrorThrower::unIntiazlizedVarible(int line){
-	string error = "Uniniazlized varible on line: "+ to_string(line);
+void ErrorThrower::unIntiazlizedVarible(int line,string symbol){
+	string error = "Uniniazlized varible '"+symbol+"' on line: "+ to_string(line);
 	hasError = true;
 
 	errors->push_back(error);
 }
 
-void ErrorThrower::mismatchType(int line){
-	string error = "Error: mismatch type in decleration on line: "+ to_string(line);
+void ErrorThrower::mismatchType(int line, string symbol, string type, string actual){
+
+	string error = "Error: mismatch type in decleration with name: "+symbol+" on line: "+ to_string(line)+" Type declared with : "+(type)+" but actual value is: "+(actual);
 	hasError = true;
 
 	errors->push_back(error);

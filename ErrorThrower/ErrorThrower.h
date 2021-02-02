@@ -19,8 +19,8 @@ public:
 	static void doubleDot(int line); // thrown when a double has two dots
 	static void unterminatedString(int line); // thrown when a string does not have a closing "
     static void missingSemiColon(int line);
-	static void illgalIdentifier(int line);
-	static void unIntiazlizedVarible(int line);
-	static void mismatchType(int line);
+	static void illgalIdentifier(int line, string symbol);
+	static void unIntiazlizedVarible(int line,string symbol);
+	static void mismatchType(int line,string symbol, string type, string actual);
 };
 #endif

@@ -9,66 +9,57 @@ SematicAn::SematicAn(Body* body){
 }
 
 void SematicAn::analize(){
-	checkForReservedKeywords(m_body);
 	checkVaribles(m_body,nullptr);
-}
-
-
-//Check to make sure that not decleration is using a reserved keyword
-void SematicAn::checkForReservedKeywords(Body* body){
-	vector<Expression*>* expressions = body->m_lines;
-	for(Expression* expr : *(expressions)){
-		if(expr->name() == "Body"){
-			checkForReservedKeywords((Body*)expr);
-		}else if(expr->name() == "Decleration"){
-			Decleration* dec = (Decleration*)expr;
-			TokenType type;
-			int line;
-			if(dec->m_name->name() == "ArrayLiteral"){
-					type = ((ArrayLiteral*)dec->m_name)->m_iden->m_token->m_type;
-					line = ((ArrayLiteral*)dec->m_name)->m_iden->m_token->m_line;
-			}else{
-				type = ((Literal*)dec->m_name)->m_token->m_type;
-				line = ((Literal*)dec->m_name)->m_token->m_line;
-			}
-		if(type != TokenType::IDEN){
-			ErrorThrower::illgalIdentifier(line);
-
-		}
-	}
-}
 }
 
 //check to see if varibles are declared and idntified correctly
 void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables){
 	map<string,TokenType>* variables = new map<string,TokenType>();
+	if(Outervariables != nullptr)
+		variables->insert(Outervariables->begin(), Outervariables->end());
 	for(Expression* expr: *(body->m_lines)){
+		if(expr->name() == "Body"){
+			if(((Body*)expr)->m_control->name() == "For")
+				addFor((ForStat*)((Body*)expr)->m_control,variables);	
+			checkVaribles((Body*)expr,variables);
+		}
 		if(expr->name() == "Decleration"){
 			Decleration* dec = (Decleration*)expr;
 			string name;
 			TokenType type;
+			TokenType nameType;
 			TokenType actual = endType(dec->m_value,variables);
+			string symbol;
 			int line;
 			if(dec->m_name->name() == "ArrayLiteral"){
 					type = ((ArrayLiteral*)dec->m_type)->m_iden->m_token->m_type;
+					nameType = ((ArrayLiteral*)dec->m_name)->m_iden->m_token->m_type;
 					name = ((ArrayLiteral*)dec->m_name)->m_iden->m_token->m_symbol;
 					line = ((ArrayLiteral*)dec->m_name)->m_iden->m_token->m_line;
 			}else{
 				type = ((Literal*)dec->m_type)->m_token->m_type;
+				nameType = ((Literal*)dec->m_name)->m_token->m_type;
 				name = ((Literal*)dec->m_name)->m_token->m_symbol;
 				line = ((Literal*)dec->m_name)->m_token->m_line;
 
+
 			}
+			if(nameType != TokenType::IDEN){
+				ErrorThrower::illgalIdentifier(line,name);
+
+			}
+
 			if(dec->m_initalize){
 				(*variables)[name] =type; 
 			}else {
 				if(!variables->count(name)){
-					ErrorThrower::unIntiazlizedVarible(line);
+					ErrorThrower::unIntiazlizedVarible(line,name);
 					continue;
 				}
+				type = (*variables)[name];
 			}
 			if(actual != type ){
-				ErrorThrower::mismatchType(line);
+				ErrorThrower::mismatchType(line,name,Lexer::typeToString(type),Lexer::typeToString(actual));
 				continue;
 			}
 		}
@@ -109,4 +100,14 @@ TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars){
 	
 	}
 	return TokenType::IDEN_BOOL;
+}
+
+void SematicAn::addFor(ForStat* stat, map<string,TokenType>* vars){
+	Expression* initial = stat->m_initial;
+	if(initial->name() == "Decleration"){
+		Decleration* dec = (Decleration*)initial;
+		Literal* name= (Literal*)dec->m_name;
+		Literal* type = dec->m_type;
+		(*vars)[name->m_token->m_symbol] = type->m_token->m_type;
+	}
 }
