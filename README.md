@@ -1,5 +1,7 @@
 # ABlaze
 
+![logo]logo.png
+
 A programming language for a busy programmer.
 
 ## About this project
