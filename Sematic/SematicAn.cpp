@@ -9,26 +9,33 @@ SematicAn::SematicAn(Body* body){
 }
 
 void SematicAn::analize(){
-	checkVaribles(m_body,nullptr);
+	checkVaribles(m_body,nullptr,nullptr);
 }
 
 //check to see if varibles are declared and idntified correctly
-void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables){
+void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables, map<string,TokenType>* outFunctions){
+	map<string,TokenType>* functions = new map<string,TokenType>();
 	map<string,TokenType>* variables = new map<string,TokenType>();
 	if(Outervariables != nullptr)
 		variables->insert(Outervariables->begin(), Outervariables->end());
+	if(outFunctions!= nullptr)
+		functions->insert(variables->begin(), variables->end());
+
 	for(Expression* expr: *(body->m_lines)){
 		if(expr->name() == "Body"){
-			if(((Body*)expr)->m_control->name() == "For")
+			string typer =((Body*)expr)->m_control->name() ; 
+			if(typer == "For")
 				addFor((ForStat*)((Body*)expr)->m_control,variables);	
-			checkVaribles((Body*)expr,variables);
+			else if(typer == "Function")
+				(*functions)[((Function*)((Body*)expr)->m_control)->m_call->m_name->m_token->m_symbol] = ((Function*)expr)->m_type->m_token->m_type; 	
+			checkVaribles((Body*)expr,variables,functions);
 		}
 		if(expr->name() == "Decleration"){
 			Decleration* dec = (Decleration*)expr;
 			string name;
 			TokenType type;
 			TokenType nameType;
-			TokenType actual = endType(dec->m_value,variables);
+			TokenType actual = endType(dec->m_value,variables,functions);
 			string symbol;
 			int line;
 			if(dec->m_name->name() == "ArrayLiteral"){
@@ -68,7 +75,9 @@ void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables)
 }
 
 //Determine the token type through a function
-TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars){
+TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars ,map<string,TokenType>* funcs){
+	if(expr == nullptr)
+		return TokenType::VOID;
 	if(expr->name() == "Literal"){
 		TokenType type =((Literal*) expr)->m_token->m_type; 
 		if( type != TokenType::IDEN){
@@ -84,10 +93,19 @@ TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars){
 		string name =((Literal*)expr)->m_token->m_symbol ;
 		TokenType str = (*vars)[name]; 
 		return str; 
+	}else if(expr->name() == "FunctionCall"){
+		string name =((FunctionCall*)expr)->m_name->m_token->m_symbol; 
+		if(funcs->count(name) ==0){
+			int line = ((FunctionCall*)expr)->m_name->m_token->m_line;
+			ErrorThrower::unIntiazlizedVarible(line,name);
+
+			return TokenType::VOID;	
+		}
+		return (*funcs)[name];	
 	}
 	BinOP* oper = (BinOP*)expr;
-	TokenType left = endType(oper->m_left,vars);
-	TokenType right = endType(oper->m_right,vars);
+	TokenType left = endType(oper->m_left,vars,funcs);
+	TokenType right = endType(oper->m_right,vars,funcs);
 	if(left == TokenType::IDEN_STRING || right == TokenType::IDEN_STRING){
 		return TokenType::IDEN_STRING;
 	}

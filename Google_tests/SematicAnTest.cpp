@@ -59,12 +59,12 @@ TEST(SematicAn,typer){
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
 	SematicAn an(body);
-	ASSERT_EQ(an.endType(body->m_lines->at(0),nullptr),TokenType::IDEN_DOUBLE);
-	ASSERT_EQ(an.endType(body->m_lines->at(1),nullptr),TokenType::IDEN_INT);
-	ASSERT_EQ(an.endType(body->m_lines->at(2),nullptr ),TokenType::IDEN_DOUBLE);
-	ASSERT_EQ(an.endType(body->m_lines->at(3),nullptr),TokenType::IDEN_STRING);
-	ASSERT_EQ(an.endType(body->m_lines->at(4),nullptr),TokenType::IDEN_BOOL);
-	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr),TokenType::IDEN_STRING);
+	ASSERT_EQ(an.endType(body->m_lines->at(0),nullptr,nullptr),TokenType::IDEN_DOUBLE);
+	ASSERT_EQ(an.endType(body->m_lines->at(1),nullptr,nullptr),TokenType::IDEN_INT);
+	ASSERT_EQ(an.endType(body->m_lines->at(2),nullptr ,nullptr),TokenType::IDEN_DOUBLE);
+	ASSERT_EQ(an.endType(body->m_lines->at(3),nullptr,nullptr),TokenType::IDEN_STRING);
+	ASSERT_EQ(an.endType(body->m_lines->at(4),nullptr,nullptr),TokenType::IDEN_BOOL);
+	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr,nullptr),TokenType::IDEN_STRING);
 }
 
 //detemine wether the sematic can determine that varibles used within scope with structures are accurtly protrayed
@@ -79,4 +79,23 @@ TEST(Sematic,structures){
 	an.analize();
 	ASSERT_TRUE(!ErrorThrower::hasError);
 
+}
+
+// test to see weather the ast can catch wrong typed functions and weather it can handle functions
+TEST(Sematic,Functions){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string voidfunc = "void voider(){print(\"void func\");}\n";
+	string stringfunc = "string roiders(){return \"hello\";}";
+	string noReturn = "int loders(){ int i =0; println(12);}";
+	string main = "int main(){roiders(); voiders(); noiders(); int i = roiders(); string hello = roiders();}";
+	Lexer lexer(voidfunc+stringfunc+noReturn+main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),4);
+	
 }

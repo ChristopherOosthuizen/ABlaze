@@ -11,8 +11,8 @@ class SematicAn{
 	public:
 		SematicAn(Body* body);
 		void analize();
-		void checkVaribles(Body* body,map<string,TokenType>* variables);
-		TokenType endType(Expression* expr, map<string,TokenType>* vars);    
+		void checkVaribles(Body* body,map<string,TokenType>* variables, map<string,TokenType>* functions);
+		TokenType endType(Expression* expr, map<string,TokenType>* vars,map<string,TokenType>* functions);    
 		void addFor(ForStat* stat,map<string,TokenType>* vars);
 		void addFunc(Function* func, map<string,TokenType>* vars);
 };
