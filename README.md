@@ -1,6 +1,6 @@
 # ABlaze
 
-![logo]logo.png
+![logo](logo.png)
 
 A programming language for a busy programmer.
 
