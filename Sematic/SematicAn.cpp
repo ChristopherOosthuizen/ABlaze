@@ -34,6 +34,8 @@ void SematicAn::checkVaribles(Body* body, map<string,TokenType>* Outervariables,
 			checkDecleration((Decleration*)expr,variables,functions);
 	}
 	}
+        delete functions;
+        delete variables;
 
 }
 
