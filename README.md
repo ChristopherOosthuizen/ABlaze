@@ -82,4 +82,5 @@ Distributed under the MIT License See `LICENCE` for more infomation.
 ## Contact
 
 Christopher Oosthuizen- Christopher.jan.oosthuizen@gmail.com
+
 ABlaze - https://github.com/ChristopherOosthuizen/ABlaze.git
