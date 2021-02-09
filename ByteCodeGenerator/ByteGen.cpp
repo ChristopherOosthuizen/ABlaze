@@ -1,3 +1,4 @@
+
 #include "ByteGen.h"
 
 ByteGen::ByteGen(Body* ast){
@@ -21,6 +22,8 @@ void ByteGen::expressionToByte(Expression* expr){
                 decToCommand((Decleration*)expr);
        }else if(name == "BinOP"){
                 ByteGen::binToCommand((BinOP*)expr);
+        }else if(name =="FunctionCall"){
+                functionCallToByte((FunctionCall*)expr);
         }
 
                 
@@ -32,6 +35,7 @@ void ByteGen::decToCommand(Decleration* dec){
                 toCommand("create",nameer,Lexer::typeToString(dec->m_type->m_token->m_type) );
         expressionToByte(dec->m_value);
         toCommand("assign","["+((Literal*)dec->m_name)->m_token->m_symbol+"]","memp");
+        m_lines->push_back("call");
 
 }
 
@@ -51,4 +55,13 @@ void ByteGen::binToCommand(BinOP* op){
                 toCommand(Lexer::typeToString(op->m_op->m_type),"memp","memp");
 
         }
+}
+
+void ByteGen::functionCallToByte(FunctionCall* call){
+        string symb = call->m_name->m_token->m_symbol;
+        for(int i=0; i< call->m_args->size();i++){
+                expressionToByte(call->m_args->at(i));
+        }
+        toCommand("set","func",symb);
+        m_lines->push_back("call");
 }

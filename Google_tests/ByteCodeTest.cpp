@@ -11,12 +11,13 @@ TEST(ByteCode,equations){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),5);
+        ASSERT_EQ(strs->size(),6);
         ASSERT_EQ(strs->at(0),"create i , IDEN_INT"); 
         ASSERT_EQ(strs->at(1),"asi memp , 8"); 
         ASSERT_EQ(strs->at(2),"TIMES memp , 2"); 
         ASSERT_EQ(strs->at(3),"PLUS memp , 12"); 
         ASSERT_EQ(strs->at(4),"assign [i] , memp"); 
+        ASSERT_EQ(strs->at(5),"call"); 
 }
 
 
@@ -26,7 +27,7 @@ TEST(ByteCode,equationsAdvanced){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),10);
+        ASSERT_EQ(strs->size(),11);
         ASSERT_EQ(strs->at(0),"create i , IDEN_INT"); 
         ASSERT_EQ(strs->at(1),"asi memp , 12"); 
         ASSERT_EQ(strs->at(2),"TIMES memp , 3"); 
@@ -37,4 +38,23 @@ TEST(ByteCode,equationsAdvanced){
         ASSERT_EQ(strs->at(7),"PLUS memp , memp"); 
         ASSERT_EQ(strs->at(8),"PLUS memp , memp"); 
         ASSERT_EQ(strs->at(9),"assign [i] , memp"); 
+        ASSERT_EQ(strs->at(10),"call"); 
+
 }
+
+
+TEST(ByteCode,print){
+        Lexer lexer("print(6*2*3);");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),5);
+        ASSERT_EQ(strs->at(0),"asi memp , 6"); 
+        ASSERT_EQ(strs->at(1),"TIMES memp , 2"); 
+        ASSERT_EQ(strs->at(2),"TIMES memp , 3"); 
+        ASSERT_EQ(strs->at(3),"set func , print"); 
+        ASSERT_EQ(strs->at(4),"call"); 
+}
+
+

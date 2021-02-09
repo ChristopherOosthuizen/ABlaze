@@ -14,6 +14,7 @@ class ByteGen{
         void toCommand(const string& com, const string& parm1, const string& parm2);
         void binToCommand(BinOP* op);
         void decToCommand(Decleration* op);
+        void functionCallToByte(FunctionCall* call);
         public:
                 ByteGen(Body* ast);
                 vector<string>* generateByteCode();
