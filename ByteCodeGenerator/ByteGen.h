@@ -11,7 +11,9 @@ class ByteGen{
         Body* m_ast;
         vector<string>* m_lines;
         void expressionToByte(Expression* expr);
-        string toCommand(const string& com, const string& parm1, const string& parm2);
+        void toCommand(const string& com, const string& parm1, const string& parm2);
+        void binToCommand(BinOP* op);
+        void decToCommand(Decleration* op);
         public:
                 ByteGen(Body* ast);
                 vector<string>* generateByteCode();

@@ -10,32 +10,45 @@ vector<string>* ByteGen::generateByteCode(){
         return m_lines;
 }
 
-string ByteGen::toCommand(const string& com, const string& param1, const string& param2){
-        return com +" "+param1+" , "+param2;
+void ByteGen::toCommand(const string& com, const string& param1, const string& param2){
+        string str = com +" "+param1+" , "+param2; 
+        m_lines->push_back(str);
 }
 
 void ByteGen::expressionToByte(Expression* expr){
         string name = expr->name(); 
         if(name == "Decleration"){
-                Decleration* dec = (Decleration*)expr;
-                string nameer=((Literal*)dec->m_name)->m_token->m_symbol;  
-                if(dec->m_initalize)
-                        m_lines->push_back(toCommand("create",nameer,Lexer::typeToString(dec->m_type->m_token->m_type) ));
-                expressionToByte(dec->m_value);
-                m_lines->push_back(toCommand("assign","["+((Literal*)dec->m_name)->m_token->m_symbol+"]","memp"));
-        }else if(name == "BinOP"){
-                BinOP* op = (BinOP*)expr;
-                if(op->m_left->name() == "Literal" && op->m_right->name() == "Literal"){
-                        m_lines->push_back(toCommand("asi","memp",((Literal*)op->m_left)->m_token->m_symbol));
-                        m_lines->push_back(toCommand(Lexer::typeToString(op->m_op->m_type),"memp",((Literal*)op->m_right)->m_token->m_symbol));
-                }else if(op->m_left->name() == "Literal"){
-                        expressionToByte(op->m_right);
-                        m_lines->push_back(toCommand(Lexer::typeToString(op->m_op->m_type),"memp",((Literal*)op->m_left)->m_token->m_symbol));
-
-                }
+                decToCommand((Decleration*)expr);
+       }else if(name == "BinOP"){
+                ByteGen::binToCommand((BinOP*)expr);
         }
 
                 
 }
 
+void ByteGen::decToCommand(Decleration* dec){
+        string nameer=((Literal*)dec->m_name)->m_token->m_symbol;  
+        if(dec->m_initalize)
+                toCommand("create",nameer,Lexer::typeToString(dec->m_type->m_token->m_type) );
+        expressionToByte(dec->m_value);
+        toCommand("assign","["+((Literal*)dec->m_name)->m_token->m_symbol+"]","memp");
 
+}
+
+void ByteGen::binToCommand(BinOP* op){
+        if(op->m_left->name() == "Literal" && op->m_right->name() == "Literal"){
+                toCommand("asi","memp",((Literal*)op->m_left)->m_token->m_symbol);
+                toCommand(Lexer::typeToString(op->m_op->m_type),"memp",((Literal*)op->m_right)->m_token->m_symbol);
+        }else if(op->m_left->name() == "Literal" && op->m_right->name() !="Literal"){
+                expressionToByte(op->m_right);
+                toCommand(Lexer::typeToString(op->m_op->m_type),"memp",((Literal*)op->m_left)->m_token->m_symbol);
+        }else if(op->m_left->name() != "Literal" && op->m_right->name() =="Literal"){
+                expressionToByte(op->m_left);
+                toCommand(Lexer::typeToString(op->m_op->m_type),"memp",((Literal*)op->m_right)->m_token->m_symbol);
+        }else {
+                expressionToByte(op->m_left);
+                expressionToByte(op->m_right);
+                toCommand(Lexer::typeToString(op->m_op->m_type),"memp","memp");
+
+        }
+}
