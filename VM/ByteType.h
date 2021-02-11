@@ -5,6 +5,7 @@
 
 enum class ByteType{
         PUSH,ADD,DIVIDE,TIMES,MINUS,INT,HALT,
+        LOAD,STORE,
         
 };
 #endif
