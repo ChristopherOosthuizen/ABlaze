@@ -4,7 +4,8 @@
 #include "ByteLexer.h"
 
 TEST(VM,PLUS){
-        vector<ByteToken*> tokens = {new ByteToken(ByteType::PUSH,0),new ByteToken(ByteType::INT,120), new ByteToken(ByteType::PUSH,0), new ByteToken(ByteType::INT,6), new ByteToken(ByteType::ADD,0),new ByteToken(ByteType::HALT,0)};
+        ByteLexer lexer("push 120 push 6 add halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
 
        Vm vm(tokens); 
        vm.execute();
@@ -14,8 +15,8 @@ TEST(VM,PLUS){
 
 
 TEST(VM,MINUS){
-        vector<ByteToken*> tokens = {new ByteToken(ByteType::PUSH,0),new ByteToken(ByteType::INT,120), new ByteToken(ByteType::PUSH,0), new ByteToken(ByteType::INT,6), new ByteToken(ByteType::MINUS,0),new ByteToken(ByteType::HALT,0)};
-
+         ByteLexer lexer("push 120 push 6 minus halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],-114);
@@ -23,8 +24,8 @@ TEST(VM,MINUS){
 }
 
 TEST(VM,TIMES){
-        vector<ByteToken*> tokens = {new ByteToken(ByteType::PUSH,0),new ByteToken(ByteType::INT,120), new ByteToken(ByteType::PUSH,0), new ByteToken(ByteType::INT,6), new ByteToken(ByteType::TIMES,0),new ByteToken(ByteType::HALT,0)};
-
+        ByteLexer lexer("push 120 push 6 times halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],720);
@@ -32,8 +33,8 @@ TEST(VM,TIMES){
 }
 
 TEST(VM,DIVIDE){
-        vector<ByteToken*> tokens = {new ByteToken(ByteType::PUSH,0),new ByteToken(ByteType::INT,120), new ByteToken(ByteType::PUSH,0), new ByteToken(ByteType::INT,6), new ByteToken(ByteType::DIVIDE,0),new ByteToken(ByteType::HALT,0)};
-
+         ByteLexer lexer("push 120 push 6 divide halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],0);
@@ -72,6 +73,16 @@ TEST(VM,CALL){
        ASSERT_EQ(tokens.size(),24);
        ASSERT_EQ(vm.m_stack.size(),1);
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],99);
+}
+
+TEST(VM,labels){
+        ByteLexer lexer("push 12 store 0 push 13 store 1 load 0 load 1 isgt jif if load 1 jmp end if: load 0 end: halt");
+          vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(tokens.size(),24);
+       ASSERT_EQ(vm.m_stack.size(),1);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
 }
 
 

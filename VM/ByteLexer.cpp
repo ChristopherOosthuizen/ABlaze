@@ -36,10 +36,14 @@ string ByteLexer::readNext(){
         return m_input.substr(start, m_pos-start-1);
 }
 
-ByteToken* ByteLexer::createToken(const string& str){
+ByteToken* ByteLexer::createToken( const string& str){
         if(m_types.count(str) !=0)
-                return new ByteToken(m_types[str],0);
-        return new ByteToken(ByteType::INT,stoi(str));
+                return new ByteToken(m_types[str],0,str);
+        if(str.at(str.size()-1) == ':')
+                return new ByteToken(ByteType::LABEL,0,str.substr(0,str.size()-1));
+        if(isdigit(str.at(0)))
+                return new ByteToken(ByteType::INT,stoi(str),str);
+        return new ByteToken(ByteType::IDEN,0,str);
 }
 
 vector<ByteToken*> ByteLexer::readAllTokens(){

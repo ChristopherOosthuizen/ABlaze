@@ -8,6 +8,11 @@ Vm::Vm(vector<ByteToken*>& tokens){
 }
 
 void Vm::execute(){
+        for(int i=0; i< m_tokens.size(); i++){
+                if(m_tokens[i]->m_type == ByteType::LABEL){
+                        m_labels[m_tokens[i]->m_symbol] = i;
+                }
+        }
         while(!m_halted){
                 step();
         }
@@ -48,7 +53,10 @@ void Vm::jumpIf(){
 }
 
 void Vm::jump(){
-        m_pos = m_tokens[m_pos]->m_value;
+        if(m_tokens[m_pos]->m_type == ByteType::INT)
+                m_pos = m_tokens[m_pos]->m_value;
+        else
+                m_pos = m_labels[m_tokens[m_pos]->m_symbol];
 }
 
 void Vm::pushToStack(){
