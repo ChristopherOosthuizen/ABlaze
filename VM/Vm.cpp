@@ -4,6 +4,7 @@ Vm::Vm(vector<ByteToken*>& tokens){
        m_pos =0;
         m_tokens = tokens;
         m_halted = false;
+        m_jumpBack =0;
 }
 
 void Vm::execute(){
@@ -19,6 +20,8 @@ void Vm::step(){
                 case ByteType::PUSH:pushToStack();break;
                 case ByteType::JIF: jumpIf(); break;
                 case ByteType::JMP: jump();break;
+                case ByteType::RETURN: Return();break;
+                case ByteType::CALL: call(); break;
                 case ByteType::ADD:
                 case ByteType::MINUS:
                 case ByteType::TIMES:
@@ -59,6 +62,16 @@ void Vm::load(){
 void Vm::store(){
         m_vars[m_tokens[m_pos++]->m_value] = m_stack[m_stack.size()-1];
         m_stack.pop_back();
+}
+
+void Vm::Return(){
+        m_pos = m_jumpBack;
+        m_jumpBack = 0;
+}
+
+void Vm::call(){
+        m_jumpBack = m_pos+1;
+        jump();
 }
 
 void Vm::binOP(ByteType type){

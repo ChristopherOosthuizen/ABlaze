@@ -64,5 +64,14 @@ TEST(VM,IF){
 
 }
 
+TEST(VM,CALL){
+        ByteLexer lexer("push 25 push 99 call 7 halt store 0 store 1 load 0 load 1 isgt jif 21 load 1 return load 0 return");
+          vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(tokens.size(),24);
+       ASSERT_EQ(vm.m_stack.size(),1);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],99);
+}
 
 

@@ -22,6 +22,8 @@ ByteLexer::ByteLexer(const string& input){
         m_types["isge"] = ByteType::ISGE;
         m_types["jmp"] = ByteType::JMP;
         m_types["jif"] = ByteType::JIF;
+        m_types["call"] = ByteType::CALL;
+        m_types["return"] = ByteType::RETURN;
 
 }
 

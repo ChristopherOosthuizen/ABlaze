@@ -13,6 +13,7 @@ public:
         map<int,int> m_vars;
         bool m_halted;
         int m_pos;
+        int m_jumpBack;
         Vm(vector<ByteToken*>& tokens);
         void execute();
         void step();
@@ -21,6 +22,8 @@ public:
         void jumpIf();
         void load();
         void store();
+        void call();
+        void Return();
         void binOP(ByteType type);
 };
 #endif
