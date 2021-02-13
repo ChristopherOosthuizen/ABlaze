@@ -78,6 +78,7 @@ void SematicAn::checkDecleration(Decleration* dec,map<string,TokenType>* vars,ma
 TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars ,map<string,TokenType>* funcs){
 	if(expr == nullptr)
 		return TokenType::VOID;
+	
 	if(expr->name() == "Literal"){
 		return endTypeLiteral((Literal*)expr,vars,funcs);
 	}else if(expr->name() == "FunctionCall"){
@@ -97,6 +98,7 @@ TokenType SematicAn::endType(Expression* expr,map<string,TokenType>* vars ,map<s
 		return TokenType::IDEN_INT;
 	
 	}
+
 	return TokenType::IDEN_BOOL;
 }
 
@@ -112,6 +114,9 @@ TokenType SematicAn::endTypeLiteral(Literal* expr,map<string,TokenType>* vars, m
 
 			}
 			return ((Literal*) expr)->m_token->m_type;
+		}
+		if(type == TokenType::IDEN){
+			return TokenType::IDEN_INT;
 		}
 		return TokenType::IDEN_BOOL; 
 		

@@ -1,0 +1,4 @@
+int i =12;
+int o = 13;
+int j =i+o;
+print(j);

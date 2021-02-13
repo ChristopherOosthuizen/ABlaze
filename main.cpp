@@ -7,7 +7,11 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+#include "Lexer.h"
+#include "ErrorThrower.h"
+#include "ASTGen.h"
+#include "SematicAn.h"
+#include "ByteGen.h"
 using namespace std;
 
 /* Starts a repl. or in other words
@@ -39,10 +43,40 @@ int file(string path) {
         return 1;
     }
     while ( getline ( reader , line ) ) {
-        wholeFile += line;
+        wholeFile += line+"\n";
     }
     reader.close();
-	cout << wholeFile;
+    Lexer lexer(wholeFile);
+    vector<Token*> tokens = lexer.readAllTokens();
+    if(ErrorThrower::hasError){
+        for(string s:*ErrorThrower::errors){
+            cout<<s<<endl;
+        }
+        return 1;
+    }
+    ASTGen gen (tokens);
+    Body* body = gen.generateAST();
+    if(ErrorThrower::hasError){
+        for(string s:*ErrorThrower::errors){
+            cout<<s<<endl;
+        }
+        return 1;
+    }
+    SematicAn an(body);
+	an.analize();
+     if(ErrorThrower::hasError){
+        for(string s:*ErrorThrower::errors){
+            cout<<s<<endl;
+        }
+        return 1;
+    }
+    ByteGen byt(body);
+    vector<string>* strs = byt.generateByteCode();
+    cout<<strs->size()<<endl;
+    for(string s:*strs){
+        cout<<s<<endl;
+    }
+
    return 0;
 }
 

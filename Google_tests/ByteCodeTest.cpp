@@ -11,7 +11,7 @@ TEST(ByteCode,equations){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),6);
+        ASSERT_EQ(strs->size(),7);
         ASSERT_EQ(strs->at(0),"push 8"); 
         ASSERT_EQ(strs->at(1),"push 2"); 
         ASSERT_EQ(strs->at(2),"times"); 
@@ -27,7 +27,7 @@ TEST(ByteCode,equationsAdvanced){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),12);
+        ASSERT_EQ(strs->size(),13);
         ASSERT_EQ(strs->at(0),"push 12"); 
         ASSERT_EQ(strs->at(1),"push 3"); 
         ASSERT_EQ(strs->at(2),"times"); 
@@ -50,7 +50,7 @@ TEST(ByteCode,print){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),6);
+        ASSERT_EQ(strs->size(),7);
         ASSERT_EQ(strs->at(0),"push 6"); 
         ASSERT_EQ(strs->at(1),"push 2"); 
         ASSERT_EQ(strs->at(2),"times"); 

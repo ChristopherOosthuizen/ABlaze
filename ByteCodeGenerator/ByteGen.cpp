@@ -7,7 +7,9 @@ ByteGen::ByteGen(Body* ast){
 }
 
 vector<string>* ByteGen::generateByteCode(){
-        expressionToByte(m_ast->m_lines->at(0));
+        for(int i=0; i< m_ast->m_lines->size();i++)
+                expressionToByte(m_ast->m_lines->at(i));
+        toCommand("halt");
         return m_lines;
 }
 
@@ -23,6 +25,8 @@ void ByteGen::expressionToByte(Expression* expr){
                 ByteGen::binToCommand((BinOP*)expr);
         }else if(name =="FunctionCall"){
                 functionCallToByte((FunctionCall*)expr);
+        }else if(name =="Literal"){
+                toCommand("push "+((Literal*)expr)->m_token->m_symbol);
         }
 
                 
