@@ -12,6 +12,17 @@ ByteLexer::ByteLexer(const string& input){
         m_types["load"] = ByteType::LOAD;
         m_types["store"] = ByteType::STORE;
         m_types["push"] = ByteType::PUSH;
+        m_types["xor"] = ByteType::XOR;
+        m_types["not"] = ByteType::NOT;
+        m_types["and"] = ByteType::AND;
+        m_types["or"] = ByteType::OR;
+        m_types["isgt"] = ByteType::ISGT;
+        m_types["islt"] = ByteType::ISLT;
+        m_types["isle"] = ByteType::ISLE;
+        m_types["isge"] = ByteType::ISGE;
+        m_types["jmp"] = ByteType::JMP;
+        m_types["jif"] = ByteType::JIF;
+
 }
 
 string ByteLexer::readNext(){

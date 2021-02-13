@@ -46,8 +46,23 @@ TEST(VM,LOADSTORE){
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
+       ASSERT_EQ(tokens.size(),14);
+       ASSERT_EQ(vm.m_stack.size(),1);
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],18);
 
 }
+
+
+TEST(VM,IF){
+        ByteLexer lexer("push 12 store 0 push 13 store 1 load 0 load 1 isgt jif 19 load 1 jmp 21 load 0 halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(tokens.size(),22);
+       ASSERT_EQ(vm.m_stack.size(),1);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
+
+}
+
 
 

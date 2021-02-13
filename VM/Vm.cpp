@@ -17,17 +17,48 @@ void Vm::step(){
         ByteType type = token->m_type;
        switch(type){
                 case ByteType::PUSH:pushToStack();break;
+                case ByteType::JIF: jumpIf(); break;
+                case ByteType::JMP: jump();break;
                 case ByteType::ADD:
                 case ByteType::MINUS:
                 case ByteType::TIMES:
+                case ByteType::XOR:
+                case ByteType::NOT:
+                case ByteType::AND:
+                case ByteType::OR:
+                case ByteType::ISGT:
+                case ByteType::ISLT:
+                case ByteType::ISLE:
+                case ByteType::ISGE:
                 case ByteType::DIVIDE: binOP(token->m_type);break;
+                case ByteType::LOAD: load(); break;
+                case ByteType::STORE: store(); break;
                 case ByteType::HALT:
                                        m_halted = true; break;
        }
 }
 
+void Vm::jumpIf(){
+        if(m_stack[m_stack.size()-1] ==1)
+                jump();
+        m_stack.pop_back();
+}
+
+void Vm::jump(){
+        m_pos = m_tokens[m_pos]->m_value;
+}
+
 void Vm::pushToStack(){
         m_stack.push_back(m_tokens[m_pos++]->m_value);
+}
+
+void Vm::load(){
+        m_stack.push_back(m_vars[m_tokens[m_pos++]->m_value]);
+}
+
+void Vm::store(){
+        m_vars[m_tokens[m_pos++]->m_value] = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
 }
 
 void Vm::binOP(ByteType type){
@@ -45,6 +76,21 @@ void Vm::binOP(ByteType type){
                         result = one * two;break;
                 case ByteType::DIVIDE:
                         result = one / two;break;
+                case ByteType::XOR:
+                        result = one ^ two; break;
+                case ByteType::AND:
+                        result = one & two; break;
+                case ByteType::OR:
+                        result = one | two; break;
+                case ByteType::ISGT:
+                        result = one < two; break;
+                case ByteType::ISLT:
+                        result = one > two; break;
+                case ByteType::ISLE:
+                        result = one <= two; break;
+                case ByteType::ISGE:
+                        result = one >= two; break;
+
         }
         m_stack.push_back(result);
 
