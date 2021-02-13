@@ -43,7 +43,7 @@ TEST(VM,DIVIDE){
 
 
 TEST(VM,LOADSTORE){
-        ByteLexer lexer("push 12 store 0 load 0 push 6 add store 1 load 1 halt");
+        ByteLexer lexer("push 12 store i load i push 6 add store i load i halt");
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
@@ -55,7 +55,7 @@ TEST(VM,LOADSTORE){
 
 
 TEST(VM,IF){
-        ByteLexer lexer("push 12 store 0 push 13 store 1 load 0 load 1 isgt jif 19 load 1 jmp 21 load 0 halt");
+        ByteLexer lexer("push 12 store i push 13 store o load i load o isgt jif 19 load o jmp 21 load i halt");
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
@@ -66,7 +66,7 @@ TEST(VM,IF){
 }
 
 TEST(VM,CALL){
-        ByteLexer lexer("push 25 push 99 call 7 halt store 0 store 1 load 0 load 1 isgt jif 21 load 1 return load 0 return");
+        ByteLexer lexer("push 25 push 99 call 7 halt store i store o load i load o isgt jif 21 load o return load i return");
           vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
@@ -76,7 +76,7 @@ TEST(VM,CALL){
 }
 
 TEST(VM,labels){
-        ByteLexer lexer("push 12 store 0 push 13 store 1 load 0 load 1 isgt jif if load 1 jmp end if: load 0 end: halt");
+        ByteLexer lexer("push 12 store i push 13 store o load i load o isgt jif if load o jmp end if: load i end: halt");
           vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
@@ -84,5 +84,3 @@ TEST(VM,labels){
        ASSERT_EQ(vm.m_stack.size(),1);
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
 }
-
-

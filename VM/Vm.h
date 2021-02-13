@@ -10,7 +10,7 @@ class Vm{
 public:
         vector<int> m_stack;        
         vector<ByteToken*> m_tokens;
-        map<int,int> m_vars;
+        map<string,int> m_vars;
         map<string,int> m_labels;
         bool m_halted;
         int m_pos;

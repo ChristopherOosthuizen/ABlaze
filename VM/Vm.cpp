@@ -64,11 +64,11 @@ void Vm::pushToStack(){
 }
 
 void Vm::load(){
-        m_stack.push_back(m_vars[m_tokens[m_pos++]->m_value]);
+        m_stack.push_back(m_vars[m_tokens[m_pos++]->m_symbol]);
 }
 
 void Vm::store(){
-        m_vars[m_tokens[m_pos++]->m_value] = m_stack[m_stack.size()-1];
+        m_vars[m_tokens[m_pos++]->m_symbol] = m_stack[m_stack.size()-1];
         m_stack.pop_back();
 }
 
