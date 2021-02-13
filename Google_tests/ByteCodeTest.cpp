@@ -12,12 +12,12 @@ TEST(ByteCode,equations){
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),6);
-        ASSERT_EQ(strs->at(0),"create i , IDEN_INT"); 
-        ASSERT_EQ(strs->at(1),"asi memp , 8"); 
-        ASSERT_EQ(strs->at(2),"TIMES memp , 2"); 
-        ASSERT_EQ(strs->at(3),"PLUS memp , 12"); 
-        ASSERT_EQ(strs->at(4),"assign [i] , memp"); 
-        ASSERT_EQ(strs->at(5),"call"); 
+        ASSERT_EQ(strs->at(0),"push 8"); 
+        ASSERT_EQ(strs->at(1),"push 2"); 
+        ASSERT_EQ(strs->at(2),"times"); 
+        ASSERT_EQ(strs->at(3),"push 12"); 
+        ASSERT_EQ(strs->at(4),"add"); 
+        ASSERT_EQ(strs->at(5),"store i"); 
 }
 
 
@@ -27,18 +27,19 @@ TEST(ByteCode,equationsAdvanced){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),11);
-        ASSERT_EQ(strs->at(0),"create i , IDEN_INT"); 
-        ASSERT_EQ(strs->at(1),"asi memp , 12"); 
-        ASSERT_EQ(strs->at(2),"TIMES memp , 3"); 
-        ASSERT_EQ(strs->at(3),"asi memp , 6"); 
-        ASSERT_EQ(strs->at(4),"TIMES memp , 8"); 
-        ASSERT_EQ(strs->at(5),"asi memp , 8"); 
-        ASSERT_EQ(strs->at(6),"TIMES memp , 3"); 
-        ASSERT_EQ(strs->at(7),"PLUS memp , memp"); 
-        ASSERT_EQ(strs->at(8),"PLUS memp , memp"); 
-        ASSERT_EQ(strs->at(9),"assign [i] , memp"); 
-        ASSERT_EQ(strs->at(10),"call"); 
+        ASSERT_EQ(strs->size(),12);
+        ASSERT_EQ(strs->at(0),"push 12"); 
+        ASSERT_EQ(strs->at(1),"push 3"); 
+        ASSERT_EQ(strs->at(2),"times"); 
+        ASSERT_EQ(strs->at(3),"push 6"); 
+        ASSERT_EQ(strs->at(4),"push 8"); 
+        ASSERT_EQ(strs->at(5),"times"); 
+        ASSERT_EQ(strs->at(6),"push 8"); 
+        ASSERT_EQ(strs->at(7),"push 3"); 
+        ASSERT_EQ(strs->at(8),"times"); 
+        ASSERT_EQ(strs->at(9),"add"); 
+        ASSERT_EQ(strs->at(10),"add"); 
+        ASSERT_EQ(strs->at(11),"store i"); 
 
 }
 
@@ -49,12 +50,13 @@ TEST(ByteCode,print){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),5);
-        ASSERT_EQ(strs->at(0),"asi memp , 6"); 
-        ASSERT_EQ(strs->at(1),"TIMES memp , 2"); 
-        ASSERT_EQ(strs->at(2),"TIMES memp , 3"); 
-        ASSERT_EQ(strs->at(3),"set func , print"); 
-        ASSERT_EQ(strs->at(4),"call"); 
+        ASSERT_EQ(strs->size(),6);
+        ASSERT_EQ(strs->at(0),"push 6"); 
+        ASSERT_EQ(strs->at(1),"push 2"); 
+        ASSERT_EQ(strs->at(2),"times"); 
+        ASSERT_EQ(strs->at(3),"push 3"); 
+        ASSERT_EQ(strs->at(4),"times"); 
+        ASSERT_EQ(strs->at(5),"print"); 
 }
 
 
