@@ -4,6 +4,7 @@
 #define ABLAZE_VM_H
 #include <vector>
 #include <map>
+#include <iostream>
 #include "ByteToken.h"
 using namespace std;
 class Vm{
@@ -18,6 +19,7 @@ public:
         Vm(vector<ByteToken*>& tokens);
         void execute();
         void step();
+        void print();
         void pushToStack();
         void jump();
         void jumpIf();

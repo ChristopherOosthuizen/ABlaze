@@ -6,7 +6,7 @@
 enum class ByteType{
         PUSH,ADD,DIVIDE,TIMES,MINUS,INT,HALT,
         LOAD,STORE,
-        LABEL,IDEN,CALL,RETURN,
+        LABEL,IDEN,CALL,RETURN,PRINT,
         XOR,NOT,AND,OR,ISGT,ISLT,ISLE,ISGE,
         JMP,JIF
         

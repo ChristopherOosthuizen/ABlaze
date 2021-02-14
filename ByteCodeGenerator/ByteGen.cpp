@@ -26,7 +26,11 @@ void ByteGen::expressionToByte(Expression* expr){
         }else if(name =="FunctionCall"){
                 functionCallToByte((FunctionCall*)expr);
         }else if(name =="Literal"){
-                toCommand("push "+((Literal*)expr)->m_token->m_symbol);
+                TokenType type = ((Literal*)expr)->m_token->m_type;
+                if(type == TokenType::IDEN)
+                        toCommand("load "+((Literal*)expr)->m_token->m_symbol);
+                else 
+                        toCommand("push "+((Literal*)expr)->m_token->m_symbol);
         }
 
                 
@@ -40,24 +44,9 @@ void ByteGen::decToCommand(Decleration* dec){
 }
 
 void ByteGen::binToCommand(BinOP* op){
-        if(op->m_left->name() == "Literal" && op->m_right->name() == "Literal"){
-                toCommand("push "+ ((Literal*)op->m_left)->m_token->m_symbol);
-                toCommand("push "+((Literal*)op->m_right)->m_token->m_symbol);
-                toCommand(Lexer::typeToString(op->m_op->m_type));
-        }else if(op->m_left->name() == "Literal" && op->m_right->name() !="Literal"){
-                expressionToByte(op->m_right);
-                toCommand("push "+((Literal*)op->m_left)->m_token->m_symbol);
-                toCommand(Lexer::typeToString(op->m_op->m_type));
-        }else if(op->m_left->name() != "Literal" && op->m_right->name() =="Literal"){
-                expressionToByte(op->m_left);
-                toCommand("push "+((Literal*)op->m_right)->m_token->m_symbol);
-                toCommand(Lexer::typeToString(op->m_op->m_type));
-        }else {
                 expressionToByte(op->m_left);
                 expressionToByte(op->m_right);
                 toCommand(Lexer::typeToString(op->m_op->m_type));
-
-        }
 }
 
 void ByteGen::functionCallToByte(FunctionCall* call){

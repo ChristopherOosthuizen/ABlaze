@@ -24,6 +24,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["jif"] = ByteType::JIF;
         m_types["call"] = ByteType::CALL;
         m_types["return"] = ByteType::RETURN;
+        m_types["print"] = ByteType::PRINT;
 
 }
 
@@ -50,7 +51,7 @@ vector<ByteToken*> ByteLexer::readAllTokens(){
         vector<ByteToken*> result;
         while(m_pos <m_input.size()){
                string str = readNext(); 
-               if(str.empty() || str ==" ")
+               if(str.empty() || str ==" "||str =="\n")
                        continue;
                ByteToken* token = createToken(str);
                result.push_back(token);

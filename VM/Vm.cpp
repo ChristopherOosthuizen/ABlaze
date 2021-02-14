@@ -27,6 +27,7 @@ void Vm::step(){
                 case ByteType::JMP: jump();break;
                 case ByteType::RETURN: Return();break;
                 case ByteType::CALL: call(); break;
+                case ByteType::PRINT: print(); break;
                 case ByteType::ADD:
                 case ByteType::MINUS:
                 case ByteType::TIMES:
@@ -80,6 +81,11 @@ void Vm::Return(){
 void Vm::call(){
         m_jumpBack = m_pos+1;
         jump();
+}
+
+void Vm::print(){
+        cout<< m_stack[m_stack.size()-1]<<endl;
+        m_stack.pop_back();
 }
 
 void Vm::binOP(ByteType type){

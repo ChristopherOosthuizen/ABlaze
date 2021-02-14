@@ -12,6 +12,8 @@
 #include "ASTGen.h"
 #include "SematicAn.h"
 #include "ByteGen.h"
+#include "Vm.h"
+#include "ByteLexer.h"
 using namespace std;
 
 /* Starts a repl. or in other words
@@ -27,25 +29,7 @@ int repl() {
     return 0;
 }
 
-/*
- * interprets ABlaze programs contained inside
- * files
- */
-int file(string path) {
-    string wholeFile;
-    string line;
-
-    // read entire file
-    ifstream reader(path);
-
-    if ( !reader.good() ) {
-        perror(string("No file with name "+path+" Found").c_str());
-        return 1;
-    }
-    while ( getline ( reader , line ) ) {
-        wholeFile += line+"\n";
-    }
-    reader.close();
+int convertToByte(const string& wholeFile){
     Lexer lexer(wholeFile);
     vector<Token*> tokens = lexer.readAllTokens();
     if(ErrorThrower::hasError){
@@ -72,13 +56,42 @@ int file(string path) {
     }
     ByteGen byt(body);
     vector<string>* strs = byt.generateByteCode();
+    ofstream filer("a.laze");
     cout<<strs->size()<<endl;
-    for(string s:*strs){
-        cout<<s<<endl;
+     for(string s:*strs){
+        filer<<s<<endl;
     }
-
+    filer.close();
    return 0;
 }
+
+/*
+ * interprets ABlaze programs contained inside
+ * files
+ */
+int file(string path,bool isOk) {
+    string wholeFile;
+    string line;
+
+    // read entire file
+    ifstream reader(path);
+
+    if ( !reader.good() ) {
+        perror(string("No file with name "+path+" Found").c_str());
+        return 1;
+    }
+    while ( getline ( reader , line ) ) {
+        wholeFile += line+"\n";
+    }
+    reader.close();
+    if(!isOk)
+        return convertToByte(wholeFile);
+       ByteLexer lexer(wholeFile);
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+}
+
 
 /*
  * Takes command prompt parameters
@@ -90,7 +103,9 @@ int main(int argc , char** argv) {
     if(argc ==1){
         return repl();
     }else if(argc ==2){
-        return file(argv[1]);
+        return file(argv[1],false);
+    }else if(argc == 3){
+        return file(argv[1],true);
     }
     perror("to many parameters");
     return 2;
