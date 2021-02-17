@@ -283,28 +283,31 @@ FunctionCall* ASTGen::functionCall(Literal* name){
 //paramters such as if while for and def
 Body* ASTGen::body(Literal* type){
         Expression* bod; 
-        Expression* initial =expression(new Literal(next())); 
-        delete next();
-        switch(type->m_token->m_type){
-                case TokenType::VOID:
-                case TokenType::IDEN_INT:
-                case TokenType::IDEN_BOOL:
-                case TokenType::IDEN_STRING:
-                case TokenType::IDEN_DOUBLE:
- 
-                case TokenType::VAR: 
-                        bod = new Function(type,(FunctionCall*)initial); break;
-                case TokenType::IF: bod =new IfStat(initial); break;
-                case TokenType::WHILE: bod = new WhileStat(initial); break;
-                case TokenType::ELSE: bod = NULL; break;
-                case TokenType::FOR: Expression* condition = expression(new Literal(next()));
-                                     delete next();
-                                     Expression* repitition= expression(new Literal(next()));
-                                     delete next();
-                                     bod = new ForStat(initial,condition,repitition);break;
+        if(!equals(type->m_token,TokenType::ELSE)){
+                Expression* initial =expression(new Literal(next())); 
+                delete next();
+                switch(type->m_token->m_type){
+                        case TokenType::VOID:
+                        case TokenType::IDEN_INT:
+                        case TokenType::IDEN_BOOL:
+                        case TokenType::IDEN_STRING:
+                        case TokenType::IDEN_DOUBLE:
+         
+                        case TokenType::VAR: 
+                                bod = new Function(type,(FunctionCall*)initial); break;
+                        case TokenType::IF: bod =new IfStat(initial); break;
+                        case TokenType::WHILE: bod = new WhileStat(initial); break;
+                        case TokenType::FOR: Expression* condition = expression(new Literal(next()));
+                                             delete next();
+                                             Expression* repitition= expression(new Literal(next()));
+                                             delete next();
+                                             bod = new ForStat(initial,condition,repitition);break;
 
 
+                }
         }
+        else
+                bod = NULL;
         if(equals(peek(),TokenType::OPEN_BRACE))
                 delete next();
         vector<Expression*>* lines = new vector<Expression*>();

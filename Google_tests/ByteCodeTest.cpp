@@ -85,7 +85,7 @@ TEST(ByteCode,ifs){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),31);
+        ASSERT_EQ(strs->size(),30);
         ASSERT_EQ(strs->at(0),"push"); 
         ASSERT_EQ(strs->at(1),"12"); 
         ASSERT_EQ(strs->at(2),"store"); 
