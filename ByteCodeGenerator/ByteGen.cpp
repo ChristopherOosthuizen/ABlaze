@@ -52,7 +52,7 @@ void ByteGen::bodyToByte(Body* body){
                                 expressionToByte(((IfStat*)bod->m_control)->m_control);
                                 toCommand("jif");
                                 toCommand("startif"+line);
-                                if(body->m_lines->at(i+1)->name() == "Body" && ((Body*)body->m_lines->at(i+1))->m_control == NULL){
+                                if(body->m_lines->at(i+1)->name() == "Body" && ((Body*)body->m_lines->at(i+1))->m_control->name() == "Else"){
                                         bodyToByte((Body*)body->m_lines->at(i+1));
                                         i++;
                                 }

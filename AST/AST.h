@@ -89,6 +89,12 @@ class IfStat: public Expression{
                 Expression* m_control;
 };
 
+class ElseStat: public Expression{
+        public:
+                ElseStat(){};
+                string name() override;
+};
+
 class WhileStat: public Expression{
         public:
                 string name() override;
@@ -142,4 +148,5 @@ class ArrayLiteral: public Expression{
                 Literal* m_iden;
                 Expression* m_value;
 };
+
 #endif

@@ -100,13 +100,6 @@ int file(string path,bool isOk) {
  * if there are more throw a error.
  */
 int main(int argc , char** argv) {
-    if(argc ==1){
-        return repl();
-    }else if(argc ==2){
-        return file(argv[1],false);
-    }else if(argc == 3){
-        return file(argv[1],true);
-    }
-    perror("to many parameters");
-    return 2;
+
+        return file("/home/chris/Projects/ABlaze/a.laze",true);
 }

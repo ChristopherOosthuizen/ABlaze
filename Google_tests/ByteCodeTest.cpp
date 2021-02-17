@@ -98,7 +98,7 @@ TEST(ByteCode,ifs){
         ASSERT_EQ(strs->at(9),"i"); 
         ASSERT_EQ(strs->at(10),"load"); 
         ASSERT_EQ(strs->at(11),"o"); 
-        ASSERT_EQ(strs->at(12),"less"); 
+        ASSERT_EQ(strs->at(12),"islt"); 
         ASSERT_EQ(strs->at(13),"store"); 
         ASSERT_EQ(strs->at(14),"right"); 
         ASSERT_EQ(strs->at(15),"load"); 

@@ -92,6 +92,8 @@ IfStat::IfStat(Expression* control){
 }
 
 string IfStat::name(){ return "If";}
+string ElseStat::name(){ return "Else";}
+
 
 IfStat::~IfStat(){
         delete m_control;        

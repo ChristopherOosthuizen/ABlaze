@@ -307,7 +307,7 @@ Body* ASTGen::body(Literal* type){
                 }
         }
         else
-                bod = NULL;
+                bod = new ElseStat();
         if(equals(peek(),TokenType::OPEN_BRACE))
                 delete next();
         vector<Expression*>* lines = new vector<Expression*>();
