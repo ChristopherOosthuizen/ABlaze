@@ -29,7 +29,7 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["string"] = TokenType::IDEN_STRING;
 			m_built_in_words["true"] = TokenType::BOOL;
 			m_built_in_words["false"] = TokenType::BOOL;
-
+			m_built_in_words["else"] = TokenType::ELSE;
 		}
 }
 
@@ -119,6 +119,7 @@ string Lexer::typeToString(TokenType type){
 		case TokenType::IDEN_BOOL : return "iden_bool";  
 		case TokenType::IDEN_STRING : return "iden_string";  
 		case TokenType::IDEN_DOUBLE : return "iden_double";  
+		case TokenType::ELSE : return "else";  
 	}
 	return "";
 }

@@ -195,6 +195,7 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::INT: return expr; 
                 case TokenType::FOR:
                 case TokenType::WHILE:
+                case TokenType::ELSE:
                 case TokenType::IF: return body((Literal*)expr);
                 case TokenType::NOT: 
                 case TokenType::PLUS_PLUS:
@@ -295,6 +296,7 @@ Body* ASTGen::body(Literal* type){
                         bod = new Function(type,(FunctionCall*)initial); break;
                 case TokenType::IF: bod =new IfStat(initial); break;
                 case TokenType::WHILE: bod = new WhileStat(initial); break;
+                case TokenType::ELSE: bod = NULL; break;
                 case TokenType::FOR: Expression* condition = expression(new Literal(next()));
                                      delete next();
                                      Expression* repitition= expression(new Literal(next()));

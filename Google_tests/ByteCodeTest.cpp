@@ -11,13 +11,19 @@ TEST(ByteCode,equations){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),7);
-        ASSERT_EQ(strs->at(0),"push 8"); 
-        ASSERT_EQ(strs->at(1),"push 2"); 
-        ASSERT_EQ(strs->at(2),"times"); 
-        ASSERT_EQ(strs->at(3),"push 12"); 
-        ASSERT_EQ(strs->at(4),"add"); 
-        ASSERT_EQ(strs->at(5),"store i"); 
+        ASSERT_EQ(strs->size(),11);
+        ASSERT_EQ(strs->at(0),"push"); 
+        ASSERT_EQ(strs->at(1),"12"); 
+        ASSERT_EQ(strs->at(2),"push"); 
+        ASSERT_EQ(strs->at(3),"8"); 
+        ASSERT_EQ(strs->at(4),"push"); 
+        ASSERT_EQ(strs->at(5),"2"); 
+        ASSERT_EQ(strs->at(6),"times");
+        ASSERT_EQ(strs->at(7),"add"); 
+        ASSERT_EQ(strs->at(8),"store"); 
+        ASSERT_EQ(strs->at(9),"i"); 
+        ASSERT_EQ(strs->at(10),"halt"); 
+
 }
 
 
@@ -27,19 +33,26 @@ TEST(ByteCode,equationsAdvanced){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),13);
-        ASSERT_EQ(strs->at(0),"push 12"); 
-        ASSERT_EQ(strs->at(1),"push 3"); 
-        ASSERT_EQ(strs->at(2),"times"); 
-        ASSERT_EQ(strs->at(3),"push 6"); 
-        ASSERT_EQ(strs->at(4),"push 8"); 
-        ASSERT_EQ(strs->at(5),"times"); 
-        ASSERT_EQ(strs->at(6),"push 8"); 
-        ASSERT_EQ(strs->at(7),"push 3"); 
-        ASSERT_EQ(strs->at(8),"times"); 
-        ASSERT_EQ(strs->at(9),"add"); 
-        ASSERT_EQ(strs->at(10),"add"); 
-        ASSERT_EQ(strs->at(11),"store i"); 
+        ASSERT_EQ(strs->size(),20);
+        ASSERT_EQ(strs->at(0),"push"); 
+        ASSERT_EQ(strs->at(1),"12"); 
+        ASSERT_EQ(strs->at(2),"push"); 
+        ASSERT_EQ(strs->at(3),"3"); 
+        ASSERT_EQ(strs->at(4),"times"); 
+        ASSERT_EQ(strs->at(5),"push"); 
+        ASSERT_EQ(strs->at(6),"6"); 
+        ASSERT_EQ(strs->at(7),"push"); 
+        ASSERT_EQ(strs->at(8),"8"); 
+        ASSERT_EQ(strs->at(9),"times"); 
+        ASSERT_EQ(strs->at(10),"push"); 
+        ASSERT_EQ(strs->at(11),"8"); 
+        ASSERT_EQ(strs->at(12),"push"); 
+        ASSERT_EQ(strs->at(13),"3"); 
+        ASSERT_EQ(strs->at(14),"times"); 
+        ASSERT_EQ(strs->at(15),"add"); 
+        ASSERT_EQ(strs->at(16),"add"); 
+        ASSERT_EQ(strs->at(17),"store"); 
+        ASSERT_EQ(strs->at(18),"i"); 
 
 }
 
@@ -50,13 +63,57 @@ TEST(ByteCode,print){
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),7);
-        ASSERT_EQ(strs->at(0),"push 6"); 
-        ASSERT_EQ(strs->at(1),"push 2"); 
-        ASSERT_EQ(strs->at(2),"times"); 
-        ASSERT_EQ(strs->at(3),"push 3"); 
+        ASSERT_EQ(strs->size(),10);
+        ASSERT_EQ(strs->at(0),"push"); 
+        ASSERT_EQ(strs->at(1),"6"); 
+        ASSERT_EQ(strs->at(2),"push"); 
+        ASSERT_EQ(strs->at(3),"2"); 
         ASSERT_EQ(strs->at(4),"times"); 
-        ASSERT_EQ(strs->at(5),"print"); 
+        ASSERT_EQ(strs->at(5),"push"); 
+        ASSERT_EQ(strs->at(6),"3"); 
+        ASSERT_EQ(strs->at(7),"times"); 
+        ASSERT_EQ(strs->at(8),"print"); 
+        ASSERT_EQ(strs->at(9),"halt"); 
+
 }
 
 
+TEST(ByteCode,ifs){
+        Lexer lexer("int i=12; int o =13; int right = i < o; if( right ){ print( i ); } else { print(o); }");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),31);
+        ASSERT_EQ(strs->at(0),"push"); 
+        ASSERT_EQ(strs->at(1),"12"); 
+        ASSERT_EQ(strs->at(2),"store"); 
+        ASSERT_EQ(strs->at(3),"i"); 
+        ASSERT_EQ(strs->at(4),"push"); 
+        ASSERT_EQ(strs->at(5),"13"); 
+        ASSERT_EQ(strs->at(6),"store"); 
+        ASSERT_EQ(strs->at(7),"o"); 
+        ASSERT_EQ(strs->at(8),"load"); 
+        ASSERT_EQ(strs->at(9),"i"); 
+        ASSERT_EQ(strs->at(10),"load"); 
+        ASSERT_EQ(strs->at(11),"o"); 
+        ASSERT_EQ(strs->at(12),"less"); 
+        ASSERT_EQ(strs->at(13),"store"); 
+        ASSERT_EQ(strs->at(14),"right"); 
+        ASSERT_EQ(strs->at(15),"load"); 
+        ASSERT_EQ(strs->at(16),"right"); 
+        ASSERT_EQ(strs->at(17),"jif"); 
+        ASSERT_EQ(strs->at(18),"startif15"); 
+        ASSERT_EQ(strs->at(19),"load"); 
+        ASSERT_EQ(strs->at(20),"o"); 
+        ASSERT_EQ(strs->at(21),"print"); 
+        ASSERT_EQ(strs->at(22),"jmp"); 
+        ASSERT_EQ(strs->at(23),"endif15"); 
+        ASSERT_EQ(strs->at(24),"startif15:"); 
+        ASSERT_EQ(strs->at(25),"load"); 
+        ASSERT_EQ(strs->at(26),"i"); 
+        ASSERT_EQ(strs->at(27),"print"); 
+        ASSERT_EQ(strs->at(28),"endif15:"); 
+        ASSERT_EQ(strs->at(29),"halt"); 
+}

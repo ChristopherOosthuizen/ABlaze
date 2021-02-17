@@ -7,8 +7,7 @@ ByteGen::ByteGen(Body* ast){
 }
 
 vector<string>* ByteGen::generateByteCode(){
-        for(int i=0; i< m_ast->m_lines->size();i++)
-                expressionToByte(m_ast->m_lines->at(i));
+        bodyToByte(m_ast);
         toCommand("halt");
         return m_lines;
 }
@@ -27,19 +26,56 @@ void ByteGen::expressionToByte(Expression* expr){
                 functionCallToByte((FunctionCall*)expr);
         }else if(name =="Literal"){
                 TokenType type = ((Literal*)expr)->m_token->m_type;
-                if(type == TokenType::IDEN)
-                        toCommand("load "+((Literal*)expr)->m_token->m_symbol);
-                else 
-                        toCommand("push "+((Literal*)expr)->m_token->m_symbol);
+                if(type == TokenType::IDEN){
+                        toCommand("load");
+                        toCommand(((Literal*)expr)->m_token->m_symbol); 
+                }
+                else {
+                        toCommand("push");
+                        toCommand(((Literal*)expr)->m_token->m_symbol);
+                }
+        }else if(name == "Body"){
+                bodyToByte((Body*)expr);
         }
 
+
                 
+}
+
+void ByteGen::bodyToByte(Body* body){
+        for(int i=0; i< body->m_lines->size();i++){
+                Expression* current = body->m_lines->at(i);
+                if(current->name() == "Body"){
+                        Body* bod = (Body*)current;
+                        if(bod->m_control->name() == "If"){
+                                string line = to_string(m_lines->size());
+                                expressionToByte(((IfStat*)bod->m_control)->m_control);
+                                toCommand("jif");
+                                toCommand("startif"+line);
+                                if(body->m_lines->at(i+1)->name() == "Body" && ((Body*)body->m_lines->at(i+1))->m_control == NULL){
+                                        bodyToByte((Body*)body->m_lines->at(i+1));
+                                        i++;
+                                }
+                                toCommand("jmp");
+                                toCommand("endif"+line);
+                                toCommand("startif"+line+":");
+                                bodyToByte(bod);
+                                toCommand("endif"+line+":");
+                        }
+                }
+                else 
+                        expressionToByte(current);
+                
+               
+        }
+
 }
 
 void ByteGen::decToCommand(Decleration* dec){
         string nameer=((Literal*)dec->m_name)->m_token->m_symbol;  
         expressionToByte(dec->m_value);
-        toCommand("store "+((Literal*)dec->m_name)->m_token->m_symbol);
+        toCommand("store");
+        toCommand(((Literal*)dec->m_name)->m_token->m_symbol); 
 
 }
 
