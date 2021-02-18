@@ -16,6 +16,16 @@
 #include "ByteLexer.h"
 using namespace std;
 
+int version(){
+        cout<<"ABlaze version: 0.1"<<endl;
+        return 0;
+}
+
+int help(){
+        cout<< "Help function not implemented yet"<<endl;
+        return 0;
+}
+
 /* Starts a repl. or in other words
  * Continuously executes users input as the program runs
  */
@@ -29,7 +39,7 @@ int repl() {
     return 0;
 }
 
-int convertToByte(const string& wholeFile){
+int convertToByte(const string& wholeFile,const string& output){
     Lexer lexer(wholeFile);
     vector<Token*> tokens = lexer.readAllTokens();
     if(ErrorThrower::hasError){
@@ -56,8 +66,7 @@ int convertToByte(const string& wholeFile){
     }
     ByteGen byt(body);
     vector<string>* strs = byt.generateByteCode();
-    ofstream filer("a.laze");
-    cout<<strs->size()<<endl;
+    ofstream filer(output);
      for(string s:*strs){
         filer<<s<<endl;
     }
@@ -69,7 +78,7 @@ int convertToByte(const string& wholeFile){
  * interprets ABlaze programs contained inside
  * files
  */
-int file(string path,bool isOk) {
+int file(string path,string  output,bool run) {
     string wholeFile;
     string line;
 
@@ -84,12 +93,13 @@ int file(string path,bool isOk) {
         wholeFile += line+"\n";
     }
     reader.close();
-    if(!isOk)
-        return convertToByte(wholeFile);
-       ByteLexer lexer(wholeFile);
-       vector<ByteToken*> tokens = lexer.readAllTokens();
-       Vm vm(tokens); 
-       vm.execute();
+    if(!run)
+        return convertToByte(wholeFile,output);
+    ByteLexer lexer(wholeFile);
+    vector<ByteToken*> tokens = lexer.readAllTokens();
+    Vm vm(tokens);
+    vm.execute();
+    return 0;
 }
 
 
@@ -100,6 +110,20 @@ int file(string path,bool isOk) {
  * if there are more throw a error.
  */
 int main(int argc , char** argv) {
-
-        return file("/home/chris/Projects/ABlaze/a.laze",true);
+        if(argc == 1)
+                return repl(); 
+        string arg1 = argv[1];
+        if(arg1 =="--help" || arg1=="-h")
+                return help();
+        else if(arg1 =="--version" || arg1=="-v")
+                return version();
+        string output = "a.laze";
+        string input = argv[argc-1];
+        if(arg1 == "-r"){
+                return file(input,output,true);
+        }
+        if(arg1 == "-o"){
+                output = argv[2];
+        }
+        return file(input,output,false);
 }

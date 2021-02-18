@@ -119,7 +119,7 @@ void ByteGen::binToCommand(BinOP* op){
 
 void ByteGen::functionToByte(Body* body){
 
-        FunctionCall* control = (FunctionCall*)((Function*)body->m_control)->m_cal;
+        FunctionCall* control = (FunctionCall*)((Function*)body->m_control)->m_call;
         string name = control->m_name->m_token->m_symbol; 
         toCommand(name+":");  
         for(int i=0; i< control->m_args->size();i++){
