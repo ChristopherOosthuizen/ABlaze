@@ -38,8 +38,6 @@ void ByteGen::expressionToByte(Expression* expr){
                 bodyToByte((Body*)expr);
         }
 
-
-                
 }
 
 void ByteGen::bodyToByte(Body* body){
@@ -47,8 +45,8 @@ void ByteGen::bodyToByte(Body* body){
                 Expression* current = body->m_lines->at(i);
                 if(current->name() == "Body"){
                         Body* bod = (Body*)current;
+                        string line = to_string(m_lines->size());
                         if(bod->m_control->name() == "If"){
-                                string line = to_string(m_lines->size());
                                 expressionToByte(((IfStat*)bod->m_control)->m_control);
                                 toCommand("jif");
                                 toCommand("startif"+line);
@@ -61,6 +59,8 @@ void ByteGen::bodyToByte(Body* body){
                                 toCommand("startif"+line+":");
                                 bodyToByte(bod);
                                 toCommand("endif"+line+":");
+                        }else if(bod->m_control->name() == "While"){
+                                whileToByte(bod,line);
                         }
                 }
                 else 
@@ -69,6 +69,16 @@ void ByteGen::bodyToByte(Body* body){
                
         }
 
+}
+
+void ByteGen::whileToByte(Body* body,string line){
+        toCommand("startWhile"+line+":");
+        expressionToByte(((WhileStat*)body->m_control)->m_control);
+        toCommand("not");
+        toCommand("jif");
+        toCommand("endWhile"+line);
+        bodyToByte(body);
+        toCommand("endWhile"+line+":");
 }
 
 void ByteGen::decToCommand(Decleration* dec){

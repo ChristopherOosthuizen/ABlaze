@@ -46,8 +46,22 @@ TEST(ASTGeneral,elsser){
         ASSERT_EQ(ifs->m_lines->size(),1);
         ASSERT_EQ(ifs->m_lines->at(0)->name(),"FunctionCall");
 
+}
 
-
+TEST(ASTGenetal,whiles){
+        Lexer lexer("int i=0; while(i<12){i =i+1; print(i);} ");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),2);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_EQ(body->m_lines->at(1)->name(),"Body");
+        Body* whiler= (Body*)body->m_lines->at(1);
+        WhileStat* stat = (WhileStat*)whiler->m_control;
+        ASSERT_EQ(stat->m_control->name(),"BinOP");
+        ASSERT_EQ(whiler->m_lines->size(),2);
+        ASSERT_EQ(whiler->m_lines->at(0)->name(),"Decleration");
+        ASSERT_EQ(whiler->m_lines->at(1)->name(),"FunctionCall");
 
 
 }

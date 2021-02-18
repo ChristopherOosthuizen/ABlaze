@@ -117,3 +117,38 @@ TEST(ByteCode,ifs){
         ASSERT_EQ(strs->at(28),"endif15:"); 
         ASSERT_EQ(strs->at(29),"halt"); 
 }
+
+TEST(ByteCode,whiles){
+        Lexer lexer("int i=0; while(i<12){i =i+1; print(i);} ");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),25);
+        ASSERT_EQ(strs->at(0),"push"); 
+        ASSERT_EQ(strs->at(1),"0"); 
+        ASSERT_EQ(strs->at(2),"store"); 
+        ASSERT_EQ(strs->at(3),"i"); 
+        ASSERT_EQ(strs->at(4),"startWhile4:"); 
+        ASSERT_EQ(strs->at(5),"load"); 
+        ASSERT_EQ(strs->at(6),"i"); 
+        ASSERT_EQ(strs->at(7),"push"); 
+        ASSERT_EQ(strs->at(8),"12"); 
+        ASSERT_EQ(strs->at(9),"islt"); 
+        ASSERT_EQ(strs->at(10),"not"); 
+        ASSERT_EQ(strs->at(11),"jif"); 
+        ASSERT_EQ(strs->at(12),"endWhile4"); 
+        ASSERT_EQ(strs->at(13),"load"); 
+        ASSERT_EQ(strs->at(14),"i"); 
+        ASSERT_EQ(strs->at(15),"push"); 
+        ASSERT_EQ(strs->at(16),"1"); 
+        ASSERT_EQ(strs->at(17),"add"); 
+        ASSERT_EQ(strs->at(18),"store"); 
+        ASSERT_EQ(strs->at(19),"i"); 
+        ASSERT_EQ(strs->at(20),"load"); 
+        ASSERT_EQ(strs->at(21),"i"); 
+        ASSERT_EQ(strs->at(22),"print"); 
+        ASSERT_EQ(strs->at(23),"endWhile4:"); 
+        ASSERT_EQ(strs->at(24),"halt"); 
+}
