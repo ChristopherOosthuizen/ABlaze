@@ -92,6 +92,13 @@ void Vm::binOP(ByteType type){
         int result =0;
         int one = m_stack[m_stack.size()-1];
                 m_stack.pop_back();
+        if(type==ByteType::NOT){
+                if(one ==1)
+                        m_stack.push_back(1);
+                else
+                        m_stack.push_back(0);
+                return;
+        }
         int two = m_stack[m_stack.size()-1];
                 m_stack.pop_back();
         switch(type){
@@ -110,9 +117,9 @@ void Vm::binOP(ByteType type){
                 case ByteType::OR:
                         result = one | two; break;
                 case ByteType::ISGT:
-                        result = one < two; break;
-                case ByteType::ISLT:
                         result = one > two; break;
+                case ByteType::ISLT:
+                        result = one < two; break;
                 case ByteType::ISLE:
                         result = one <= two; break;
                 case ByteType::ISGE:
