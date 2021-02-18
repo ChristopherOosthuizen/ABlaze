@@ -61,6 +61,8 @@ void ByteGen::bodyToByte(Body* body){
                                 toCommand("endif"+line+":");
                         }else if(bod->m_control->name() == "While"){
                                 whileToByte(bod,line);
+                        }else if(bod->m_control->name() =="For"){
+                                forToByte(bod,line);
                         }
                 }
                 else 
@@ -78,8 +80,26 @@ void ByteGen::whileToByte(Body* body,string line){
         toCommand("jif");
         toCommand("endWhile"+line);
         bodyToByte(body);
+        toCommand("jmp");
+        toCommand("startWhile"+line);
         toCommand("endWhile"+line+":");
 }
+
+void ByteGen::forToByte(Body* body,string line){
+        ForStat* stat =((ForStat*)body->m_control);
+        expressionToByte(stat->m_initial);
+        toCommand("startFor"+line+":");
+        expressionToByte(stat->m_condition);
+        toCommand("not");
+        toCommand("jif");
+        toCommand("endFor"+line);
+        bodyToByte(body);
+        expressionToByte(stat->m_repitition);
+        toCommand("jmp");
+        toCommand("startFor"+line);
+        toCommand("endFor"+line+":");
+}
+
 
 void ByteGen::decToCommand(Decleration* dec){
         string nameer=((Literal*)dec->m_name)->m_token->m_symbol;  
