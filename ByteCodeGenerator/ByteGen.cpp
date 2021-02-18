@@ -63,6 +63,8 @@ void ByteGen::bodyToByte(Body* body){
                                 whileToByte(bod,line);
                         }else if(bod->m_control->name() =="For"){
                                 forToByte(bod,line);
+                        }else if(bod->m_control->name() == "Function"){
+                                functionToByte(bod);
                         }
                 }
                 else 
@@ -115,10 +117,31 @@ void ByteGen::binToCommand(BinOP* op){
                 toCommand(Lexer::typeToString(op->m_op->m_type));
 }
 
+void ByteGen::functionToByte(Body* body){
+
+        FunctionCall* control = (FunctionCall*)((Function*)body->m_control)->m_cal;
+        string name = control->m_name->m_token->m_symbol; 
+        toCommand(name+":");  
+        for(int i=0; i< control->m_args->size();i++){
+                toCommand("store");
+                Decleration* dec =(Decleration*)control->m_args->at(i) ;
+                toCommand(((Literal*)dec->m_name)->m_token->m_symbol);
+        }
+        bodyToByte(body);
+        if(name != "main"){
+                toCommand("return");
+        }
+}
+
 void ByteGen::functionCallToByte(FunctionCall* call){
         string symb = call->m_name->m_token->m_symbol;
         for(int i=0; i< call->m_args->size();i++){
                 expressionToByte(call->m_args->at(i));
         }
-        m_lines->push_back("print");
+        if(symb == "print"){
+                m_lines->push_back("print");
+                return;
+        }
+        toCommand("call");
+        toCommand(symb);
 }

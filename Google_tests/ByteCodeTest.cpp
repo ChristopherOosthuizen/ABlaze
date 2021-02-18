@@ -192,3 +192,31 @@ TEST(ByteCode,fors){
         ASSERT_EQ(strs->at(25),"endFor0:"); 
         ASSERT_EQ(strs->at(26),"halt"); 
 }
+
+TEST(ByteCode,functions){
+        Lexer lexer("void  runner(int i){print(i);} int main(){ int o = 12; runner(o)}");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),17);
+        ASSERT_EQ(strs->at(0),"runner:"); 
+        ASSERT_EQ(strs->at(1),"store"); 
+        ASSERT_EQ(strs->at(2),"i"); 
+        ASSERT_EQ(strs->at(3),"load"); 
+        ASSERT_EQ(strs->at(4),"i"); 
+        ASSERT_EQ(strs->at(5),"print"); 
+        ASSERT_EQ(strs->at(6),"return"); 
+        ASSERT_EQ(strs->at(7),"main:"); 
+        ASSERT_EQ(strs->at(8),"push"); 
+        ASSERT_EQ(strs->at(9),"12"); 
+        ASSERT_EQ(strs->at(10),"store"); 
+        ASSERT_EQ(strs->at(11),"o"); 
+        ASSERT_EQ(strs->at(12),"load"); 
+        ASSERT_EQ(strs->at(13),"o"); 
+        ASSERT_EQ(strs->at(14),"call"); 
+        ASSERT_EQ(strs->at(15),"runner"); 
+        ASSERT_EQ(strs->at(16),"halt"); 
+ 
+}
