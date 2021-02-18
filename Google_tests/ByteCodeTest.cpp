@@ -5,6 +5,24 @@
 #include "Lexer.h"
 #include "ByteGen.h"
 
+
+TEST(ByteCode,pluss){
+        Lexer lexer("i++;");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),8);
+        ASSERT_EQ(strs->at(0),"load"); 
+        ASSERT_EQ(strs->at(1),"i"); 
+        ASSERT_EQ(strs->at(2),"push"); 
+        ASSERT_EQ(strs->at(3),"1"); 
+        ASSERT_EQ(strs->at(4),"add"); 
+        ASSERT_EQ(strs->at(5),"store"); 
+        ASSERT_EQ(strs->at(6),"i"); 
+        ASSERT_EQ(strs->at(7),"halt"); 
+}
+
 TEST(ByteCode,equations){
         Lexer lexer("int i=12+8*2");
         ASTGen gen(lexer.readAllTokens());
@@ -220,3 +238,5 @@ TEST(ByteCode,functions){
         ASSERT_EQ(strs->at(16),"halt"); 
  
 }
+
+

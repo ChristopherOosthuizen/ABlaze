@@ -19,6 +19,7 @@ class ByteGen{
         void whileToByte(Body* body,string line);
         void forToByte(Body* body,string line);
         void functionToByte(Body* body);
+        void unToByte(Unary* unary);
         public:
                 ByteGen(Body* ast);
                 vector<string>* generateByteCode();

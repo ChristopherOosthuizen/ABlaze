@@ -66,7 +66,8 @@ int convertToByte(const string& wholeFile,const string& output){
     }
     ByteGen byt(body);
     vector<string>* strs = byt.generateByteCode();
-    ofstream filer(output);
+    ofstream filer;
+    filer.open(output,std::ofstream::out | std::ofstream::trunc );
      for(string s:*strs){
         filer<<s<<endl;
     }

@@ -61,7 +61,7 @@ TEST(VM,IF){
        vm.execute();
        ASSERT_EQ(tokens.size(),22);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],12);
 
 }
 
@@ -72,7 +72,7 @@ TEST(VM,CALL){
        vm.execute();
        ASSERT_EQ(tokens.size(),24);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],99);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],25);
 }
 
 TEST(VM,labels){
@@ -82,5 +82,5 @@ TEST(VM,labels){
        vm.execute();
        ASSERT_EQ(tokens.size(),24);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],12);
 }

@@ -36,6 +36,8 @@ void ByteGen::expressionToByte(Expression* expr){
                 }
         }else if(name == "Body"){
                 bodyToByte((Body*)expr);
+        }else if(name == "UnOP"){
+                unToByte((Unary*)expr);
         }
 
 }
@@ -72,6 +74,22 @@ void ByteGen::bodyToByte(Body* body){
                 
                
         }
+
+}
+
+void ByteGen::unToByte(Unary* unary){
+        TokenType type = unary->m_op->m_token->m_type;
+        toCommand("load");
+        toCommand(unary->m_iden->m_token->m_symbol);
+        toCommand("push");
+        toCommand("1");
+        switch(type){
+                case TokenType::PLUS_PLUS: toCommand("add");break;
+                case TokenType::MINUS_MINUS: toCommand("minus");break;
+
+        }
+        toCommand("store");
+        toCommand(unary->m_iden->m_token->m_symbol);
 
 }
 

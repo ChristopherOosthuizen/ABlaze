@@ -10,8 +10,6 @@ using namespace std;
 class Vm{
 public:
         vector<int> m_stack;   
-        vector<int> m_isString;
-        vector<string> m_strings;
         vector<ByteToken*> m_tokens;
         map<string,int> m_vars;
         map<string,int> m_labels;
