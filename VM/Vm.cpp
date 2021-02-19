@@ -86,7 +86,11 @@ void Vm::call(){
 }
 
 void Vm::print(){
-        cout<< m_stack[m_stack.size()-1].m_val.m_int<<endl;
+        if(m_stack[m_stack.size()-1].m_type == ByteType::INT)
+                cout<< m_stack[m_stack.size()-1].m_val.m_int<<endl;
+        else if(m_stack[m_stack.size()-1].m_type == ByteType::DOUBLE)
+                cout<< m_stack[m_stack.size()-1].m_val.m_double<<endl;
+
         m_stack.pop_back();
 }
 
