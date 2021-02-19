@@ -13,13 +13,24 @@ TEST(VM,PLUS){
 
 }
 
+TEST(VM,isle){
+        ByteLexer lexer("push 12 push 14 isle halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
+
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],1);
+
+}
+
+
 
 TEST(VM,MINUS){
          ByteLexer lexer("push 120 push 6 minus halt");
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],-114);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],114);
 
 }
 
@@ -37,7 +48,7 @@ TEST(VM,DIVIDE){
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],0);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],20);
 
 }
 
@@ -61,7 +72,7 @@ TEST(VM,IF){
        vm.execute();
        ASSERT_EQ(tokens.size(),22);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],12);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
 
 }
 
@@ -72,7 +83,7 @@ TEST(VM,CALL){
        vm.execute();
        ASSERT_EQ(tokens.size(),24);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],25);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],99);
 }
 
 TEST(VM,labels){
@@ -82,5 +93,5 @@ TEST(VM,labels){
        vm.execute();
        ASSERT_EQ(tokens.size(),24);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],12);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
 }

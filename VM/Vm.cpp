@@ -103,27 +103,27 @@ void Vm::binOP(ByteType type){
                 m_stack.pop_back();
         switch(type){
                 case ByteType::ADD:
-                        result = one + two;break;
+                        result = two + one;break;
                 case ByteType::MINUS:
-                        result = one - two;break;
+                        result = two - one;break;
                 case ByteType::TIMES:
-                        result = one * two;break;
+                        result = two * one;break;
                 case ByteType::DIVIDE:
-                        result = one / two;break;
+                        result = two / one;break;
                 case ByteType::XOR:
-                        result = one ^ two; break;
+                        result = two ^ one; break;
                 case ByteType::AND:
-                        result = one & two; break;
+                        result = two & one; break;
                 case ByteType::OR:
-                        result = one | two; break;
+                        result = two | one; break;
                 case ByteType::ISGT:
-                        result = one > two; break;
+                        result = two > one; break;
                 case ByteType::ISLT:
-                        result = one < two; break;
+                        result = two < one; break;
                 case ByteType::ISLE:
-                        result = one <= two; break;
+                        result = two <= one; break;
                 case ByteType::ISGE:
-                        result = one >= two; break;
+                        result = two >= one; break;
 
         }
         m_stack.push_back(result);
