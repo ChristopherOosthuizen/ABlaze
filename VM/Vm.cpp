@@ -48,7 +48,7 @@ void Vm::step(){
 }
 
 void Vm::jumpIf(){
-        if(m_stack[m_stack.size()-1] ==1)
+        if(m_stack[m_stack.size()-1].m_val.m_int ==1)
                 jump();
         m_stack.pop_back();
 }
@@ -61,7 +61,8 @@ void Vm::jump(){
 }
 
 void Vm::pushToStack(){
-        m_stack.push_back(m_tokens[m_pos++]->m_value);
+        DataVal val(ByteType::INT,Val(m_tokens[m_pos++]->m_value,-1,-1));
+        m_stack.push_back(val);
 }
 
 void Vm::load(){
@@ -84,22 +85,26 @@ void Vm::call(){
 }
 
 void Vm::print(){
-        cout<< m_stack[m_stack.size()-1]<<endl;
+        cout<< m_stack[m_stack.size()-1].m_val.m_int<<endl;
         m_stack.pop_back();
 }
 
 void Vm::binOP(ByteType type){
         int result =0;
-        int one = m_stack[m_stack.size()-1];
+        int one = m_stack[m_stack.size()-1].m_val.m_int;
                 m_stack.pop_back();
         if(type==ByteType::NOT){
-                if(one ==1)
-                        m_stack.push_back(0);
-                else
-                        m_stack.push_back(1);
+                int result =1;
+                if(one ==1){
+                        result = 0;
+
+                }
+                DataVal val(ByteType::INT,Val(result,-1,-1));
+                m_stack.push_back(val);
+
                 return;
         }
-        int two = m_stack[m_stack.size()-1];
+        int two = m_stack[m_stack.size()-1].m_val.m_int;
                 m_stack.pop_back();
         switch(type){
                 case ByteType::ADD:
@@ -126,7 +131,8 @@ void Vm::binOP(ByteType type){
                         result = two >= one; break;
 
         }
-        m_stack.push_back(result);
+        DataVal val(ByteType::INT,Val(result,-1,-1));
+        m_stack.push_back(val);
 
 }
 

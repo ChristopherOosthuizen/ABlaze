@@ -9,7 +9,7 @@ TEST(VM,PLUS){
 
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],126);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int,126);
 
 }
 
@@ -19,7 +19,7 @@ TEST(VM,isle){
 
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],1);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,1);
 
 }
 
@@ -29,7 +29,7 @@ TEST(VM,isge){
 
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],0);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,0);
 
 }
 
@@ -39,7 +39,7 @@ TEST(VM,isgt){
 
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],0);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,0);
 
 }
 
@@ -51,7 +51,7 @@ TEST(VM,nots){
 
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],1);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,1);
 
 }
 
@@ -63,7 +63,7 @@ TEST(VM,islt){
 
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],1);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,1);
 
 }
 
@@ -74,7 +74,7 @@ TEST(VM,MINUS){
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],114);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,114);
 
 }
 
@@ -83,7 +83,7 @@ TEST(VM,TIMES){
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],720);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,720);
 
 }
 
@@ -92,7 +92,7 @@ TEST(VM,DIVIDE){
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],20);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,20);
 
 }
 
@@ -104,7 +104,7 @@ TEST(VM,LOADSTORE){
        vm.execute();
        ASSERT_EQ(tokens.size(),14);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],18);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,18);
 
 }
 
@@ -116,7 +116,7 @@ TEST(VM,IF){
        vm.execute();
        ASSERT_EQ(tokens.size(),22);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,13);
 
 }
 
@@ -127,7 +127,7 @@ TEST(VM,CALL){
        vm.execute();
        ASSERT_EQ(tokens.size(),24);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],99);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,99);
 }
 
 TEST(VM,labels){
@@ -137,5 +137,5 @@ TEST(VM,labels){
        vm.execute();
        ASSERT_EQ(tokens.size(),24);
        ASSERT_EQ(vm.m_stack.size(),1);
-       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],13);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,13);
 }
