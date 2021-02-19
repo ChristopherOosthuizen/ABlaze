@@ -247,6 +247,7 @@ Token* Lexer::next() {
                    return next();
 	case '\0': return new Token(TokenType::END,"\0",m_line);
 	case '"': return strings();
+        case '\'': return chars();
 	
 	default: 
 		  if(isNum(current)){
@@ -278,6 +279,31 @@ char Lexer::peek() {
 bool Lexer::isAtEnd() {
    return m_input.length() <= m_pos ;
 }
+
+
+/*
+ * Convert next string into a token 
+ * ending once a non excaped sequenced quote 
+ * it given
+ */
+Token* Lexer::chars(){
+	int start = m_pos;	
+	bool isEsc = false;
+	char peeked = peek();
+	while(m_pos < m_input.length() && (peeked != '\'' || isEsc)){ 
+		if(peeked == '\n')
+			m_line++;
+		m_pos++;
+		isEsc = m_input.at(m_pos-1) == '\\';
+		peeked = peek();
+	}
+	if(m_pos >= m_input.length() ){
+		ErrorThrower::unterminatedString(m_line);
+	}
+        m_pos++;
+	return new Token(TokenType::CHAR,m_input.substr(start, (m_pos-1)-start),m_line);
+}
+
 
 /*
  * Convert next string into a token 

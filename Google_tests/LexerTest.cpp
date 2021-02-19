@@ -414,6 +414,14 @@ TEST(ERRORS, unterminated){
 	ErrorThrower::errors = new vector<string>();
 }
 
+TEST(Lexer,chars){
+        Lexer lexer("'3'");
+        Token* token;
+        token = lexer.next();
+        ASSERT_EQ(token->m_type,TokenType::CHAR);
+}
+
+
 //Test weather the parser can handle strings properly
 TEST(ASTSTRUT, mores){
         Lexer lexer("for(var i=0; i != 2; ++i){ printer(\"hello\");}");

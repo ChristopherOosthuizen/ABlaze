@@ -32,6 +32,7 @@ private:
     Token* Double(); // convert a double to a token
     Token* Integer(); // convert a integer to a token
     Token* Iden(); // convert identifiers and reserved keywords to correct token type
+    Token* chars();
 };
 
 #endif //ABLAZE_LEXER_H
