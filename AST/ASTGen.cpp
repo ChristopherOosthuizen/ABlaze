@@ -190,6 +190,7 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::STRING:
                 case TokenType::DOUBLE:
                 case TokenType::BOOL:
+                case TokenType::CHAR:
                 case TokenType::INT: return expr; 
                 case TokenType::FOR:
                 case TokenType::WHILE:
