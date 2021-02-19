@@ -22,8 +22,6 @@ Body* ASTGen::generateAST(){
         return new Body(NULL,lines);
 }
 
-
-
 // check the token that is dist
 // number ahead of the current token
 Token* ASTGen::peek(int dist){
@@ -271,7 +269,8 @@ FunctionCall* ASTGen::functionCall(Literal* name){
                do{
                         args->push_back(expression(new Literal(next())));          
                         isComma = equals(peek(),TokenType::COMMA);
-                        delete next();
+                        if(!equals(peek(),TokenType::SEMI_COLON))
+                                delete next();
                }while(isComma);
         }else{
                 delete next();

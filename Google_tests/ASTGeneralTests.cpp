@@ -8,6 +8,21 @@
 #include "Lexer.h"
 #include "ErrorThrower.h"
 
+TEST(ASTGeneral,prints){
+        ErrorThrower::hasError = false;
+        ErrorThrower::errors = new vector<string>();
+        string end = "print(15+5);\nprint(1);\n";
+        Lexer lexer(end);
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_TRUE(!ErrorThrower::hasError);
+        ASSERT_EQ(body->m_lines->size(),2);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"FunctionCall");
+        ASSERT_EQ(body->m_lines->at(1)->name(),"FunctionCall");
+
+ 
+}
+
 TEST(ASTGeneral,mainFunction){
         ErrorThrower::hasError = false;
         ErrorThrower::errors = new vector<string>();
