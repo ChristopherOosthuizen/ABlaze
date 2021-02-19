@@ -43,8 +43,20 @@ ByteToken* ByteLexer::createToken( const string& str){
         if(str.at(str.size()-1) == ':')
                 return new ByteToken(ByteType::LABEL,0,str.substr(0,str.size()-1));
         if(isdigit(str.at(0)))
-                return new ByteToken(ByteType::INT,stoi(str),str);
+                return numbers(str);
         return new ByteToken(ByteType::IDEN,0,str);
+}
+
+ByteToken* ByteLexer::numbers(const string& str){
+        ByteType type = ByteType::INT;
+        for(int i=0; i <str.size();i++){
+                if(str[i] == '.'){
+                        type = ByteType::DOUBLE;
+                        break;
+                }
+        }
+        double  d= stod(str);
+        return new ByteToken(type,d,str);
 }
 
 vector<ByteToken*> ByteLexer::readAllTokens(){

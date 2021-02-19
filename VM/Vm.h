@@ -54,5 +54,6 @@ public:
         void Return();
         void label();
         void binOP(ByteType type);
+        void binOPDouble(ByteType type,double one,double two);
 };
 #endif

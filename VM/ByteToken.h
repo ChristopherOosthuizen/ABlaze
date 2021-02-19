@@ -8,7 +8,7 @@ using namespace std;
 class ByteToken{
 public:
         ByteType m_type;
-        int m_value;
+        double m_value;
         string m_symbol;
         ByteToken(ByteType type,int value,const string& symbol){
                 m_type =type;

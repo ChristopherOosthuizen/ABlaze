@@ -14,6 +14,7 @@ class ByteLexer{
         map<string,ByteType> m_types;
         string readNext();
         ByteToken* createToken(const string& str);
+        ByteToken* numbers(const string& str);
         public:
                 ByteLexer(const string& input);
                 vector<ByteToken*> readAllTokens();

@@ -61,7 +61,8 @@ void Vm::jump(){
 }
 
 void Vm::pushToStack(){
-        DataVal val(ByteType::INT,Val(m_tokens[m_pos++]->m_value,-1,-1));
+        DataVal val(m_tokens[m_pos]->m_type,Val(m_tokens[m_pos]->m_value,stod(m_tokens[m_pos]->m_symbol) ,m_tokens[m_pos]->m_value));
+        m_pos++;
         m_stack.push_back(val);
 }
 
@@ -91,11 +92,12 @@ void Vm::print(){
 
 void Vm::binOP(ByteType type){
         int result =0;
-        int one = m_stack[m_stack.size()-1].m_val.m_int;
-                m_stack.pop_back();
+
+        DataVal one = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
         if(type==ByteType::NOT){
                 int result =1;
-                if(one ==1){
+                if(one.m_val.m_int ==1){
                         result = 0;
 
                 }
@@ -104,8 +106,45 @@ void Vm::binOP(ByteType type){
 
                 return;
         }
-        int two = m_stack[m_stack.size()-1].m_val.m_int;
-                m_stack.pop_back();
+        DataVal two = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+        if(two.m_type == ByteType::DOUBLE||one.m_type == ByteType::DOUBLE ){
+                binOPDouble(type, one.m_val.m_double , two.m_val.m_double);
+                return;
+        }
+
+        switch(type){
+                case ByteType::ADD:
+                        result = two.m_val.m_int + one.m_val.m_int;break;
+                case ByteType::MINUS:
+                        result = two.m_val.m_int - one.m_val.m_int;break;
+                case ByteType::TIMES:
+                        result = two.m_val.m_int * one.m_val.m_int;break;
+                case ByteType::DIVIDE:
+                        result = two.m_val.m_int / one.m_val.m_int;break;
+                case ByteType::XOR:
+                        result = two.m_val.m_int ^ one.m_val.m_int; break;
+                case ByteType::AND:
+                        result = two.m_val.m_int & one.m_val.m_int; break;
+                case ByteType::OR:
+                        result = two.m_val.m_int | one.m_val.m_int; break;
+                case ByteType::ISGT:
+                        result = two.m_val.m_int > one.m_val.m_int; break;
+                case ByteType::ISLT:
+                        result = two.m_val.m_int < one.m_val.m_int; break;
+                case ByteType::ISLE:
+                        result = two.m_val.m_int <= one.m_val.m_int; break;
+                case ByteType::ISGE:
+                        result = two.m_val.m_int >= one.m_val.m_int; break;
+
+        }
+        DataVal val(ByteType::INT,Val(result,result,result));
+        m_stack.push_back(val);
+
+}
+
+void Vm::binOPDouble(ByteType type, double one , double two){
+        double result =0;
         switch(type){
                 case ByteType::ADD:
                         result = two + one;break;
@@ -115,12 +154,6 @@ void Vm::binOP(ByteType type){
                         result = two * one;break;
                 case ByteType::DIVIDE:
                         result = two / one;break;
-                case ByteType::XOR:
-                        result = two ^ one; break;
-                case ByteType::AND:
-                        result = two & one; break;
-                case ByteType::OR:
-                        result = two | one; break;
                 case ByteType::ISGT:
                         result = two > one; break;
                 case ByteType::ISLT:
@@ -131,8 +164,16 @@ void Vm::binOP(ByteType type){
                         result = two >= one; break;
 
         }
-        DataVal val(ByteType::INT,Val(result,-1,-1));
+        ByteType typer = ByteType::DOUBLE;
+        switch(type){
+                case ByteType::ISGT: 
+                case ByteType::ISLT: 
+                case ByteType::ISLE: 
+                case ByteType::ISGE: typer = ByteType::INT;
+
+
+        }
+        DataVal val(typer,Val(result,result,result));
         m_stack.push_back(val);
-
+ 
 }
-

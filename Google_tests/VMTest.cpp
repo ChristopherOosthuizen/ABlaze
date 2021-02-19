@@ -13,6 +13,19 @@ TEST(VM,PLUS){
 
 }
 
+TEST(VM,Double){
+        ByteLexer lexer("push 120.4 push 6.5 add halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
+
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_type,ByteType::DOUBLE);
+
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_double,126.9);
+
+}
+
+
 TEST(VM,isle){
         ByteLexer lexer("push 12 push 14 isle halt");
         vector<ByteToken*> tokens = lexer.readAllTokens();
