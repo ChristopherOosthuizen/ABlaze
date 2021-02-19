@@ -23,6 +23,50 @@ TEST(VM,isle){
 
 }
 
+TEST(VM,isge){
+        ByteLexer lexer("push 12 push 14 isge halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
+
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],0);
+
+}
+
+TEST(VM,isgt){
+        ByteLexer lexer("push 12 push 14 isgt halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
+
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],0);
+
+}
+
+
+
+TEST(VM,nots){
+        ByteLexer lexer("push 12 push 14 isgt not halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
+
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],1);
+
+}
+
+
+
+TEST(VM,islt){
+        ByteLexer lexer("push 12 push 14 islt halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
+
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1],1);
+
+}
+
 
 
 TEST(VM,MINUS){

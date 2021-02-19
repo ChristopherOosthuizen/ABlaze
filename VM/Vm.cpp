@@ -94,9 +94,9 @@ void Vm::binOP(ByteType type){
                 m_stack.pop_back();
         if(type==ByteType::NOT){
                 if(one ==1)
-                        m_stack.push_back(1);
-                else
                         m_stack.push_back(0);
+                else
+                        m_stack.push_back(1);
                 return;
         }
         int two = m_stack[m_stack.size()-1];
