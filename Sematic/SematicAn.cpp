@@ -111,6 +111,7 @@ TokenType SematicAn::endTypeLiteral(Literal* expr,map<string,TokenType>* vars, m
 				case TokenType::BOOL: return TokenType::IDEN_BOOL;
 				case TokenType::STRING: return TokenType::IDEN_STRING;
 				case TokenType::INT: return TokenType::IDEN_INT;
+                                case TokenType::CHAR: return TokenType::IDEN_CHAR;
 
 			}
 			return ((Literal*) expr)->m_token->m_type;
