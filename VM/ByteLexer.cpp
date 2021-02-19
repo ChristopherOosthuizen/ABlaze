@@ -42,7 +42,7 @@ ByteToken* ByteLexer::createToken( const string& str){
                 return new ByteToken(m_types[str],0,str);
         if(str.at(str.size()-1) == ':')
                 return new ByteToken(ByteType::LABEL,0,str.substr(0,str.size()-1));
-        if(isdigit(str.at(0)))
+        if(str.at(0) == '.' ||isdigit(str.at(0)))
                 return numbers(str);
         return new ByteToken(ByteType::IDEN,0,str);
 }
