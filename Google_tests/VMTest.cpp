@@ -13,6 +13,19 @@ TEST(VM,PLUS){
 
 }
 
+TEST(VM,strings){
+        ByteLexer lexer("push \"hello\" push \" there\" add halt");
+        vector<ByteToken*> tokens = lexer.readAllTokens();
+
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_type,ByteType::STRING);
+
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_string,"hello there");
+
+}
+
+
 TEST(VM,Double){
         ByteLexer lexer("push 120.4 push 6.5 add halt");
         vector<ByteToken*> tokens = lexer.readAllTokens();

@@ -1,6 +1,5 @@
 #ifndef ABLAZE_BYTELEXER_H
-#define ABLAZE_BYTELEXER_H
-
+#define ABLAZE_BYTELEXER_H 
 #include "ByteToken.h"
 #include <vector>
 #include <map>
@@ -13,6 +12,7 @@ class ByteLexer{
         int m_pos;
         map<string,ByteType> m_types;
         string readNext();
+        string strings(int start);
         ByteToken* createToken(const string& str);
         ByteToken* numbers(const string& str);
         public:

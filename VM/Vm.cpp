@@ -61,7 +61,10 @@ void Vm::jump(){
 }
 
 void Vm::pushToStack(){
-        DataVal val(m_tokens[m_pos]->m_type,Val(m_tokens[m_pos]->m_value,stod(m_tokens[m_pos]->m_symbol) ,m_tokens[m_pos]->m_value));
+        double value =0;
+        if(m_tokens[m_pos]->m_type != ByteType::STRING)
+                value = stod(m_tokens[m_pos]->m_symbol); 
+        DataVal val(m_tokens[m_pos]->m_type,Val(m_tokens[m_pos]->m_value, value ,m_tokens[m_pos]->m_value,m_tokens[m_pos]->m_symbol));
         m_pos++;
         m_stack.push_back(val);
 }
@@ -86,10 +89,7 @@ void Vm::call(){
 }
 
 void Vm::print(){
-        if(m_stack[m_stack.size()-1].m_type == ByteType::INT)
-                cout<< m_stack[m_stack.size()-1].m_val.m_int<<endl;
-        else if(m_stack[m_stack.size()-1].m_type == ByteType::DOUBLE)
-                cout<< m_stack[m_stack.size()-1].m_val.m_double<<endl;
+        cout<< m_stack[m_stack.size()-1].m_val.m_string<<endl;
 
         m_stack.pop_back();
 }
@@ -105,13 +105,18 @@ void Vm::binOP(ByteType type){
                         result = 0;
 
                 }
-                DataVal val(ByteType::INT,Val(result,-1,-1));
+                DataVal val(ByteType::INT,Val(result,-1,-1,to_string(result)));
                 m_stack.push_back(val);
 
                 return;
         }
         DataVal two = m_stack[m_stack.size()-1];
         m_stack.pop_back();
+        if(two.m_type == ByteType::STRING||one.m_type == ByteType::STRING){
+                binOPSTRING(type, one.m_val.m_string, two.m_val.m_string);
+                return;
+
+        }
         if(two.m_type == ByteType::DOUBLE||one.m_type == ByteType::DOUBLE ){
                 binOPDouble(type, one.m_val.m_double , two.m_val.m_double);
                 return;
@@ -142,7 +147,7 @@ void Vm::binOP(ByteType type){
                         result = two.m_val.m_int >= one.m_val.m_int; break;
 
         }
-        DataVal val(ByteType::INT,Val(result,result,result));
+        DataVal val(ByteType::INT,Val(result,result,result,to_string(result)));
         m_stack.push_back(val);
 
 }
@@ -177,7 +182,18 @@ void Vm::binOPDouble(ByteType type, double one , double two){
 
 
         }
-        DataVal val(typer,Val(result,result,result));
+        DataVal val(typer,Val(result,result,result,to_string(result)));
         m_stack.push_back(val);
  
+}
+
+void Vm::binOPSTRING(ByteType type, string one, string two){
+        string result = "";
+        switch(type){
+                case ByteType::ADD:
+                        result = two+one;break;
+        }
+        DataVal val(ByteType::STRING,Val(0,0,0,result));
+        m_stack.push_back(val);
+
 }

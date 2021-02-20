@@ -28,16 +28,32 @@ ByteLexer::ByteLexer(const string& input){
 
 }
 
+string ByteLexer::strings(int start){
+        m_pos--;
+	char peeked = m_input.at(m_pos+1);
+	while(m_pos < m_input.length() && (peeked != '"' )){ 
+		m_pos++;
+		peeked = m_input[m_pos+1]; 
+	}
+        m_pos+=2;
+        return m_input.substr(start, (m_pos)-start);  
+
+}
+
 string ByteLexer::readNext(){
         int start = m_pos;
         char c;
         do{
                 c= m_input.at(m_pos++);
+                if(c== '"')
+                        return strings(start);
         }while(m_pos< m_input.size() && c != ' ' && c!='\n'); 
         return m_input.substr(start, m_pos-start-1);
 }
 
 ByteToken* ByteLexer::createToken( const string& str){
+        if(str.at(0) =='"')
+                return new ByteToken(ByteType::STRING,0,str.substr(1,str.size()-2));
         if(m_types.count(str) !=0)
                 return new ByteToken(m_types[str],0,str);
         if(str.at(str.size()-1) == ':')

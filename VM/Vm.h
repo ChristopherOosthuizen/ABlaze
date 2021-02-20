@@ -13,10 +13,12 @@ public:
         int m_int;
         double m_double;
         char m_char;
-        Val(int in, double d, char c){
+        string m_string;
+        Val(int in, double d, char c , const string& str){
                 m_int = in;
                 m_double = d;
                 m_char = c;
+                m_string= str;
         }
         Val(){}
 };
@@ -55,5 +57,6 @@ public:
         void label();
         void binOP(ByteType type);
         void binOPDouble(ByteType type,double one,double two);
+        void binOPSTRING(ByteType type, string one,string two);
 };
 #endif
