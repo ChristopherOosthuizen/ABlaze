@@ -32,7 +32,10 @@ void ByteGen::expressionToByte(Expression* expr){
                 }
                 else {
                         toCommand("push");
-                        toCommand(((Literal*)expr)->m_token->m_symbol);
+                        if(((Literal*)expr)->m_token->m_type == TokenType::STRING)
+                                toCommand("\""+((Literal*)expr)->m_token->m_symbol+"\"");
+                        else
+                                toCommand(((Literal*)expr)->m_token->m_symbol);
                 }
         }else if(name == "Body"){
                 bodyToByte((Body*)expr);
