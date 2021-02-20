@@ -70,11 +70,27 @@ void Vm::pushToStack(){
 }
 
 void Vm::load(){
-        m_stack.push_back(m_vars[m_tokens[m_pos++]->m_symbol]);
+        string name=m_tokens[m_pos++]->m_symbol; 
+        for(int i=m_locals.size()-1;i >=0;i--){
+                if(m_locals[i]->m_name ==name){
+                        m_stack.push_back(m_locals[i]->m_val);
+                        return;
+                }
+        }
 }
 
 void Vm::store(){
-        m_vars[m_tokens[m_pos++]->m_symbol] = m_stack[m_stack.size()-1];
+        Local* local = NULL;
+        string name =m_tokens[m_pos++]->m_symbol; 
+        for(int i = m_locals.size()-1; i>=0; i--){
+                if(m_locals[i]->m_name == name){
+                        local = m_locals[i];
+                        local->m_val =m_stack[m_stack.size()-1]; 
+                        break;
+                }
+        }
+        if(local ==NULL)
+                m_locals.push_back(new Local(0,name, m_stack[m_stack.size()-1]));
         m_stack.pop_back();
 }
 
