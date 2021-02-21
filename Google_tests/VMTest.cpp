@@ -136,11 +136,10 @@ TEST(VM,LOADSTORE){
 
 
 TEST(VM,IF){
-        ByteLexer lexer("push 12 store i push 13 store o load i load o isgt jif 19 load o jmp 21 load i halt");
+        ByteLexer lexer("push 12 store i push 13 store o load i load o isgt jif 19 startlocal load o poplocal jmp 21 startlocal load i poplocal halt");
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(tokens.size(),22);
        ASSERT_EQ(vm.m_stack.size(),1);
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,13);
 

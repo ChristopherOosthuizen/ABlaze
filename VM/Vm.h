@@ -37,7 +37,6 @@ public:
 class Local{
 public:
         int m_depth;
-        int m_count;
         string m_name;
         DataVal m_val;
         Local(int depth, const string& name, DataVal val){
@@ -56,6 +55,7 @@ public:
         map<string,int> m_labels;
         bool m_halted;
         int m_pos;
+        int m_localCount;
         int m_jumpBack;
         Vm(vector<ByteToken*>& tokens);
         void execute();
@@ -69,6 +69,8 @@ public:
         void call();
         void Return();
         void label();
+        void createLocal();
+        void popLocal();
         void binOP(ByteType type);
         void binOPDouble(ByteType type,double one,double two);
         void binOPSTRING(ByteType type, string one,string two);

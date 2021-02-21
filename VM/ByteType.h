@@ -8,7 +8,8 @@ enum class ByteType{
         LOAD,STORE,
         LABEL,IDEN,CALL,RETURN,PRINT,
         XOR,NOT,AND,OR,ISGT,ISLT,ISLE,ISGE,
-        JMP,JIF
+        JMP,JIF,
+        CREATELOCAL,POPLOCAL,
         
 };
 #endif

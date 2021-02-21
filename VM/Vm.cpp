@@ -5,6 +5,7 @@ Vm::Vm(vector<ByteToken*>& tokens){
         m_tokens = tokens;
         m_halted = false;
         m_jumpBack =0;
+        m_localCount= 0;
 }
 
 void Vm::execute(){
@@ -39,12 +40,29 @@ void Vm::step(){
                 case ByteType::ISLT:
                 case ByteType::ISLE:
                 case ByteType::ISGE:
-                case ByteType::DIVIDE: binOP(token->m_type);break;
+               case ByteType::DIVIDE: binOP(token->m_type);break;
                 case ByteType::LOAD: load(); break;
                 case ByteType::STORE: store(); break;
                 case ByteType::HALT:
                                        m_halted = true; break;
+                case ByteType::CREATELOCAL:createLocal();break;
+                case ByteType::POPLOCAL:popLocal();break;
+ 
        }
+}
+
+void Vm::createLocal(){
+       m_localCount++; 
+}
+
+void Vm::popLocal(){
+        while(m_locals.size() != 0 && m_locals[m_locals.size()-1]->m_depth == m_localCount){
+              Local* local =m_locals[m_locals.size()-1];   
+              m_locals.pop_back();
+              delete local;
+        }
+        if(m_localCount!=0)
+                m_localCount--;
 }
 
 void Vm::jumpIf(){
@@ -82,7 +100,7 @@ void Vm::load(){
 void Vm::store(){
         Local* local = NULL;
         string name =m_tokens[m_pos++]->m_symbol; 
-        for(int i = m_locals.size()-1; i>=0; i--){
+        for(int i = m_locals.size()-1; i>=0&&m_locals[i]->m_depth == m_localCount ; i--){
                 if(m_locals[i]->m_name == name){
                         local = m_locals[i];
                         local->m_val =m_stack[m_stack.size()-1]; 
@@ -90,7 +108,7 @@ void Vm::store(){
                 }
         }
         if(local ==NULL)
-                m_locals.push_back(new Local(0,name, m_stack[m_stack.size()-1]));
+                m_locals.push_back(new Local(m_localCount,name, m_stack[m_stack.size()-1]));
         m_stack.pop_back();
 }
 
