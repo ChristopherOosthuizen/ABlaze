@@ -68,7 +68,7 @@ void SematicAn::checkDecleration(Decleration* dec,map<string,TokenType>* vars,ma
 				type = (*vars)[token->m_symbol];
 				return;
 			}
-			if(actual != type ){
+			if(type !=TokenType::VAR&&actual != type ){
 				ErrorThrower::mismatchType(token->m_line,token->m_symbol,Lexer::typeToString(type),Lexer::typeToString(actual));
 			}
 		
