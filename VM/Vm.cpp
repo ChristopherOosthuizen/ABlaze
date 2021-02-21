@@ -4,8 +4,8 @@ Vm::Vm(vector<ByteToken*>& tokens){
        m_pos =0;
         m_tokens = tokens;
         m_halted = false;
-        m_jumpBack =0;
         m_localCount= 0;
+        m_locals.push_back(new vector<Local*>());
 }
 
 void Vm::execute(){
@@ -55,8 +55,9 @@ void Vm::createLocal(){
 }
 
 void Vm::popLocal(){
-        while(m_locals.size() > 0 && m_locals[m_locals.size()-1]->m_depth == m_localCount){
-              Local* local =m_locals[m_locals.size()-1];   
+        vector<Local*>* locals = m_locals.at(m_locals.size()-1);
+        while(locals->size() > 0 && locals->at(m_locals.size()-1)->m_depth == m_localCount){
+              Local* local =locals->at(m_locals.size()-1);   
               m_locals.pop_back();
               delete local;
         }
@@ -88,9 +89,10 @@ void Vm::pushToStack(){
 
 void Vm::load(){
         string name=m_tokens[m_pos++]->m_symbol; 
-        for(int i=m_locals.size()-1;i >=0;i--){
-                if(m_locals[i]->m_name ==name){
-                        m_stack.push_back(m_locals[i]->m_val);
+        vector<Local*>* locals = m_locals[m_locals.size()-1];
+        for(int i=locals->size()-1;i >=0;i--){
+                if(locals->at(i)->m_name ==name){
+                        m_stack.push_back(locals->at(i)->m_val);
                         return;
                 }
         }
@@ -99,25 +101,30 @@ void Vm::load(){
 void Vm::store(){
         Local* local = NULL;
         string name =m_tokens[m_pos++]->m_symbol; 
-        for(int i = m_locals.size()-1; i>=0&&m_locals[i]->m_depth == m_localCount ; i--){
-                if(m_locals[i]->m_name == name){
-                        local = m_locals[i];
+        vector<Local*>* locals = m_locals[m_locals.size()-1];
+        for(int i = locals->size()-1; i>=0&&locals->at(i)->m_depth == m_localCount ; i--){
+                if(locals->at(i)->m_name == name){
+                        local = locals->at(i);
                         local->m_val =m_stack[m_stack.size()-1]; 
                         break;
                 }
         }
         if(local ==NULL)
-                m_locals.push_back(new Local(m_localCount,name, m_stack[m_stack.size()-1]));
+                locals->push_back(new Local(m_localCount,name, m_stack[m_stack.size()-1]));
         m_stack.pop_back();
 }
 
 void Vm::Return(){
-        m_pos = m_jumpBack;
-        m_jumpBack = 0;
+        m_pos = m_jumpBacks[m_jumpBacks.size()-1];
+        vector<Local*>* locals = m_locals[m_locals.size()-1];
+        m_locals.pop_back();
+        delete locals;
+        m_jumpBacks.pop_back();
 }
 
 void Vm::call(){
-        m_jumpBack = m_pos+1;
+        m_jumpBacks.push_back(m_pos+1);
+        m_locals.push_back(new vector<Local*>());
         jump();
 }
 

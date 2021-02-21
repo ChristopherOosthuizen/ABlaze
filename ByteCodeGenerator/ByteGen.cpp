@@ -7,8 +7,9 @@ ByteGen::ByteGen(Body* ast){
 }
 
 vector<string>* ByteGen::generateByteCode(){
+        toCommand("call");
+        toCommand("main");
         bodyToByte(m_ast);
-        toCommand("halt");
         return m_lines;
 }
 
@@ -162,7 +163,8 @@ void ByteGen::functionToByte(Body* body){
         bodyToByte(body);
         if(name != "main"){
                 toCommand("return");
-        }
+        }else
+                toCommand("halt");
 }
 
 void ByteGen::functionCallToByte(FunctionCall* call){

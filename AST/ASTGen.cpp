@@ -17,7 +17,8 @@ Body* ASTGen::generateAST(){
         vector<Expression*>* lines = new vector<Expression*>;
         while(peek() != NULL&& peek()->m_type != TokenType::END){
                 lines->push_back(expression(new Literal(next())));
-                delete next();
+                if(equals(peek(),TokenType::SEMI_COLON) || equals(peek(),TokenType::CLOSE_BRACE))
+                        delete next();
         }
         return new Body(NULL,lines);
 }
@@ -315,10 +316,12 @@ Body* ASTGen::body(Literal* type){
                lines->push_back(expression(new Literal(next())));
                if(equals(peek(),TokenType::SEMI_COLON)){
                         delete next();
-               }else{
+               }else if(lines->at(lines->size()-1)->name() !="Body"){
+
                        ErrorThrower::missingSemiColon(peek()->m_line+1);
                }
         }
+        delete next();
        return new Body(bod,lines); 
 
 }

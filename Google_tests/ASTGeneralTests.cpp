@@ -80,3 +80,13 @@ TEST(ASTGenetal,whiles){
 
 
 }
+
+TEST(ASTGenetal,mainFunction){
+        Lexer lexer("int main(){int i=12; int o =13; int right = i < o; if( right ){ print( i ); } else { print(o); }}");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_EQ(((Body*)body->m_lines->at(0))->m_lines->size(),5);
+
+}

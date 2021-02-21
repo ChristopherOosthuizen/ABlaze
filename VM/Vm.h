@@ -50,13 +50,12 @@ class Vm{
 public:
         vector<DataVal> m_stack;   
         vector<ByteToken*> m_tokens;
-        vector<Local*> m_locals;
-        map<string,DataVal> m_vars;
+        vector<vector<Local*>*> m_locals;
+        vector<int> m_jumpBacks;
         map<string,int> m_labels;
         bool m_halted;
         int m_pos;
         int m_localCount;
-        int m_jumpBack;
         Vm(vector<ByteToken*>& tokens);
         void execute();
         void step();
