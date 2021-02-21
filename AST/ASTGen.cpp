@@ -17,7 +17,7 @@ Body* ASTGen::generateAST(){
         vector<Expression*>* lines = new vector<Expression*>;
         while(peek() != NULL&& peek()->m_type != TokenType::END){
                 lines->push_back(expression(new Literal(next())));
-                if(equals(peek(),TokenType::SEMI_COLON) || equals(peek(),TokenType::CLOSE_BRACE))
+                if(peek() != NULL && equals(peek(),TokenType::SEMI_COLON) || equals(peek(),TokenType::CLOSE_BRACE))
                         delete next();
         }
         return new Body(NULL,lines);

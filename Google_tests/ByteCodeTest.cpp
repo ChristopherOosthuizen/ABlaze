@@ -130,6 +130,15 @@ TEST(ByteCode,print){
 
 }
 
+TEST(ByteCode,equals){
+        Lexer lexer("int main(){if(1 ==1){print(\"yes\");}}");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+}
+
+
 
 TEST(ByteCode,ifs){
         Lexer lexer("int main(){int i=12; int o =13; int right = i < o; if( right ){ print( i ); } else { print(o); }}");

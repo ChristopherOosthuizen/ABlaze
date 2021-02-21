@@ -229,6 +229,8 @@ void Vm::binOPDouble(ByteType type, double one , double two){
                         result = two <= one; break;
                 case ByteType::ISGE:
                         result = two >= one; break;
+                case ByteType::EQUAL:
+                        result = two ==one; break;
 
         }
         ByteType typer = ByteType::DOUBLE;

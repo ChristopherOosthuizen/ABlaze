@@ -90,3 +90,12 @@ TEST(ASTGenetal,mainFunction){
         ASSERT_EQ(((Body*)body->m_lines->at(0))->m_lines->size(),5);
 
 }
+
+TEST(ASTGenetal,equals){
+        Lexer lexer("int main(){if(1==1){print(\"hello\");}}");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+
+}

@@ -56,8 +56,8 @@ int convertToByte(const string& wholeFile,const string& output){
         }
         return 1;
     }
-//    SematicAn an(body);
-//	an.analize();
+    SematicAn an(body);
+	an.analize();
      if(ErrorThrower::hasError){
         for(string s:*ErrorThrower::errors){
             cout<<s<<endl;
