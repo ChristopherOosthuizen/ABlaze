@@ -43,8 +43,7 @@ void Vm::step(){
                case ByteType::DIVIDE: binOP(token->m_type);break;
                 case ByteType::LOAD: load(); break;
                 case ByteType::STORE: store(); break;
-                case ByteType::HALT:
-                                       m_halted = true; break;
+                case ByteType::HALT:m_halted = true; break;
                 case ByteType::CREATELOCAL:createLocal();break;
                 case ByteType::POPLOCAL:popLocal();break;
  
@@ -56,7 +55,7 @@ void Vm::createLocal(){
 }
 
 void Vm::popLocal(){
-        while(m_locals.size() != 0 && m_locals[m_locals.size()-1]->m_depth == m_localCount){
+        while(m_locals.size() > 0 && m_locals[m_locals.size()-1]->m_depth == m_localCount){
               Local* local =m_locals[m_locals.size()-1];   
               m_locals.pop_back();
               delete local;

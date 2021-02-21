@@ -136,7 +136,7 @@ TEST(VM,LOADSTORE){
 
 
 TEST(VM,IF){
-        ByteLexer lexer("push 12 store i push 13 store o load i load o isgt jif 19 startlocal load o poplocal jmp 21 startlocal load i poplocal halt");
+        ByteLexer lexer("push 12 store i push 13 store o load i load o isgt jif 19 load o jmp 21 load i halt");
         vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
@@ -164,3 +164,12 @@ TEST(VM,labels){
        ASSERT_EQ(vm.m_stack.size(),1);
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,13);
 }
+
+TEST(VM,locals){
+        ByteLexer lexer("push 12 store i startlocal push 1 jif startif4 jmp endif4 startif4: push 13 store i load i print endif4: poplocal startlocal push 1 jif startif21 jmp endif21 startif21: push 14 store i load i print endif21: poplocal load i print halt ");
+          vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),0);
+}
+
