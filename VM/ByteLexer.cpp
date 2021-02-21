@@ -27,6 +27,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["print"] = ByteType::PRINT;
         m_types["startlocal"] = ByteType::CREATELOCAL;
         m_types["poplocal"] = ByteType::POPLOCAL;
+        m_types["asi"] = ByteType::ASI;
 
 }
 

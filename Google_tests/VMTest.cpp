@@ -166,10 +166,18 @@ TEST(VM,labels){
 }
 
 TEST(VM,locals){
-        ByteLexer lexer("push 12 store i startlocal push 1 jif startif4 jmp endif4 startif4: push 13 store i load i print endif4: poplocal startlocal push 1 jif startif21 jmp endif21 startif21: push 14 store i load i print endif21: poplocal load i print halt ");
+        ByteLexer lexer("call  main  main:  push  12  store  i  startlocal  push  1  jif  startif7  jmp  endif7  startif7:  push  14  store  i  load  i  print  endif7:  poplocal  startlocal  push  1  jif  startif24  jmp  endif24  startif24:  push  15  store  i  load  i  print  endif24:  poplocal  load  i  print  halt  ");
           vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
        ASSERT_EQ(vm.m_stack.size(),0);
 }
 
+TEST(VM,forLoop){
+        ByteLexer lexer("call main main: startlocal push 0 store i startFor3: load i push 20 islt not startlocal jif endFor3 load i print load i push 1 add asi i poplocal jmp startFor3 endFor3: poplocal halt");
+          vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),0);
+
+}

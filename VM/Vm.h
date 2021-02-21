@@ -65,6 +65,7 @@ public:
         void jumpIf();
         void load();
         void store();
+        void asi();
         void call();
         void Return();
         void label();

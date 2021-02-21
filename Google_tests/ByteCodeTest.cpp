@@ -21,7 +21,7 @@ TEST(ByteCode,pluss){
         ASSERT_EQ(strs->at(5),"push"); 
         ASSERT_EQ(strs->at(6),"1"); 
         ASSERT_EQ(strs->at(7),"add"); 
-        ASSERT_EQ(strs->at(8),"store"); 
+        ASSERT_EQ(strs->at(8),"asi"); 
         ASSERT_EQ(strs->at(9),"i"); 
         ASSERT_EQ(strs->at(10),"halt"); 
 }
@@ -185,7 +185,7 @@ TEST(ByteCode,whiles){
         ASSERT_EQ(strs->at(20),"push"); 
         ASSERT_EQ(strs->at(21),"1"); 
         ASSERT_EQ(strs->at(22),"add"); 
-        ASSERT_EQ(strs->at(23),"store"); 
+        ASSERT_EQ(strs->at(23),"asi"); 
         ASSERT_EQ(strs->at(24),"i"); 
         ASSERT_EQ(strs->at(25),"load"); 
         ASSERT_EQ(strs->at(26),"i"); 
@@ -233,7 +233,7 @@ TEST(ByteCode,fors){
         ASSERT_EQ(strs->at(23),"push"); 
         ASSERT_EQ(strs->at(24),"1"); 
         ASSERT_EQ(strs->at(25),"add"); 
-        ASSERT_EQ(strs->at(26),"store"); 
+        ASSERT_EQ(strs->at(26),"asi"); 
         ASSERT_EQ(strs->at(27),"i"); 
         ASSERT_EQ(strs->at(28),"poplocal"); 
         ASSERT_EQ(strs->at(29),"jmp"); 

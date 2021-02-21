@@ -94,7 +94,7 @@ void ByteGen::unToByte(Unary* unary){
                 case TokenType::MINUS_MINUS: toCommand("minus");break;
 
         }
-        toCommand("store");
+        toCommand("asi");
         toCommand(unary->m_iden->m_token->m_symbol);
 
 }
@@ -139,7 +139,10 @@ void ByteGen::forToByte(Body* body,string line){
 void ByteGen::decToCommand(Decleration* dec){
         string nameer=((Literal*)dec->m_name)->m_token->m_symbol;  
         expressionToByte(dec->m_value);
-        toCommand("store");
+        if(dec->m_initalize)
+                toCommand("store");
+        else
+                toCommand("asi");
         toCommand(((Literal*)dec->m_name)->m_token->m_symbol); 
 
 }

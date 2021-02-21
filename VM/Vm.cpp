@@ -43,11 +43,27 @@ void Vm::step(){
                case ByteType::DIVIDE: binOP(token->m_type);break;
                 case ByteType::LOAD: load(); break;
                 case ByteType::STORE: store(); break;
+                case ByteType::ASI: asi();break;
                 case ByteType::HALT:m_halted = true; break;
                 case ByteType::CREATELOCAL:createLocal();break;
                 case ByteType::POPLOCAL:popLocal();break;
  
        }
+}
+
+void Vm::asi(){
+        Local* local = NULL;
+        string name =m_tokens[m_pos++]->m_symbol; 
+        vector<Local*>* locals = m_locals[m_locals.size()-1];
+        for(int i = locals->size()-1; i>=0; i--){
+                if(locals->at(i)->m_name == name){
+                        local = locals->at(i);
+                        local->m_val =m_stack[m_stack.size()-1]; 
+                        break;
+                }
+        }
+        m_stack.pop_back();
+        
 }
 
 void Vm::createLocal(){
@@ -56,9 +72,9 @@ void Vm::createLocal(){
 
 void Vm::popLocal(){
         vector<Local*>* locals = m_locals.at(m_locals.size()-1);
-        while(locals->size() > 0 && locals->at(m_locals.size()-1)->m_depth == m_localCount){
+        while(locals->size() > 0 && locals->at(locals->size()-1)->m_depth == m_localCount){
               Local* local =locals->at(m_locals.size()-1);   
-              m_locals.pop_back();
+              locals->pop_back();
               delete local;
         }
         if(m_localCount!=0)
