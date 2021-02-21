@@ -55,7 +55,7 @@ public:
         map<string,int> m_labels;
         bool m_halted;
         int m_pos;
-        int m_localCount;
+        vector<int> m_localCounts;
         Vm(vector<ByteToken*>& tokens);
         void execute();
         void step();
