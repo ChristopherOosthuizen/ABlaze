@@ -42,6 +42,8 @@ void ByteGen::expressionToByte(Expression* expr){
                 bodyToByte((Body*)expr);
         }else if(name == "UnOP"){
                 unToByte((Unary*)expr);
+        }else if(name == "Return"){
+                returnToByte((Return*) expr);
         }
 
 }
@@ -168,6 +170,11 @@ void ByteGen::functionToByte(Body* body){
                 toCommand("return");
         }else
                 toCommand("halt");
+}
+
+void ByteGen::returnToByte(Return* ret){
+        expressionToByte(ret->m_value);
+        toCommand("return");
 }
 
 void ByteGen::functionCallToByte(FunctionCall* call){

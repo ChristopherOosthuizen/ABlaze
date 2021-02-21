@@ -26,6 +26,28 @@ TEST(ByteCode,pluss){
         ASSERT_EQ(strs->at(10),"halt"); 
 }
 
+
+TEST(ByteCode,returns){
+        Lexer lexer("int one(){return 1;} int main(){one();}");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),11);
+        ASSERT_EQ(strs->at(0),"call"); 
+        ASSERT_EQ(strs->at(1),"main"); 
+        ASSERT_EQ(strs->at(2),"one:"); 
+        ASSERT_EQ(strs->at(3),"push"); 
+        ASSERT_EQ(strs->at(4),"1"); 
+        ASSERT_EQ(strs->at(5),"return"); 
+        ASSERT_EQ(strs->at(6),"return"); 
+        ASSERT_EQ(strs->at(7),"main:"); 
+        ASSERT_EQ(strs->at(8),"call"); 
+        ASSERT_EQ(strs->at(9),"one"); 
+        ASSERT_EQ(strs->at(10),"halt"); 
+}
+
+
 TEST(ByteCode,equations){
         Lexer lexer("int main(){int i=12+8*2}");
         ASTGen gen(lexer.readAllTokens());
