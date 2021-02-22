@@ -183,13 +183,13 @@ TEST(VM,forLoop){
 }
 
 
-//TEST(VM,recursion){
-//        ByteLexer lexer("call main right: store i startlocal load i push 2 equal_equal jif startif5 jmp endif5 startif5: push 12 return endif5: poplocal push 4 push 2 call right add return return main: push 3 call right print halt ");
-//          vector<ByteToken*> tokens = lexer.readAllTokens();
-//       Vm vm(tokens); 
-//       vm.execute();
-//       ASSERT_EQ(vm.m_stack.size(),0);
+TEST(VM,recursion){
+        ByteLexer lexer("call main right: store i startlocal load i push 2 equal_equal jif startif5 jmp endif5 startif5: push 12 return endif5: poplocal push 4 push 2 call right add return return main: push 3 call right print halt ");
+          vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),0);
 
-//}
+}
 
 

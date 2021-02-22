@@ -37,6 +37,7 @@ void Vm::step(){
                 case ByteType::AND:
                 case ByteType::OR:
                 case ByteType::ISGT:
+                case ByteType::EQUAL:
                 case ByteType::ISLT:
                 case ByteType::ISLE:
                 case ByteType::ISGE:
@@ -203,6 +204,10 @@ void Vm::binOP(ByteType type){
                         result = two.m_val.m_int <= one.m_val.m_int; break;
                 case ByteType::ISGE:
                         result = two.m_val.m_int >= one.m_val.m_int; break;
+
+                case ByteType::EQUAL:
+                        result = two.m_val.m_int == one.m_val.m_int; break;
+
 
         }
         DataVal val(ByteType::INT,Val(result,result,result,to_string(result)));
