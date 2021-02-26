@@ -9,7 +9,8 @@ enum class ByteType{
         LABEL,IDEN,CALL,RETURN,PRINT,
         XOR,NOT,AND,OR,ISGT,ISLT,ISLE,ISGE,
         JMP,JIF,
-        CREATELOCAL,POPLOCAL,
+        CREATELOCAL,POPLOCAL,NEW,APPEND,DELETE, AT,
+        LIST,OBJ,
         
 };
 #endif

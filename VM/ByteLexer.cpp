@@ -29,6 +29,12 @@ ByteLexer::ByteLexer(const string& input){
         m_types["poplocal"] = ByteType::POPLOCAL;
         m_types["asi"] = ByteType::ASI;
         m_types["equal_equal"] = ByteType::EQUAL;
+        m_types["new"] = ByteType::NEW;
+        m_types["append"] = ByteType::APPEND;
+        m_types["delete"] = ByteType::DELETE;
+        m_types["at"] = ByteType::AT;
+
+
 
 }
 

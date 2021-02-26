@@ -8,6 +8,9 @@
 #include "ByteToken.h"
 using namespace std;
 
+                
+
+
 class Val{
 public:
         int m_int;
@@ -34,6 +37,17 @@ public:
         DataVal(){}
 };
 
+class DataObj{
+public:
+        ByteType m_type;
+        void* m_pointer;
+        DataObj(ByteType type){
+                m_type =type;
+                if(m_type == ByteType::LIST)
+                        m_pointer = new vector<DataVal>();
+        }
+};
+
 class Local{
 public:
         int m_depth;
@@ -49,6 +63,7 @@ public:
 class Vm{
 public:
         vector<DataVal> m_stack;   
+        vector<DataObj*> m_objs;
         vector<ByteToken*> m_tokens;
         vector<vector<Local*>*> m_locals;
         vector<int> m_jumpBacks;
@@ -57,6 +72,7 @@ public:
         int m_pos;
         vector<int> m_localCounts;
         Vm(vector<ByteToken*>& tokens);
+        void newObj();
         void execute();
         void step();
         void print();
@@ -69,6 +85,9 @@ public:
         void call();
         void Return();
         void label();
+        void append();
+        void at();
+        void del();
         void createLocal();
         void popLocal();
         void binOP(ByteType type);

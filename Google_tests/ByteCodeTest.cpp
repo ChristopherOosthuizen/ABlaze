@@ -301,7 +301,5 @@ TEST(ByteCode,functions){
         ASSERT_EQ(strs->at(16),"call"); 
         ASSERT_EQ(strs->at(17),"runner"); 
         ASSERT_EQ(strs->at(18),"halt"); 
- 
 }
-
 

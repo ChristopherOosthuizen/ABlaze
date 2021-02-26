@@ -192,4 +192,15 @@ TEST(VM,recursion){
 
 }
 
+TEST(VM,array){
+       ByteLexer lexer("new list store i load i push 0 append load i push 3 append load i push 0 delete load i push 0 at halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),1);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,3);
+
+}
+
+
 

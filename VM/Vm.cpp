@@ -29,6 +29,10 @@ void Vm::step(){
                 case ByteType::RETURN: Return();break;
                 case ByteType::CALL: call(); break;
                 case ByteType::PRINT: print(); break;
+                case ByteType::NEW: newObj();break;
+                case ByteType::DELETE: del(); break;
+                case ByteType::AT: at(); break;
+                case ByteType::APPEND: append(); break;
                 case ByteType::ADD:
                 case ByteType::MINUS:
                 case ByteType::TIMES:
@@ -51,6 +55,50 @@ void Vm::step(){
  
        }
 }
+
+void Vm::append(){
+        DataVal two = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+        DataVal one = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+          
+        DataObj* obj = m_objs[one.m_val.m_int];
+        vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
+        vals->push_back(two);
+}
+
+void Vm::at(){
+        DataVal two= m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+        DataVal one= m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+          
+        DataObj* obj = m_objs[one.m_val.m_int];
+        vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
+        m_stack.push_back(vals->at(two.m_val.m_int));
+
+}
+
+void Vm::del(){
+        DataVal two= m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+        DataVal one= m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+          
+        DataObj* obj = m_objs[one.m_val.m_int];
+        vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
+        vals->erase(vals->begin()+two.m_val.m_int);
+
+
+}
+
+void Vm::newObj(){
+        DataVal val(ByteType::OBJ, Val(m_objs.size(),0,0,""));                
+        m_objs.push_back(new DataObj(ByteType::LIST));
+        m_pos++;
+        m_stack.push_back(val);
+}
+
 
 void Vm::asi(){
         Local* local = NULL;
