@@ -334,3 +334,12 @@ TEST(ByteCode,arrays){
         ASSERT_EQ(strs->at(20),"delete");
 }
 
+TEST(ByteCode,arrayss){
+        Lexer lexer("int main(){ int: array = int[]; append(array,12);append(array,13)append(array,19);for(int i=0; i<3;i++){ print(array[i]);} } ");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+}
+
