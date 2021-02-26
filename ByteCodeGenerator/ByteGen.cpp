@@ -44,8 +44,22 @@ void ByteGen::expressionToByte(Expression* expr){
                 unToByte((Unary*)expr);
         }else if(name == "Return"){
                 returnToByte((Return*) expr);
+        }else if(name == "ArrayLiteral"){
+                arrayToByte((ArrayLiteral*) expr);
         }
 
+}
+
+void ByteGen::arrayToByte(ArrayLiteral* literal){
+        if(literal->m_value == nullptr){
+                toCommand("new");
+                toCommand("Array");
+                return;
+        }
+        toCommand("load");
+        toCommand(literal->m_iden->m_token->m_symbol);
+        expressionToByte(literal->m_value);
+        toCommand("at");
 }
 
 void ByteGen::bodyToByte(Body* body){
@@ -182,8 +196,8 @@ void ByteGen::functionCallToByte(FunctionCall* call){
         for(int i=0; i< call->m_args->size();i++){
                 expressionToByte(call->m_args->at(i));
         }
-        if(symb == "print"){
-                m_lines->push_back("print");
+        if(symb == "print" || symb=="append"|| symb =="delete"){
+                m_lines->push_back(symb);
                 return;
         }
         toCommand("call");

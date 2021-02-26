@@ -303,3 +303,34 @@ TEST(ByteCode,functions){
         ASSERT_EQ(strs->at(18),"halt"); 
 }
 
+TEST(ByteCode,arrays){
+        Lexer lexer("int: i = int[]; append(i,12); i[0]; delete(i,0);");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),21);
+        ASSERT_EQ(strs->at(0),"call"); 
+        ASSERT_EQ(strs->at(1),"main"); 
+        ASSERT_EQ(strs->at(2),"new");
+        ASSERT_EQ(strs->at(3),"Array");
+        ASSERT_EQ(strs->at(4),"store");
+        ASSERT_EQ(strs->at(5),"i");
+        ASSERT_EQ(strs->at(6),"load");
+        ASSERT_EQ(strs->at(7),"i");
+        ASSERT_EQ(strs->at(8),"push");
+        ASSERT_EQ(strs->at(9),"12");
+        ASSERT_EQ(strs->at(10),"append");
+        ASSERT_EQ(strs->at(11),"load");
+        ASSERT_EQ(strs->at(12),"i");
+        ASSERT_EQ(strs->at(13),"push");
+        ASSERT_EQ(strs->at(14),"0");
+        ASSERT_EQ(strs->at(15),"at");
+        ASSERT_EQ(strs->at(16),"load");
+        ASSERT_EQ(strs->at(17),"i");
+        ASSERT_EQ(strs->at(18),"push");
+        ASSERT_EQ(strs->at(19),"0");
+        ASSERT_EQ(strs->at(20),"delete");
+}
+

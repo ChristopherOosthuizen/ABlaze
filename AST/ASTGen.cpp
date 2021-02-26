@@ -328,6 +328,11 @@ Body* ASTGen::body(Literal* type){
 
 ArrayLiteral* ASTGen::arrayLiteral(Literal* name){
         delete next();
+        if(equals(peek(),TokenType::CLOSE_BRACKET)){
+                delete next();
+                return new ArrayLiteral(name,nullptr);
+
+        }
         Expression* value = expression(new Literal(next()));
         delete next();
         return new ArrayLiteral(name,value);
