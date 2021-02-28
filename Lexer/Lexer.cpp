@@ -31,6 +31,7 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["false"] = TokenType::BOOL;
 			m_built_in_words["else"] = TokenType::ELSE;
 			m_built_in_words["char"] = TokenType::IDEN_CHAR;
+			m_built_in_words["struct"] = TokenType::STRUCT;
 
 		}
 }

@@ -163,3 +163,15 @@ ArrayLiteral::~ArrayLiteral(){
         delete m_value;
         delete m_iden;
 }
+
+string Struct::name(){return "Struct";}
+
+Struct::Struct(Literal* iden){
+        m_iden = iden;
+}
+
+Struct::~Struct(){
+        delete m_iden;
+}
+
+

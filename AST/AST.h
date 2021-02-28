@@ -149,4 +149,13 @@ class ArrayLiteral: public Expression{
                 Expression* m_value;
 };
 
+class Struct: public Expression{
+
+        public:
+                string name() override;
+                Struct(Literal* iden);
+                ~Struct(); 
+                Literal* m_iden;
+
+};
 #endif

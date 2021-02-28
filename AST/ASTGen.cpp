@@ -196,6 +196,7 @@ Expression* ASTGen::expression(Expression* expr){
                 case TokenType::FOR:
                 case TokenType::WHILE:
                 case TokenType::ELSE:
+                case TokenType::STRUCT:
                 case TokenType::IF: return body((Literal*)expr);
                 case TokenType::NOT: 
                 case TokenType::PLUS_PLUS:
@@ -288,12 +289,13 @@ Body* ASTGen::body(Literal* type){
                 Expression* initial =expression(new Literal(next())); 
                 delete next();
                 switch(type->m_token->m_type){
+                        case TokenType::STRUCT:bod = new Struct((Literal*)initial);break;
                         case TokenType::VOID:
                         case TokenType::IDEN_INT:
                         case TokenType::IDEN_BOOL:
                         case TokenType::IDEN_STRING:
                         case TokenType::IDEN_DOUBLE:
-         
+                                 
                         case TokenType::VAR: 
                                 bod = new Function(type,(FunctionCall*)initial); break;
                         case TokenType::IF: bod =new IfStat(initial); break;
@@ -303,6 +305,7 @@ Body* ASTGen::body(Literal* type){
                                              Expression* repitition= expression(new Literal(next()));
                                              delete next();
                                              bod = new ForStat(initial,condition,repitition);break;
+
 
 
                 }
