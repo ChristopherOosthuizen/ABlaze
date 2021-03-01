@@ -33,6 +33,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["append"] = ByteType::APPEND;
         m_types["delete"] = ByteType::DELETE;
         m_types["at"] = ByteType::AT;
+        m_types["structdec"] = ByteType::STRUCTCONST;
 
 
 

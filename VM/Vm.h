@@ -36,15 +36,23 @@ public:
         }
         DataVal(){}
 };
+class StructObj{
+public:
+        map<string,DataVal*> m_vals;
+        StructObj(vector<string>* vals){
+                for(int i=0; i< vals->size(); i++){
+                        m_vals[vals->at(i)]=nullptr;
+                }
+        }
 
+};
 class DataObj{
 public:
         ByteType m_type;
         void* m_pointer;
-        DataObj(ByteType type){
+        DataObj(ByteType type,void* pointer){
                 m_type =type;
-                if(m_type == ByteType::LIST)
-                        m_pointer = new vector<DataVal>();
+                m_pointer = pointer;
         }
 };
 
@@ -65,6 +73,7 @@ public:
         vector<DataVal> m_stack;   
         vector<DataObj*> m_objs;
         vector<ByteToken*> m_tokens;
+        map<string,vector<string>*> m_structs; 
         vector<vector<Local*>*> m_locals;
         vector<int> m_jumpBacks;
         map<string,int> m_labels;
@@ -88,6 +97,7 @@ public:
         void append();
         void at();
         void del();
+        void structDec();
         void createLocal();
         void popLocal();
         void binOP(ByteType type);

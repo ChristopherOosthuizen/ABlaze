@@ -202,6 +202,15 @@ TEST(VM,array){
 
 }
 
+TEST(VM,structs){
+       ByteLexer lexer("startlocal store y store x structdec pos halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),0);
+
+}
+
 
 
 

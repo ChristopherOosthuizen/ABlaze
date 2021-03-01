@@ -10,7 +10,7 @@ enum class ByteType{
         XOR,NOT,AND,OR,ISGT,ISLT,ISLE,ISGE,
         JMP,JIF,
         CREATELOCAL,POPLOCAL,NEW,APPEND,DELETE, AT,
-        LIST,OBJ,
+        LIST,OBJ,STRUCT,STRUCTCONST,
         
 };
 #endif
