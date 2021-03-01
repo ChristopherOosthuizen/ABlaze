@@ -203,11 +203,11 @@ TEST(VM,array){
 }
 
 TEST(VM,structs){
-       ByteLexer lexer("startlocal store y store x structdec pos halt");
+       ByteLexer lexer("startlocal store y store x structdec pos new pos store position push 13 load position set x load position select x halt");
        vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
-       ASSERT_EQ(vm.m_stack.size(),0);
+       ASSERT_EQ(vm.m_stack.size(),1);
 
 }
 

@@ -38,10 +38,10 @@ public:
 };
 class StructObj{
 public:
-        map<string,DataVal*> m_vals;
+        map<string,DataVal> m_vals;
         StructObj(vector<string>* vals){
                 for(int i=0; i< vals->size(); i++){
-                        m_vals[vals->at(i)]=nullptr;
+                        m_vals[vals->at(i)]=DataVal(ByteType::NIL, Val(0,0,0,""));
                 }
         }
 
@@ -99,6 +99,8 @@ public:
         void del();
         void structDec();
         void createLocal();
+        void set();
+        void select();
         void popLocal();
         void binOP(ByteType type);
         void binOPDouble(ByteType type,double one,double two);

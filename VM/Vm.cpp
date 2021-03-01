@@ -45,16 +45,35 @@ void Vm::step(){
                 case ByteType::ISLT:
                 case ByteType::ISLE:
                 case ByteType::ISGE:
-               case ByteType::DIVIDE: binOP(token->m_type);break;
-               case ByteType::STRUCTCONST: structDec();break;
+                case ByteType::DIVIDE: binOP(token->m_type);break;
+                case ByteType::STRUCTCONST: structDec();break;
                 case ByteType::LOAD: load(); break;
                 case ByteType::STORE: store(); break;
                 case ByteType::ASI: asi();break;
                 case ByteType::HALT:m_halted = true; break;
                 case ByteType::CREATELOCAL:createLocal();break;
                 case ByteType::POPLOCAL:popLocal();break;
+                case ByteType::SET: set(); break;
+                case ByteType::SELECT: select(); break;
  
        }
+}
+
+void Vm::set(){
+        DataVal two = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+        DataVal one = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+        StructObj* obj = (StructObj*)m_objs[two.m_val.m_int]->m_pointer;
+        obj->m_vals[m_tokens[m_pos++]->m_symbol] = one;
+}
+
+
+void Vm::select(){
+        DataVal two = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+        StructObj* obj = (StructObj*)m_objs[two.m_val.m_int]->m_pointer;
+        m_stack.push_back(obj->m_vals[m_tokens[m_pos++]->m_symbol]);
 }
 
 void Vm::structDec(){
