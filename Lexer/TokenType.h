@@ -33,7 +33,7 @@ enum class TokenType{
   //COLONS
   SEMI_COLON, COLON, DOT, COMMA,
 
-  END,
+  END,NEW,
 
   //built in functions
   PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,INPUT,

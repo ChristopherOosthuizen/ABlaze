@@ -318,3 +318,19 @@ TEST(Dec, Type){
 
 
 }
+
+TEST(Dec,structs){
+        Lexer lexer("var pos = new Pos; pos.x = 12; print(pos.x);");
+        ASTGen gen (lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),3);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(1) != nullptr);
+        ASSERT_EQ(body->m_lines->at(1)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(2) != nullptr);
+        ASSERT_EQ(body->m_lines->at(2)->name(),"FunctionCall");
+
+
+}
+        

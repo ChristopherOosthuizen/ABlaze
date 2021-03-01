@@ -143,7 +143,7 @@ Expression* ASTGen::expression(Expression* expr){
                 if(isOP(peek())) 
                         return binaryOperation(expr);
         }
-        if(expr->name() == "ArrayLiteral"){
+        if(expr->name() == "ArrayLiteral" || expr->name() == "Dot"){
                 if(isEquals(peek())){
                         return new Decleration(NULL,expr,new Literal(next()),expression(new Literal(next())),false,false);
                 }
@@ -166,6 +166,8 @@ Expression* ASTGen::expression(Expression* expr){
                                        return new Import(expression(new Literal(next()))); 
                 case TokenType::RETURN:  delete expr;
                                         return new Return(expression(new Literal(next())));
+                case TokenType::NEW:  delete expr;
+                                        return new New(new Literal(next()));
                 case TokenType::VOID: return body((Literal*)expr);
                 case TokenType::IDEN_INT:
                 case TokenType::IDEN_BOOL:
@@ -188,6 +190,11 @@ Expression* ASTGen::expression(Expression* expr){
                                               return functionCall((Literal*)expr);
                                        else if(equals(peek(),TokenType::OPEN_BRACKET))
                                                 return expression(arrayLiteral((Literal*)expr));
+                                        else if(equals(peek(),TokenType::DOT)){
+                                                return expression(dot((Literal*)expr));
+                                        }
+                                        else if(equals(peek(),TokenType::IDEN))
+                                                return decleration((Literal*)expr, true);
                 case TokenType::STRING:
                 case TokenType::DOUBLE:
                 case TokenType::BOOL:
@@ -205,6 +212,10 @@ Expression* ASTGen::expression(Expression* expr){
         return NULL; 
 }
 
+Dot* ASTGen::dot(Literal* literal){
+        delete next();
+        return new Dot(literal,new Literal(next()));
+}
 
 // Construct a binOP based on specifically equations
 // such as +-,*

@@ -158,4 +158,28 @@ class Struct: public Expression{
                 Literal* m_iden;
 
 };
+
+
+class New: public Expression{
+
+        public:
+                string name() override;
+                New(Literal* iden);
+                ~New(); 
+                Literal* m_iden;
+
+};
+
+
+class Dot: public Expression{
+
+        public:
+                string name() override;
+                Dot(Literal* iden,Literal* subIden);
+                ~Dot(); 
+                Literal* m_iden;
+                Literal* m_subIden;
+
+};
+
 #endif

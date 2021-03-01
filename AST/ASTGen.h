@@ -31,6 +31,7 @@ class ASTGen{
         FunctionCall* functionCall(Literal* name); // construct a function call object
         Body* body(Literal* type); // cosntruct a body such as if while for and def
         ArrayLiteral* arrayLiteral(Literal* name); // generate a arrayLiteral
+        Dot* dot(Literal* name);
 
 };
 

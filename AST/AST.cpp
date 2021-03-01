@@ -174,4 +174,27 @@ Struct::~Struct(){
         delete m_iden;
 }
 
+string New::name(){return "New";}
+
+New::New(Literal* iden){
+        m_iden = iden;
+}
+
+New::~New(){
+        delete m_iden;
+}
+
+string Dot::name(){return "Dot";}
+
+Dot::Dot(Literal* iden, Literal* subIden){
+        m_iden = iden;
+        m_subIden = subIden;
+}
+
+Dot::~Dot(){
+        delete m_iden;
+        delete m_subIden;
+}
+
+
 
