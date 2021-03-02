@@ -145,7 +145,7 @@ Token* Lexer::next() {
                         if(peek() == '='){
                                 m_pos++;
                                 return new Token(TokenType::PLUS_PLUS,"%=",m_line);
-		}
+				}
 				return new Token(TokenType::REMAND,"%",m_line);
         case '+':
 		if(peek() == '+'){
@@ -252,7 +252,8 @@ Token* Lexer::next() {
                    return next();
 	case '\0': return new Token(TokenType::END,"\0",m_line);
 	case '"': return strings();
-        case '\'': return chars();
+    case '\'': return chars();
+	case '#': while(m_pos < m_input.size() && m_input.at(m_pos) != '\n') m_pos++; return next();
 	
 	default: 
 		  if(isNum(current)){

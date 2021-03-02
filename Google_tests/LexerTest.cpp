@@ -103,11 +103,11 @@ TEST(Lexer,Two){
  */
 
 TEST(Lexer,invalidCharacters){
-	string  str = "@#~";
+	string  str = "@~";
 	Lexer lexer(str);
 	lexer.readAllTokens();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(3,ErrorThrower::errors->size());
+	ASSERT_EQ(2,ErrorThrower::errors->size());
 
 	ErrorThrower::hasError =false;
 	delete ErrorThrower::errors ;
