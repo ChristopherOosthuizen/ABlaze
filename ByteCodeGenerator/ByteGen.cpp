@@ -7,6 +7,11 @@ ByteGen::ByteGen(Body* ast){
 }
 
 vector<string>* ByteGen::generateByteCode(){
+        for(int i=0; i< m_ast->m_lines->size(); i++){
+                if(m_ast->m_lines->at(i)->name() == "Body" && ((Body*)m_ast->m_lines->at(i))->m_control->name() == "Struct"){
+                        structToByte((Body*)(m_ast->m_lines->at(i)));
+                }
+        }
         toCommand("call");
         toCommand("main");
         bodyToByte(m_ast);
@@ -46,8 +51,23 @@ void ByteGen::expressionToByte(Expression* expr){
                 returnToByte((Return*) expr);
         }else if(name == "ArrayLiteral"){
                 arrayToByte((ArrayLiteral*) expr);
+        }else if(name == "Dot"){
+                dotToByte((Dot*) expr);
+        }else if(name == "New"){
+                newToByte((New*)expr);
         }
 
+}
+void ByteGen::newToByte(New* news){
+        toCommand("new");
+        toCommand(news->m_iden->m_token->m_symbol);
+}
+
+void ByteGen::dotToByte(Dot* dot){
+        toCommand("load");
+        toCommand(dot->m_iden->m_token->m_symbol);
+        toCommand("select");
+        toCommand(dot->m_subIden->m_token->m_symbol);
 }
 
 void ByteGen::arrayToByte(ArrayLiteral* literal){
@@ -89,6 +109,8 @@ void ByteGen::bodyToByte(Body* body){
                                 forToByte(bod,line);
                         }else if(bod->m_control->name() == "Function"){
                                 functionToByte(bod);
+                        }else if(bod->m_control->name() == "Struct"){
+                                continue;
                         }
                 }
                 else 
@@ -98,6 +120,14 @@ void ByteGen::bodyToByte(Body* body){
         }
 
 }
+
+void ByteGen::structToByte(Body* body){
+         toCommand("startlocal");
+        bodyToByte(body);
+        toCommand("structdec");
+        toCommand(((Struct*)body->m_control)->m_iden->m_token->m_symbol);
+}
+
 
 void ByteGen::unToByte(Unary* unary){
         TokenType type = unary->m_op->m_token->m_type;
@@ -154,7 +184,19 @@ void ByteGen::forToByte(Body* body,string line){
 
 void ByteGen::decToCommand(Decleration* dec){
         string nameer=((Literal*)dec->m_name)->m_token->m_symbol;  
-        expressionToByte(dec->m_value);
+        if(dec->m_value != nullptr)
+                expressionToByte(dec->m_value);
+
+        
+        if(dec->m_name->name() =="Dot"){
+                Dot* dot = (Dot*)dec->m_name;
+                toCommand("load");
+                toCommand(dot->m_iden->m_token->m_symbol);
+                toCommand("set");
+                toCommand(dot->m_subIden->m_token->m_symbol);
+                return;
+        }
+
         if(dec->m_initalize)
                 toCommand("store");
         else

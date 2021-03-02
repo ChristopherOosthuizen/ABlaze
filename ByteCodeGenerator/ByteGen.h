@@ -21,6 +21,9 @@ class ByteGen{
         void functionToByte(Body* body);
         void unToByte(Unary* unary);
         void returnToByte(Return* ret);
+        void structToByte(Body* body);
+        void dotToByte(Dot* dot);
+        void newToByte(New* news);
         void arrayToByte(ArrayLiteral* literal);
         public:
                 ByteGen(Body* ast);

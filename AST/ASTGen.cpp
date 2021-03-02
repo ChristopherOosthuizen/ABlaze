@@ -222,11 +222,11 @@ Dot* ASTGen::dot(Literal* literal){
 Expression* ASTGen::binaryOperation(Expression* left){
 
        Token* op = next();
-        Literal* right = new Literal(next());
-
+        Expression* right = new Literal(next());
+        if(equals(peek(),TokenType::DOT))
+                right = dot((Literal*)right);
        if(equals(peek(), TokenType::SEMI_COLON)||equals(peek(), TokenType::OPEN_PARENTHESE))
                        return expression(new BinOP(left,op,expression(right)));
-
 
        if(equals(peek(),TokenType::CLOSE_PARENTHESE)){
                         delete next();

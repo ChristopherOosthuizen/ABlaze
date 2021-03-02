@@ -343,3 +343,56 @@ TEST(ByteCode,arrayss){
         vector<string>* strs = byt.generateByteCode();
 }
 
+
+TEST(ByteCode,structs){
+        Lexer lexer("struct Pos{int x; int y;} int main(){Pos position = new Pos; position.x =12; position.y = 14; print(position.x+position.y); }");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size() , 2);
+        ASSERT_EQ(body->m_lines->at(0)->name() , "Body");
+        ASSERT_EQ(body->m_lines->at(1)->name() , "Body");
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        //ASSERT_EQ(strs->size(),33);
+        int i =0;
+        ASSERT_EQ(strs->at(i++),"startlocal"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"x"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"y"); 
+        ASSERT_EQ(strs->at(i++),"structdec"); 
+        ASSERT_EQ(strs->at(i++),"Pos"); 
+        ASSERT_EQ(strs->at(i++),"call"); 
+        ASSERT_EQ(strs->at(i++),"main");
+        ASSERT_EQ(strs->at(i++),"main:");
+        ASSERT_EQ(strs->at(i++),"new");
+        ASSERT_EQ(strs->at(i++),"Pos");
+        ASSERT_EQ(strs->at(i++),"store");
+        ASSERT_EQ(strs->at(i++),"position");
+        ASSERT_EQ(strs->at(i++),"push");
+        ASSERT_EQ(strs->at(i++),"12");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"position");
+        ASSERT_EQ(strs->at(i++),"set");
+        ASSERT_EQ(strs->at(i++),"x");
+        ASSERT_EQ(strs->at(i++),"push");
+        ASSERT_EQ(strs->at(i++),"14");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"position");
+        ASSERT_EQ(strs->at(i++),"set");
+        ASSERT_EQ(strs->at(i++),"y");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"position");
+        ASSERT_EQ(strs->at(i++),"select");
+        ASSERT_EQ(strs->at(i++),"x");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"position");
+        ASSERT_EQ(strs->at(i++),"select");
+        ASSERT_EQ(strs->at(i++),"y");
+        ASSERT_EQ(strs->at(i++),"add");
+        ASSERT_EQ(strs->at(i++),"print");
+        ASSERT_EQ(strs->at(i++),"halt");
+
+}
+

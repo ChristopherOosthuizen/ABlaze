@@ -324,13 +324,33 @@ TEST(Dec,structs){
         ASTGen gen (lexer.readAllTokens());
         Body* body = gen.generateAST();
         ASSERT_EQ(body->m_lines->size(),3);
+        Decleration* dec;
         ASSERT_TRUE(body->m_lines->at(0) != nullptr);
         ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        dec = (Decleration*)body->m_lines->at(0);
+        ASSERT_TRUE(dec->m_value != nullptr);
+        ASSERT_EQ(dec->m_value->name(),"New");
+
         ASSERT_TRUE(body->m_lines->at(1) != nullptr);
         ASSERT_EQ(body->m_lines->at(1)->name(),"Decleration");
+        dec = (Decleration*)body->m_lines->at(1);
+        ASSERT_TRUE(dec->m_name != nullptr);
+        ASSERT_EQ(dec->m_name->name(),"Dot");
         ASSERT_TRUE(body->m_lines->at(2) != nullptr);
         ASSERT_EQ(body->m_lines->at(2)->name(),"FunctionCall");
 
 
 }
-        
+
+TEST(AST, dots){
+        Lexer lexer("print(position.x+position.y);");
+        ASTGen gen(lexer.readAllTokens());
+        Expression* expression = (Expression*) gen.generateAST()->m_lines->at(0);
+        ASSERT_TRUE(expression != nullptr);
+        ASSERT_EQ(expression->name(),"FunctionCall");
+        BinOP* op = (BinOP*)((FunctionCall*)expression)->m_args->at(0);
+        ASSERT_TRUE(op->m_left !=nullptr);
+        ASSERT_EQ(op->m_left->name(),"Dot");
+        ASSERT_TRUE(op->m_right !=nullptr);
+        ASSERT_EQ(op->m_right->name(),"Dot");
+}
