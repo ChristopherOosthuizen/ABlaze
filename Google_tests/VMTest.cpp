@@ -202,6 +202,7 @@ TEST(VM,array){
 
 }
 
+
 TEST(VM,structs){
        ByteLexer lexer("startlocal store y store x structdec pos new pos store position push 13 load position set x load position select x halt");
        vector<ByteToken*> tokens = lexer.readAllTokens();

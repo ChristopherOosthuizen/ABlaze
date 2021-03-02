@@ -19,6 +19,31 @@ void Vm::execute(){
         }
 }
 
+void Vm::garbageCollect(int pos){
+        for(vector<Local*>* local:m_locals){
+                for(int i=0; i< local->size(); i++){
+                        if( local->at(i)->m_val.m_type == ByteType::OBJ && local->at(i)->m_val.m_val.m_int ==pos){
+                                return;
+                        }
+                }
+        }
+        for(int i= 0; i< m_stack.size() ;i++){
+                if( m_stack[i].m_type == ByteType::OBJ &&  m_stack[i].m_val.m_int ==pos){
+                                return;
+                }
+        }
+        DataObj* obj = m_objs[pos];
+        m_objs[pos] = nullptr;
+        delete obj;
+}
+
+void Vm::collectAllGarbage(){
+        for(int i=0; i< m_objs.size(); i++){
+                if(m_objs[i] != nullptr)
+                        garbageCollect(i);
+        }
+}
+
 void Vm::step(){
         ByteToken* token = m_tokens[m_pos++];
         ByteType type = token->m_type;
@@ -57,6 +82,7 @@ void Vm::step(){
                 case ByteType::SELECT: select(); break;
  
        }
+       collectAllGarbage();
 }
 
 void Vm::set(){
@@ -128,12 +154,23 @@ void Vm::del(){
 }
 
 void Vm::newObj(){
-        ByteToken* token= m_tokens[m_pos++];
-        DataVal val(ByteType::OBJ, Val(m_objs.size(),0,0,""));      
+        ByteToken* token= m_tokens[m_pos++]; 
+        int pos = -1;
+        for(int i =0; i< m_objs.size(); i++){
+                if(m_objs[i] == nullptr){
+                        pos = i;
+                        break;
+                }
+        }
+        if(pos == -1){
+                pos = m_objs.size();
+                m_objs.push_back(nullptr);
+        }
+        DataVal val(ByteType::OBJ, Val(pos,0,0,""));     
         if(token->m_symbol == "list"){          
-                m_objs.push_back(new DataObj(ByteType::LIST,new vector<DataVal>()));
+                m_objs[pos] = new DataObj(ByteType::LIST,new vector<DataVal>());
         }else{            
-                m_objs.push_back(new DataObj(ByteType::STRUCT,new StructObj(m_structs[token->m_symbol])));
+                m_objs[pos] = new DataObj(ByteType::STRUCT,new StructObj(m_structs[token->m_symbol]));
         }
         m_stack.push_back(val);
 }
