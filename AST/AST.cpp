@@ -43,8 +43,7 @@ Decleration::~Decleration(){
 }
 
 
-Body::Body(Expression* control, vector<Expression*>* expressions){
-        m_control = control;
+Body::Body(vector<Expression*>* expressions){
         m_lines = expressions;
         
 }
@@ -52,7 +51,6 @@ Body::Body(Expression* control, vector<Expression*>* expressions){
 string Body::name(){return "Body";}
 
 Body::~Body(){
-       delete m_control;
        for(int i=0; i< m_lines->size(); i++){
                delete m_lines->at(i); 
        }
@@ -74,7 +72,7 @@ FunctionCall::~FunctionCall(){
          
        delete m_args;
 }
-Unary::Unary(Literal* op, Literal* iden, bool post){
+Unary::Unary(Literal* op, Expression* iden, bool post){
         m_op = op;
         m_iden = iden;
         m_post = post;

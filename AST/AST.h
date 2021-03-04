@@ -54,9 +54,8 @@ class Decleration: public Expression{
 class Body: public Expression{
         public:
                 string name() override;
-                Body(Expression* control, vector<Expression*>* expressions);
+                Body(vector<Expression*>* expressions);
                 ~Body();
-                Expression* m_control;
                 vector<Expression*>* m_lines;
 
 
@@ -74,10 +73,10 @@ class FunctionCall: public Expression{
 class Unary: public Expression{
         public:
                 string name() override;
-                Unary(Literal* op, Literal* iden, bool post);
+                Unary(Literal* op, Expression* iden, bool post);
                 ~Unary(); 
                 Literal* m_op;
-                Literal* m_iden;
+                Expression* m_iden;
                 bool m_post;
 };
 
