@@ -190,7 +190,7 @@ TEST(Unary, basic){
         ASSERT_EQ(body->m_lines->at(2)->name(),"UnOP");
 
 }
-/*
+
 //Unary operators
 TEST(Unary, postfix){
         Lexer lexer("lets++; lets--;");
@@ -203,7 +203,7 @@ TEST(Unary, postfix){
         ASSERT_EQ(body->m_lines->at(1)->name(),"UnOP");
 
 }
-*/
+
 
 //Test weather the ast parser can handle ** and // which represent power
 TEST(Power, basic){

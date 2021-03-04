@@ -23,11 +23,14 @@ class ASTGen{
         int order(Token* token);
         bool isIden(Token* token);
         bool isEquals(Token* token);
+        bool isBod(Token* token);
+        vector<Expression*>* lines();
         Expression* expression(); // construct a AST based on Predefined paramaters
         Expression* literal();
         Expression* parans();
         Expression* binaryOperation(int precidence); // Constructed a binOP AST 
         Expression* unary();
+        Expression* body();
         Expression* decleration();
         Expression* assignment(Expression* name);
         Expression* functionCall();

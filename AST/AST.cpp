@@ -43,14 +43,16 @@ Decleration::~Decleration(){
 }
 
 
-Body::Body(vector<Expression*>* expressions){
+Body::Body(Expression* control,vector<Expression*>* expressions){
         m_lines = expressions;
+        m_control = control;
         
 }
 
 string Body::name(){return "Body";}
 
 Body::~Body(){
+        delete m_control;
        for(int i=0; i< m_lines->size(); i++){
                delete m_lines->at(i); 
        }

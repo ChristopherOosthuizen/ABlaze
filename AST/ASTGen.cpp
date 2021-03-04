@@ -13,11 +13,49 @@ ASTGen::ASTGen(vector<Token*> tokens){
 
 Body* ASTGen::generateAST(){
         vector<Expression*>* exprs = new vector<Expression*>();
-        while(m_pos < m_tokens.size()){
+        while(m_pos < m_tokens.size() && peek()!= nullptr && !peek()->m_symbol.empty()){
                 exprs->push_back(lineStat());
-                delete next();
         }
-        return new Body(exprs);
+        return new Body(nullptr, exprs);
+}
+Expression* ASTGen::body(){
+       TokenType type = peek()->m_type;
+       Literal* lit = new Literal(next());
+       Expression* control= nullptr; 
+       if(type == TokenType::ELSE){
+               control = new ElseStat();
+       }else if(type == TokenType::IF){
+               control = new IfStat(expression());
+       }else if(type == TokenType::FOR){
+               delete next();
+               Expression* inital = lineStat();
+               Expression* controlStat = expression();
+               delete next();
+               Expression* rep = expression();
+               delete next();
+               control = new ForStat(inital,controlStat,rep);
+       }else if(type == TokenType::WHILE){
+               control = new WhileStat(expression()); 
+       }else if(type == TokenType::STRUCT){
+               control = new Struct(new Literal(next()));
+       }else if(isIden(lit->m_token)){
+                control = new Function(lit,(FunctionCall*)functionCall());
+       }
+       return new Body(control,lines());
+}
+
+vector<Expression*>* ASTGen::lines(){
+        vector<Expression*>* exprs = new vector<Expression*>();
+        if(peek()->m_type == TokenType::OPEN_BRACE){
+                delete next();
+                while(peek()->m_type != TokenType::CLOSE_BRACE){
+                       exprs->push_back(lineStat());
+                }
+                delete next();
+        }else{
+                exprs->push_back(lineStat());
+        }
+        return exprs;
 }
 
 Token* ASTGen::next(){
@@ -38,6 +76,8 @@ Token* ASTGen::previous(){
 }
 
 int ASTGen::order(Token* token){
+        if(token == NULL)
+                return -1;
         switch(token->m_type){
                case TokenType::XOR:
                 case TokenType::AND_AND:
@@ -67,18 +107,42 @@ bool ASTGen::isIden(Token* token){
                 case TokenType::IDEN_DOUBLE:
                 case TokenType::IDEN_CHAR:
                 case TokenType::IDEN_STRING:
+                case TokenType::VOID:
                 case TokenType::IDEN_INT:
                 case TokenType::IDEN_BOOL:return 1;
         }
         return 0;
 }
 
-Expression* ASTGen::lineStat(){
-        if(isIden(peek()) || (peek()->m_type == TokenType::IDEN&& m_tokens[m_pos+1]->m_type == TokenType::IDEN) ){
-                return decleration();
+bool ASTGen::isBod(Token* token){
+        switch(token->m_type){
+                case TokenType::FOR:
+                case TokenType::IF:
+                case TokenType::WHILE:
+                case TokenType::ELSE:
+                case TokenType::STRUCT:return 1;
         }
-        if(m_pos+1 <m_tokens.size())
-        return expression();
+        return 0;
+
+}
+Expression* ASTGen::lineStat(){
+        Expression* expr = nullptr;
+        bool isRange = m_pos+1 <m_tokens.size();
+        bool isDec =isIden(peek()) || (isRange &&(m_tokens[m_pos+1]->m_type == TokenType::COLON || (peek()->m_type == TokenType::IDEN&& m_tokens[m_pos+1]->m_type == TokenType::IDEN))); 
+        if(peek()->m_type ==TokenType::RETURN){
+                delete next();
+                expr = new Return(expression());
+        }else if(peek()->m_type == TokenType::IMPORT){
+                delete next();
+                expr = new Import(expression());
+        }else if( isBod(peek()) ||(isDec && m_tokens[m_pos+2]->m_type == TokenType::OPEN_PARENTHESE)){
+                return body();
+        }else if(isDec){
+               expr = decleration(); 
+        }else 
+                 expr = expression();
+        delete next();
+        return expr;
 }
 
 bool ASTGen::isEquals(Token* token){
@@ -97,20 +161,27 @@ Expression* ASTGen::expression(){
         Expression* expression = binaryOperation(6); 
         if(isEquals(peek())){
                 expression = assignment(expression);
+        }else if(peek()->m_type == TokenType::PLUS_PLUS || peek()->m_type == TokenType::MINUS_MINUS){
+                expression = new Unary(new Literal(next()), expression,true);
         }
 
         return expression; 
 }
 
 Expression* ASTGen::decleration(){
-       Literal* type = new Literal(next()); 
+       Literal* type = new Literal(next());
+       bool isArr = false; 
+       if(peek()->m_type == TokenType::COLON){
+               delete next();
+               isArr = true;
+       }
        Expression* name = literal();
        Expression* value = nullptr;
        if(peek()->m_type == TokenType::EQUAL){
                delete next();
                 value = expression();
        }
-       return new Decleration(type,name,nullptr,value,true,false);
+       return new Decleration(type,name,nullptr,value,true,isArr);
 }
 
 Expression* ASTGen::assignment(Expression* name){
@@ -184,11 +255,21 @@ Expression* ASTGen::literal(){
                 delete next();
                 return new New(new Literal(next()));
         }
-        if(m_tokens[m_pos+1]->m_type == TokenType::DOT){
+        bool isRange = m_pos+1 <m_tokens.size();
+        if(isRange &&m_tokens[m_pos+1]->m_type == TokenType::DOT){
                 Literal* name = new Literal(next());
                 delete next();
                 Literal* sub= new Literal(next());
                 return new Dot(name,sub);
+        }else if (isRange && m_tokens[m_pos+1]->m_type == TokenType::OPEN_BRACKET) {
+                Literal* name = new Literal(next());
+                delete next();
+                Expression* value = nullptr;
+                if(peek()->m_type != TokenType::CLOSE_BRACKET){
+                        value = expression();
+                }
+                delete next();
+                return new ArrayLiteral(name,value);
         }
         return new Literal(next());
 }

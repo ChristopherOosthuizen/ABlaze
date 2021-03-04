@@ -54,11 +54,10 @@ class Decleration: public Expression{
 class Body: public Expression{
         public:
                 string name() override;
-                Body(vector<Expression*>* expressions);
+                Body(Expression* control ,vector<Expression*>* expressions);
                 ~Body();
+                Expression* m_control;
                 vector<Expression*>* m_lines;
-
-
 };
 
 class FunctionCall: public Expression{
