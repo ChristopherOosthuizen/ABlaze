@@ -141,7 +141,10 @@ Expression* ASTGen::lineStat(){
                expr = decleration(); 
         }else 
                  expr = expression();
-        delete next();
+        if(peek()->m_type == TokenType::SEMI_COLON)
+                delete next();
+        else 
+        ErrorThrower::missingSemiColon(peek()->m_line+1);
         return expr;
 }
 
