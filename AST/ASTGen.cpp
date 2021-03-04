@@ -13,7 +13,7 @@ ASTGen::ASTGen(vector<Token*> tokens){
 
 Body* ASTGen::generateAST(){
         vector<Expression*>* exprs = new vector<Expression*>();
-        exprs->push_back(binaryOperation(3));
+        exprs->push_back(expression());
         return new Body(exprs);
 }
 
@@ -49,14 +49,16 @@ int ASTGen::order(Token* token){
 }
 
 Expression* ASTGen::expression(){
-        return expr;
+        return binaryOperation(3);
 }
 
 Expression* ASTGen::binaryOperation(int precidence){
+        
         if(precidence <= 0){
                 return unary();
-        }
+        } 
         Expression* expr = binaryOperation(precidence-1);
+
         while(order(peek()) == precidence){
                 Token* op= next();
                 Expression* right = binaryOperation(precidence-1);
@@ -70,6 +72,16 @@ Expression* ASTGen::unary(){
                 Token* op = previous();
                 Expression* right = unary();               
                 return new Unary(new Literal(op), right,0);
+        }
+        return literal();
+}
+
+Expression* ASTGen::literal(){
+        if(peek()->m_type == TokenType::OPEN_PARENTHESE){
+                delete next();
+                Expression* expr = expression();
+                delete next();
+                return expr; 
         }
         return new Literal(next());
 }

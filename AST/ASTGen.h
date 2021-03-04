@@ -22,6 +22,8 @@ class ASTGen{
         Token* previous();
         int order(Token* token);
         Expression* expression(); // construct a AST based on Predefined paramaters
+        Expression* literal();
+        Expression* parans();
         Expression* binaryOperation(int precidence); // Constructed a binOP AST 
         Expression* unary();
 
