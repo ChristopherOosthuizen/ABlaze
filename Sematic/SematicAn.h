@@ -21,6 +21,7 @@ class Lock{
 class SematicAn{
 	Body* m_body;
 	vector<Lock> m_vars;
+	map<string,TokenType> m_functions;
 	int m_level;
 	public:
 		SematicAn(Body* body);
@@ -37,8 +38,8 @@ class SematicAn{
 		bool containsVar(string str);
 		void popLevel();
 		void increaseLevel();
+		void checkFunction(Function* function);
 		void controlStatements(Expression* expr);
-		void clearAll();
 			
 };
 #endif

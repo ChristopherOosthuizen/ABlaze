@@ -93,10 +93,22 @@ void SematicAn::controlStatements(Expression* expression){
 	}else if(name == "While"){
 		IfStat* stat = (IfStat*)expression;
 		check(stat->m_control);
+	}else if(name == "Function"){
+		checkFunction((Function*) expression);
 	}
 }
 
+void SematicAn::checkFunction(Function* expr){
+	m_functions[expr->m_call->m_name->m_token->m_symbol] =  expr->m_type->m_token->m_type;
+	checkFunctionCall(expr->m_call);
+}
+
+
 void SematicAn::checkFunctionCall(FunctionCall* functionCall){
+	Token* token = functionCall->m_name->m_token; 
+	string name =token->m_symbol;  
+	if(m_functions.count(name) ==0 )
+		ErrorThrower::unIntiazlizedVarible(token->m_line,name);
 	for(int i=0; i< functionCall->m_args->size(); i++){
 		check(functionCall->m_args->at(0));
 	}

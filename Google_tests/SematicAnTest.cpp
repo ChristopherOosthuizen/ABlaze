@@ -82,7 +82,7 @@ TEST(SematicAn,typer){
 	ASSERT_EQ(an.endType(body->m_lines->at(4),nullptr,nullptr),TokenType::IDEN_BOOL);
 	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr,nullptr),TokenType::IDEN_STRING);
 }
-
+*/
 
 // test to see weather the ast can catch wrong typed functions and weather it can handle functions
 TEST(Sematic,Functions){
@@ -102,5 +102,3 @@ TEST(Sematic,Functions){
 	ASSERT_EQ(ErrorThrower::errors->size(),4);
 	
 }
-
-*/
