@@ -18,6 +18,17 @@ Body* ASTGen::generateAST(){
         }
         return new Body(nullptr, exprs);
 }
+void ASTGen::consume( TokenType type,const string& message ){
+        Token* peeked = peek();
+        if(!(peeked->m_type == type)){
+                ErrorThrower::unNamedError(message,peeked->m_line);
+
+        }else{
+                delete next();
+
+        }
+}
+
 Expression* ASTGen::body(){
        TokenType type = peek()->m_type;
        Literal* lit = new Literal(next());
@@ -125,7 +136,8 @@ bool ASTGen::isBod(Token* token){
         return 0;
 
 }
-Expression* ASTGen::lineStat(){
+
+Expression* ASTGen::lineExpr(){
         Expression* expr = nullptr;
         bool isRange = m_pos+1 <m_tokens.size();
         bool isDec =isIden(peek()) || (isRange &&(m_tokens[m_pos+1]->m_type == TokenType::COLON || (peek()->m_type == TokenType::IDEN&& m_tokens[m_pos+1]->m_type == TokenType::IDEN))); 
@@ -141,10 +153,14 @@ Expression* ASTGen::lineStat(){
                expr = decleration(); 
         }else 
                  expr = expression();
-        if(peek()->m_type == TokenType::SEMI_COLON)
-                delete next();
-        else 
-        ErrorThrower::missingSemiColon(peek()->m_line+1);
+        return expr;
+ 
+}
+
+Expression* ASTGen::lineStat(){
+        Expression* expr = lineExpr();
+        if(expr->name() !="Body")
+                consume(TokenType::SEMI_COLON, "Error: Missing Semi Colon on line:");
         return expr;
 }
 
@@ -231,11 +247,11 @@ Expression* ASTGen::functionCall(){
         delete next();
         vector<Expression*>* args = new vector<Expression*>();
         while(peek()->m_type != TokenType::CLOSE_PARENTHESE){
-                args->push_back(expression());
+                args->push_back(lineExpr());
                 if(peek()->m_type == TokenType::COMMA)
                         delete next();
         }
-        delete next();
+        consume(TokenType::CLOSE_PARENTHESE,"Error: Unclosed function call on line:");
         return new FunctionCall(lit,args);
 }
 

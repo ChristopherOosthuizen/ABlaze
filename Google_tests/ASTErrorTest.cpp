@@ -14,5 +14,5 @@ TEST(ErrorThrowerAST,basics){
         ASTGen gen(lexer.readAllTokens());
         Body* body = gen.generateAST();
         ASSERT_TRUE(ErrorThrower::hasError);
-        ASSERT_EQ(ErrorThrower::errors->at(0),"Error: missing semi colon on line 1");
+        ASSERT_EQ(ErrorThrower::errors->at(0),"Error: Missing Semi Colon on line: 1");
 }

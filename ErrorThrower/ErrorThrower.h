@@ -22,5 +22,6 @@ public:
 	static void illgalIdentifier(int line, string symbol);
 	static void unIntiazlizedVarible(int line,string symbol);
 	static void mismatchType(int line,string symbol, string type, string actual);
+	static void unNamedError(const string& str, int line);
 };
 #endif

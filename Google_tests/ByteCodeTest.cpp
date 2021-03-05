@@ -49,7 +49,7 @@ TEST(ByteCode,returns){
 
 
 TEST(ByteCode,equations){
-        Lexer lexer("int main(){int i=12+8*2}");
+        Lexer lexer("int main(){int i=12+8*2;}");
         ASTGen gen(lexer.readAllTokens());
         Body* body = gen.generateAST();
         ByteGen byt(body);
@@ -93,12 +93,12 @@ TEST(ByteCode,equationsAdvanced){
         ASSERT_EQ(strs->at(10),"push"); 
         ASSERT_EQ(strs->at(11),"8"); 
         ASSERT_EQ(strs->at(12),"times"); 
-        ASSERT_EQ(strs->at(13),"push"); 
-        ASSERT_EQ(strs->at(14),"8"); 
-        ASSERT_EQ(strs->at(15),"push"); 
-        ASSERT_EQ(strs->at(16),"3"); 
-        ASSERT_EQ(strs->at(17),"times"); 
-        ASSERT_EQ(strs->at(18),"add"); 
+        ASSERT_EQ(strs->at(13),"add"); 
+        ASSERT_EQ(strs->at(14),"push"); 
+        ASSERT_EQ(strs->at(15),"8"); 
+        ASSERT_EQ(strs->at(16),"push"); 
+        ASSERT_EQ(strs->at(17),"3"); 
+        ASSERT_EQ(strs->at(18),"times"); 
         ASSERT_EQ(strs->at(19),"add"); 
         ASSERT_EQ(strs->at(20),"store"); 
         ASSERT_EQ(strs->at(21),"i"); 
@@ -275,7 +275,7 @@ TEST(ByteCode,fors){
 }
 
 TEST(ByteCode,functions){
-        Lexer lexer("void  runner(int i){print(i);} int main(){ int o = 12; runner(o)}");
+        Lexer lexer("void  runner(int i){print(i);} int main(){ int o = 12; runner(o);}");
         vector<Token*> tokens = lexer.readAllTokens();
         ASTGen gen(tokens);
         Body* body = gen.generateAST();

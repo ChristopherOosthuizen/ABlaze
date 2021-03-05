@@ -61,3 +61,11 @@ void ErrorThrower::mismatchType(int line, string symbol, string type, string act
 
 	errors->push_back(error);
 }
+
+void ErrorThrower::unNamedError(const string& message, int line){
+	string error = message +" "+to_string(line+1);
+	hasError = true;
+
+	errors->push_back(error);
+
+}

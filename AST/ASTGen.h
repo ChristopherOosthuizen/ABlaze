@@ -26,6 +26,7 @@ class ASTGen{
         bool isBod(Token* token);
         vector<Expression*>* lines();
         Expression* expression(); // construct a AST based on Predefined paramaters
+        void consume(TokenType type, const string& message);
         Expression* literal();
         Expression* parans();
         Expression* binaryOperation(int precidence); // Constructed a binOP AST 
@@ -35,6 +36,7 @@ class ASTGen{
         Expression* assignment(Expression* name);
         Expression* functionCall();
         Expression* lineStat();
+        Expression* lineExpr();
         Expression* postfix();
         bool isFunc(Token* token);
 

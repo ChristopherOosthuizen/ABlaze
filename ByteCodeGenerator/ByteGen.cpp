@@ -131,8 +131,7 @@ void ByteGen::structToByte(Body* body){
 
 void ByteGen::unToByte(Unary* unary){
         TokenType type = unary->m_op->m_token->m_type;
-        toCommand("load");
-        toCommand(unary->m_iden->m_token->m_symbol);
+        expressionToByte(unary->m_iden);
         toCommand("push");
         toCommand("1");
         switch(type){
@@ -141,7 +140,7 @@ void ByteGen::unToByte(Unary* unary){
 
         }
         toCommand("asi");
-        toCommand(unary->m_iden->m_token->m_symbol);
+        toCommand(((Literal*)unary->m_iden)->m_token->m_symbol);
 
 }
 

@@ -21,7 +21,7 @@ TEST(SematicAn, reservedKeywords){
 	ASSERT_EQ(ErrorThrower::errors->size(),1);
 
 }
-
+/*
 //Check to see if varibles used out of scope are error thrown
 TEST(SematicAn, outOfScpoer){
 	ErrorThrower::hasError = false;
@@ -99,3 +99,5 @@ TEST(Sematic,Functions){
 	ASSERT_EQ(ErrorThrower::errors->size(),4);
 	
 }
+
+*/
