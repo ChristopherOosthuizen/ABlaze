@@ -237,7 +237,7 @@ Expression* ASTGen::unary(){
 Expression* ASTGen::parans(){
         delete next();
         Expression* expr = expression();
-        delete next();
+        consume(TokenType::CLOSE_PARENTHESE,"Error: Unclosed parethese on line:");
         return expr; 
 
 }
@@ -287,7 +287,7 @@ Expression* ASTGen::literal(){
                 if(peek()->m_type != TokenType::CLOSE_BRACKET){
                         value = expression();
                 }
-                delete next();
+                consume(TokenType::CLOSE_BRACKET,"Error: Unclosed array on line :");
                 return new ArrayLiteral(name,value);
         }
         return new Literal(next());

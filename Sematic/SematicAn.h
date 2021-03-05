@@ -6,18 +6,39 @@
 #include <map>
 #include "Lexer.h"
 
+class Lock{
+	public:
+		int m_level;
+		string m_symbol;
+		TokenType m_type;
+		Lock(int level, string symbol, TokenType type){
+			m_level = level;
+			m_symbol = symbol;
+			m_type = type;
+		}
+};
+
 class SematicAn{
 	Body* m_body;
+	vector<Lock> m_vars;
+	int m_level;
 	public:
 		SematicAn(Body* body);
 		void analize();
-		void checkVaribles(Body* body,map<string,TokenType>* variables, map<string,TokenType>* functions);
-		void checkDecleration(Decleration* dec,map<string,TokenType>* variables, map<string,TokenType>* functions);
-		TokenType endType(Expression* expr, map<string,TokenType>* vars,map<string,TokenType>* functions);    
-		TokenType endTypeLiteral(Literal* expr, map<string,TokenType>* vars,map<string,TokenType>* functions); 
-		TokenType endTypeFunctionCall(FunctionCall* expr, map<string,TokenType>* vars,map<string,TokenType>* functions); 
- 
-		void addFor(ForStat* stat,map<string,TokenType>* vars);
-		void addFunc(Function* func, map<string,TokenType>* vars);
+		void check(Expression* expression);
+		void checkFunction(Body* body);
+		void checkBinOP(BinOP* op);
+		void checkBody(Body* body);
+		void checkDecleration(Decleration* dec);
+		void checkFunctionCall(FunctionCall* call);
+		void checkDot(Dot* dot);
+		void checkArrayLiteral(ArrayLiteral* literal);
+		void checkLiteral(Literal* literal);
+		bool containsVar(string str);
+		void popLevel();
+		void increaseLevel();
+		void controlStatements(Expression* expr);
+		void clearAll();
+			
 };
 #endif

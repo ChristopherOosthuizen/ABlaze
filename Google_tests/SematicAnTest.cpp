@@ -21,7 +21,7 @@ TEST(SematicAn, reservedKeywords){
 	ASSERT_EQ(ErrorThrower::errors->size(),1);
 
 }
-/*
+
 //Check to see if varibles used out of scope are error thrown
 TEST(SematicAn, outOfScpoer){
 	ErrorThrower::hasError = false;
@@ -36,6 +36,22 @@ TEST(SematicAn, outOfScpoer){
 	ASSERT_EQ(ErrorThrower::errors->size(),1);
 }
 
+
+//detemine wether the sematic can determine that varibles used within scope with structures are accurtly protrayed
+TEST(Sematic,structures){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	Lexer lexer("int fith = 6;for(int i =0; i<12;i++){i =6; fith = 12;}");
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(!ErrorThrower::hasError);
+
+} 
+
+/*
 //check to see if the sematic anlisis will throw a error if the wrong type of decleration is used on a varible
 TEST(SematicAn,wrongUse){
 	ErrorThrower::hasError = false;
@@ -67,19 +83,6 @@ TEST(SematicAn,typer){
 	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr,nullptr),TokenType::IDEN_STRING);
 }
 
-//detemine wether the sematic can determine that varibles used within scope with structures are accurtly protrayed
-TEST(Sematic,structures){
-	ErrorThrower::hasError = false;
-	delete ErrorThrower::errors;
-	ErrorThrower::errors = new vector<string>();
-	Lexer lexer("int fith = 6;for(int i =0; i<12;i++){i =6; fith = 12;}");
-	ASTGen gen = ASTGen(lexer.readAllTokens());
-	Body* body = gen.generateAST();	
-	SematicAn an(body);
-	an.analize();
-	ASSERT_TRUE(!ErrorThrower::hasError);
-
-}
 
 // test to see weather the ast can catch wrong typed functions and weather it can handle functions
 TEST(Sematic,Functions){
