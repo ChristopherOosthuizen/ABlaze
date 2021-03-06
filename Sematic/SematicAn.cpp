@@ -14,6 +14,8 @@ void SematicAn::analize(){
 }
 
 void SematicAn::check(Expression* expr){
+	if(expr == NULL)
+		return;
 	string name = expr->name(); 
 	if(name == "Decleration"){
 		checkDecleration((Decleration*) expr);
@@ -116,8 +118,6 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 
 void SematicAn::checkDecleration(Decleration* decleration){
 	Token* name = ((Literal*)decleration->m_name)->m_token;
-	if(name->m_type != TokenType::IDEN)
-		ErrorThrower::illgalIdentifier(name->m_line,Lexer::typeToString(name->m_type));
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
 

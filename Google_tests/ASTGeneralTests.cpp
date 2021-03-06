@@ -17,8 +17,8 @@ TEST(ASTGeneral,prints){
         Body* body = gen.generateAST();
         ASSERT_TRUE(!ErrorThrower::hasError);
         ASSERT_EQ(body->m_lines->size(),2);
-        ASSERT_EQ(body->m_lines->at(0)->name(),"FunctionCall");
-        ASSERT_EQ(body->m_lines->at(1)->name(),"FunctionCall");
+        ASSERT_EQ(body->m_lines->at(0)->name(),"BuiltIn");
+        ASSERT_EQ(body->m_lines->at(1)->name(),"BuiltIn");
 
  
 }
@@ -53,7 +53,7 @@ TEST(ASTGeneral,mainFunction){
         Body* second =((Body*)body->m_lines->at(0)); 
         ASSERT_EQ(second->m_lines->size(),3);
         ASSERT_EQ(second->m_lines->at(0)->name(),"Decleration"); 
-        ASSERT_EQ(second->m_lines->at(1)->name(),"FunctionCall"); 
+        ASSERT_EQ(second->m_lines->at(1)->name(),"BuiltIn"); 
         ASSERT_EQ(second->m_lines->at(2)->name(),"UnOP"); 
 }
 
@@ -71,10 +71,10 @@ TEST(ASTGeneral,elsser){
         ASSERT_EQ(body->m_lines->at(4)->name(),"Body");
         Body* ifs = (Body*)body->m_lines->at(3);
         ASSERT_EQ(ifs->m_lines->size(),1);
-        ASSERT_EQ(ifs->m_lines->at(0)->name(),"FunctionCall");
+        ASSERT_EQ(ifs->m_lines->at(0)->name(),"BuiltIn");
          ifs = (Body*)body->m_lines->at(4);
         ASSERT_EQ(ifs->m_lines->size(),1);
-        ASSERT_EQ(ifs->m_lines->at(0)->name(),"FunctionCall");
+        ASSERT_EQ(ifs->m_lines->at(0)->name(),"BuiltIn");
 
 }
 
@@ -91,7 +91,7 @@ TEST(ASTGenetal,whiles){
         ASSERT_EQ(stat->m_control->name(),"BinOP");
         ASSERT_EQ(whiler->m_lines->size(),2);
         ASSERT_EQ(whiler->m_lines->at(0)->name(),"Decleration");
-        ASSERT_EQ(whiler->m_lines->at(1)->name(),"FunctionCall");
+        ASSERT_EQ(whiler->m_lines->at(1)->name(),"BuiltIn");
 
 
 }

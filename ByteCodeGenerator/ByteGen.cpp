@@ -47,21 +47,29 @@ void ByteGen::expressionToByte(Expression* expr){
                 bodyToByte((Body*)expr);
         }else if(name == "UnOP"){
                 unToByte((Unary*)expr);
-        }else if(name == "Return"){
-                returnToByte((Return*) expr);
         }else if(name == "ArrayLiteral"){
                 arrayToByte((ArrayLiteral*) expr);
         }else if(name == "Dot"){
                 dotToByte((Dot*) expr);
-        }else if(name == "New"){
-                newToByte((New*)expr);
+        }else if(name == "BuiltIn"){
+                builtInToByte((BuiltIn*) expr);
         }
 
 }
-void ByteGen::newToByte(New* news){
-        toCommand("new");
-        toCommand(news->m_iden->m_token->m_symbol);
+
+void ByteGen::builtInToByte(BuiltIn* builtin){
+        TokenType name = builtin->m_type->m_token->m_type;
+        if(name ==TokenType::NEW){
+                toCommand(Lexer::typeToString(name));
+                Literal* value = (Literal*)builtin->m_value;
+                toCommand(value->m_token->m_symbol);
+                return;
+        }
+
+        expressionToByte(builtin->m_value);
+        toCommand(Lexer::typeToString(name));
 }
+
 
 void ByteGen::dotToByte(Dot* dot){
         toCommand("load");
@@ -227,20 +235,17 @@ void ByteGen::functionToByte(Body* body){
                 toCommand("halt");
 }
 
-void ByteGen::returnToByte(Return* ret){
-        expressionToByte(ret->m_value);
-        toCommand("return");
-}
 
 void ByteGen::functionCallToByte(FunctionCall* call){
         string symb = call->m_name->m_token->m_symbol;
         for(int i=0; i< call->m_args->size();i++){
                 expressionToByte(call->m_args->at(i));
         }
-        if(symb == "print" || symb=="append"|| symb =="delete"){
-                m_lines->push_back(symb);
+        if(symb == "delete" || symb =="append"){
+                toCommand(symb);
                 return;
         }
+        
         toCommand("call");
         toCommand(symb);
 }

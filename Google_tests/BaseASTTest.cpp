@@ -111,7 +111,7 @@ TEST(ASTSTRUT, returns){
 
         ASSERT_EQ(body->m_lines->size(),1);
         ASSERT_TRUE(body->m_lines->at(0) != nullptr);
-        ASSERT_EQ(body->m_lines->at(0)->name(),"Return");
+        ASSERT_EQ(body->m_lines->at(0)->name(),"BuiltIn");
         
 }
 
@@ -126,7 +126,7 @@ TEST(ASTSTRUT, Imports){
         ASSERT_TRUE(!ErrorThrower::hasError);
         ASSERT_EQ(body->m_lines->size(),1);
         ASSERT_TRUE(body->m_lines->at(0) != nullptr);
-        ASSERT_EQ(body->m_lines->at(0)->name(),"Import");
+        ASSERT_EQ(body->m_lines->at(0)->name(),"BuiltIn");
  
 }
 

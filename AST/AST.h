@@ -121,22 +121,6 @@ class Function: public Expression{
                 FunctionCall* m_call;
 };
 
-class Return: public Expression{
-        public:
-                string name() override;
-                Return(Expression* value);
-                ~Return(); 
-                Expression* m_value;
-};
-
-class Import: public Expression{
-        public:
-                string name() override;
-                Import(Expression* value);
-                ~Import(); 
-                Expression* m_value;
-};
-
 class ArrayLiteral: public Expression{
 
         public:
@@ -157,17 +141,14 @@ class Struct: public Expression{
 
 };
 
-
-class New: public Expression{
-
+class BuiltIn: public Expression{
         public:
                 string name() override;
-                New(Literal* iden);
-                ~New(); 
-                Literal* m_iden;
-
+                Literal* m_type;
+                Expression* m_value;
+                BuiltIn(Literal* type,Expression* value);
+                ~BuiltIn();
 };
-
 
 class Dot: public Expression{
 

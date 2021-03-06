@@ -38,6 +38,7 @@ class ASTGen{
         Expression* lineStat();
         Expression* lineExpr();
         Expression* postfix();
+        Expression* builtIn();
         bool isFunc(Token* token);
 
 };

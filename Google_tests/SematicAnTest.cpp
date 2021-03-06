@@ -18,7 +18,7 @@ TEST(SematicAn, reservedKeywords){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),1);
+	ASSERT_EQ(ErrorThrower::errors->size(),2);
 
 }
 
@@ -99,6 +99,6 @@ TEST(Sematic,Functions){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),4);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
 	
 }

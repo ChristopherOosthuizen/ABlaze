@@ -132,25 +132,6 @@ Function::~Function(){
        delete m_type;
        delete m_call;
 }
-Return::Return(Expression* value){
-        m_value = value;
-}
-
-string Return::name(){ return "Return";}
-
-Return::~Return(){
-        delete m_value;        
-}
-
-Import::Import(Expression* value){
-        m_value = value;
-}
-
-string Import::name(){ return "Import";}
-
-Import::~Import(){
-        delete m_value;        
-}
 
 ArrayLiteral::ArrayLiteral(Literal* iden, Expression* value){
         m_value = value;
@@ -174,15 +155,7 @@ Struct::~Struct(){
         delete m_iden;
 }
 
-string New::name(){return "New";}
 
-New::New(Literal* iden){
-        m_iden = iden;
-}
-
-New::~New(){
-        delete m_iden;
-}
 
 string Dot::name(){return "Dot";}
 
@@ -196,5 +169,14 @@ Dot::~Dot(){
         delete m_subIden;
 }
 
+string BuiltIn::name(){return "BuiltIn";}
 
+BuiltIn::BuiltIn(Literal* type, Expression* value ){
+        m_type = type;
+        m_value = value;
+}
 
+BuiltIn::~BuiltIn(){
+        delete m_type;
+        delete m_value;
+}

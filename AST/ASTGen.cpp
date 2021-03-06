@@ -141,13 +141,7 @@ Expression* ASTGen::lineExpr(){
         Expression* expr = nullptr;
         bool isRange = m_pos+1 <m_tokens.size();
         bool isDec =isIden(peek()) || (isRange &&(m_tokens[m_pos+1]->m_type == TokenType::COLON || (peek()->m_type == TokenType::IDEN&& m_tokens[m_pos+1]->m_type == TokenType::IDEN))); 
-        if(peek()->m_type ==TokenType::RETURN){
-                delete next();
-                expr = new Return(expression());
-        }else if(peek()->m_type == TokenType::IMPORT){
-                delete next();
-                expr = new Import(expression());
-        }else if( isBod(peek()) ||(isDec && m_tokens[m_pos+2]->m_type == TokenType::OPEN_PARENTHESE)){
+        if( isBod(peek()) ||(isDec && m_tokens[m_pos+2]->m_type == TokenType::OPEN_PARENTHESE)){
                 return body();
         }else if(isDec){
                expr = decleration(); 
@@ -194,6 +188,8 @@ Expression* ASTGen::decleration(){
                delete next();
                isArr = true;
        }
+       if(peek()->m_type != TokenType::IDEN)
+                ErrorThrower::illgalIdentifier(peek()->m_line,peek()->m_symbol);
        Expression* name = literal();
        Expression* value = nullptr;
        if(peek()->m_type == TokenType::EQUAL){
@@ -257,7 +253,9 @@ Expression* ASTGen::functionCall(){
 
 bool ASTGen::isFunc(Token* token){
         switch(token->m_type){
-                case TokenType::IDEN:
+                case TokenType::IMPORT:
+                case TokenType::RETURN:
+                case TokenType::NEW:
                 case TokenType::PRINT: return 1;
         }
         return 0;
@@ -267,13 +265,10 @@ Expression* ASTGen::literal(){
         if(peek()->m_type == TokenType::OPEN_PARENTHESE){
                 return parans();
         }
-        if(isFunc(peek()) &&m_tokens[m_pos+1]->m_type == TokenType::OPEN_PARENTHESE){
+        if(peek()->m_type == TokenType::IDEN &&m_tokens[m_pos+1]->m_type == TokenType::OPEN_PARENTHESE){
                 return functionCall();
         }
-        if(peek()->m_type == TokenType::NEW){
-                delete next();
-                return new New(new Literal(next()));
-        }
+
         bool isRange = m_pos+1 <m_tokens.size();
         if(isRange &&m_tokens[m_pos+1]->m_type == TokenType::DOT){
                 Literal* name = new Literal(next());
@@ -289,6 +284,13 @@ Expression* ASTGen::literal(){
                 }
                 consume(TokenType::CLOSE_BRACKET,"Error: Unclosed array on line :");
                 return new ArrayLiteral(name,value);
+        }else if(isFunc(peek())){
+                return builtIn();
         }
+
         return new Literal(next());
+}
+
+Expression* ASTGen::builtIn(){
+        return new BuiltIn(new Literal(next()),expression());
 }
