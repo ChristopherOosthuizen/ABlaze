@@ -69,8 +69,8 @@ string Lexer::typeToString(TokenType type){
 		case TokenType::REMAND :return "reman";
 		case TokenType::PLUS_PLUS  :return "plus_plus";
 		case TokenType::MINUS_MINUS  :return "minus_minus";
-		case TokenType::TIMES_TIMES :return "times_time";
-		case TokenType::DIVIDE_DIVIDE :return "divide_divide";
+		case TokenType::TIMES_TIMES :return "pow";
+		case TokenType::DIVIDE_DIVIDE :return "sqrt";
 		case TokenType::EQUAL :return "equal";
 		case TokenType::EQUAL_EQUAL :return "equal_equal";
 		case TokenType::PLUS_EQUAL :return "plus_equal";

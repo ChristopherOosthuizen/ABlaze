@@ -36,6 +36,8 @@ ByteLexer::ByteLexer(const string& input){
         m_types["structdec"] = ByteType::STRUCTCONST;
          m_types["set"] = ByteType::SET;
           m_types["input"] = ByteType::INPUT;
+          m_types["pow"] = ByteType::POW;
+          m_types["sqrt"] = ByteType::SQRT;
           m_types["select"] = ByteType::SELECT;
 
 

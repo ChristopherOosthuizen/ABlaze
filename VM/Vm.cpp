@@ -1,4 +1,6 @@
 #include "Vm.h"
+#include <math.h>
+
 
 Vm::Vm(vector<ByteToken*>& tokens){
        m_pos =0;
@@ -69,6 +71,8 @@ void Vm::step(){
                 case ByteType::EQUAL:
                 case ByteType::ISLT:
                 case ByteType::ISLE:
+                case ByteType::POW:
+                case ByteType::SQRT:
                 case ByteType::ISGE:
                 case ByteType::DIVIDE: binOP(token->m_type);break;
                 case ByteType::STRUCTCONST: structDec();break;
@@ -313,7 +317,7 @@ void Vm::binOP(ByteType type){
                 return;
 
         }
-        if(two.m_type == ByteType::DOUBLE||one.m_type == ByteType::DOUBLE ){
+        if(two.m_type == ByteType::DOUBLE||one.m_type == ByteType::DOUBLE || type == ByteType::POW || type == ByteType::SQRT){
                 binOPDouble(type, one.m_val.m_double , two.m_val.m_double);
                 return;
         }
@@ -347,7 +351,8 @@ void Vm::binOP(ByteType type){
 
 
         }
-        DataVal val(ByteType::INT,Val(result,result,result,to_string(result)));
+        ByteType tip= ByteType::INT;
+        DataVal val(tip,Val(result,result,result,to_string(result)));
         m_stack.push_back(val);
 
 }
@@ -373,6 +378,12 @@ void Vm::binOPDouble(ByteType type, double one , double two){
                         result = two >= one; break;
                 case ByteType::EQUAL:
                         result = two ==one; break;
+                case ByteType::POW:
+                        result = pow(two,one);break; 
+                case ByteType::SQRT:
+                        result = pow(two,1/one);break; 
+
+
 
         }
         ByteType typer = ByteType::DOUBLE;
