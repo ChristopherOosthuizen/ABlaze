@@ -84,11 +84,47 @@ void Vm::step(){
                 case ByteType::POPLOCAL:popLocal();break;
                 case ByteType::SET: set(); break;
                 case ByteType::SELECT: select(); break;
+                case ByteType::CAST: cast(); break;
                 case ByteType::INPUT: input(); break;
 
  
        }
        collectAllGarbage();
+}
+
+void Vm::cast(){
+        DataVal val = m_stack[m_stack.size()-1];
+        m_stack.pop_back();
+        string name = m_tokens[m_pos++]->m_symbol;
+        if(name == "int"){
+                if(val.m_type == ByteType::STRING){
+                        int value = stoi(val.m_val.m_string);
+                        val.m_val.m_double= value;
+                        val.m_val.m_int = value;
+                        val.m_val.m_char = value;
+                }
+                val.m_type = ByteType::INT;                
+        }else if(name == "double"){
+              if(val.m_type == ByteType::STRING){
+                        double value = stod(val.m_val.m_string);
+                        val.m_val.m_double= value;
+                        val.m_val.m_int = (int)value;
+                        val.m_val.m_char = (int)value;
+                }
+                val.m_type = ByteType::DOUBLE;                
+        }else if(name == "char"){
+                if(val.m_type == ByteType::STRING){
+                        int value = val.m_val.m_string[0];
+                        val.m_val.m_double= value;
+                        val.m_val.m_int = value;
+                        val.m_val.m_char = value;
+                }
+                val.m_type = ByteType::CHAR;                
+        }else if(name == "string"){
+                val.m_type=ByteType::STRING;
+        }
+        m_stack.push_back(val);
+
 }
 
 void Vm::input(){

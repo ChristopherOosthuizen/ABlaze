@@ -105,6 +105,7 @@ public:
         void garbageCollect(int i);
         void collectAllGarbage();
         void input();
+        void cast();
         void binOP(ByteType type);
         void binOPDouble(ByteType type,double one,double two);
         void binOPSTRING(ByteType type, string one,string two);

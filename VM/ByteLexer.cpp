@@ -34,14 +34,12 @@ ByteLexer::ByteLexer(const string& input){
         m_types["delete"] = ByteType::DELETE;
         m_types["at"] = ByteType::AT;
         m_types["structdec"] = ByteType::STRUCTCONST;
-         m_types["set"] = ByteType::SET;
-          m_types["input"] = ByteType::INPUT;
-          m_types["pow"] = ByteType::POW;
-          m_types["sqrt"] = ByteType::SQRT;
-          m_types["select"] = ByteType::SELECT;
-
-
-
+        m_types["set"] = ByteType::SET;
+        m_types["input"] = ByteType::INPUT;
+        m_types["pow"] = ByteType::POW;
+        m_types["sqrt"] = ByteType::SQRT;
+        m_types["cast"] = ByteType::CAST;
+        m_types["select"] = ByteType::SELECT;
 }
 
 string ByteLexer::strings(int start){

@@ -214,4 +214,15 @@ TEST(VM,structs){
 
 
 
+TEST(VM,casts){
+       ByteLexer lexer("startlocal push 12 cast double push 14  cast string push \"15\" cast int halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),3);
+       ASSERT_EQ(vm.m_stack[0].m_type,ByteType::DOUBLE);
+       ASSERT_EQ(vm.m_stack[1].m_type,ByteType::STRING);
+       ASSERT_EQ(vm.m_stack[2].m_type ,ByteType::INT);
+       ASSERT_EQ(vm.m_stack[2].m_val.m_int ,15);
+}
 
