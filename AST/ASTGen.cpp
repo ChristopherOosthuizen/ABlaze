@@ -263,7 +263,12 @@ bool ASTGen::isFunc(Token* token){
 
 Expression* ASTGen::literal(){
         if(peek()->m_type == TokenType::OPEN_PARENTHESE){
-                return parans();
+                Expression* expr = parans();
+                if( expr->name() == "Literal" && isIden(((Literal*)expr)->m_token) ){
+                       expr = new Cast((Literal*)expr,literal()); 
+
+                }
+                return expr;
         }
         if(peek()->m_type == TokenType::IDEN &&m_tokens[m_pos+1]->m_type == TokenType::OPEN_PARENTHESE){
                 return functionCall();

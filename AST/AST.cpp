@@ -180,3 +180,16 @@ BuiltIn::~BuiltIn(){
         delete m_type;
         delete m_value;
 }
+
+string Cast::name(){return "Cast";}
+
+Cast::Cast(Literal* iden, Expression* value){
+        m_iden = iden;
+        m_value = value;
+}
+
+Cast::~Cast(){
+        delete m_iden;
+        delete m_value;
+}
+

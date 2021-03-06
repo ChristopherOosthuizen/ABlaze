@@ -266,3 +266,18 @@ TEST(AST, dots){
         ASSERT_TRUE(op->m_right !=nullptr);
         ASSERT_EQ(op->m_right->name(),"Dot");
 }
+
+
+TEST(AST, cast){
+        Lexer lexer("string str = \"12\"; (int)str;");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),2);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_TRUE(body->m_lines->at(1) != nullptr);
+        ASSERT_EQ(body->m_lines->at(1)->name(),"Cast");
+}
+
+
+

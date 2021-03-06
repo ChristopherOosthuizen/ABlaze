@@ -150,6 +150,18 @@ class BuiltIn: public Expression{
                 ~BuiltIn();
 };
 
+class Cast: public Expression{
+
+        public:
+                string name() override;
+                Cast(Literal* iden,Expression* value);
+                ~Cast(); 
+                Literal* m_iden;
+                Expression* m_value;
+
+};
+
+
 class Dot: public Expression{
 
         public:
