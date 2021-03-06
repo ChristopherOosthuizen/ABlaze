@@ -115,7 +115,7 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	if(m_functions.count(name) ==0 )
 		ErrorThrower::unIntiazlizedVarible(token->m_line,name);
 	for(int i=0; i< functionCall->m_args->size(); i++){
-		check(functionCall->m_args->at(0));
+		check(functionCall->m_args->at(i));
 	}
 }
 

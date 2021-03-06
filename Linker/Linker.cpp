@@ -1,5 +1,5 @@
 #include "Linker.h"
-
+#include "ErrorThrower.h"
 Linker::Linker(string origin, Body* body){
     m_body = body;
     paths.insert(string(realpath(origin.c_str(),nullptr)));
@@ -7,8 +7,81 @@ Linker::Linker(string origin, Body* body){
 
 void Linker::findAllPaths(Body* body){
     for(int i=0; i< body->m_lines->size(); i++){
-        if(m_body->m_lines->at(i)->name() == "BuiltIn" && ((BuiltIn*)m_body->m_lines->at(i))->m_type->m_token->m_type == TokenType::IMPORT ){
-             
+        if( isImport(body->m_lines->at(i))){
+            Literal* lit =(Literal*)((BuiltIn*)body->m_lines->at(i))->m_value; 
+            string origin = lit->m_token->m_symbol;
+            ifstream ifile;
+            ifile.open(origin);
+            if(!ifile){
+                ErrorThrower::unNamedError("File "+origin+" does not exist",0);
+                ifile.close();
+                i++;
+                continue;
+            }
+            ifile.close();
+            string path =string(realpath(origin.c_str(),nullptr)); 
+            if(paths.find(path) == paths.end()){
+                paths.insert(path);
+                Body* body = readBody(path); 
+                if(body != nullptr){
+                    findAllPaths(body);
+                    bods.push_back(body);
+                }
+            }
         }
     }
+}
+
+void Linker::linkFiles(){
+    findAllPaths(m_body);
+    for(int i=0; i< m_body->m_lines->size(); i++){
+        if(isImport( m_body->m_lines->at(i) )){
+           m_body->m_lines->erase(m_body->m_lines->begin()+i);
+           i--; 
+        }
+    }
+    for(int i=0; i<bods.size();i++){
+        merge(m_body,bods[i]);
+    }
+}
+
+bool Linker::isImport(Expression* expr){
+    if(expr == nullptr||expr->name() != "BuiltIn")
+        return false;
+    BuiltIn* build =((BuiltIn*)expr); 
+    return build->m_type->m_token->m_type == TokenType::IMPORT; 
+
+}
+
+void Linker::merge(Body* body, Body* second){
+    for(int i=0; i< second->m_lines->size(); i++){
+        if(!isImport(second->m_lines->at(i)))
+            body->m_lines->push_back(second->m_lines->at(i));
+    }
+}
+
+Body* Linker::readBody(string path){
+    string wholeFile;
+    string line;
+
+    // read entire file
+    ifstream reader(path);
+   while ( getline ( reader , line ) ) {
+        wholeFile += line+"\n";
+    }
+    reader.close();
+
+  Lexer lexer(wholeFile);
+    vector<Token*> tokens = lexer.readAllTokens();
+    if(ErrorThrower::hasError){
+        for(string s:*ErrorThrower::errors){
+            cout<<s<<endl;
+        }
+        return nullptr;
+    }
+
+    ASTGen gen (tokens);
+    Body* body = gen.generateAST();
+  
+    return body;
 }

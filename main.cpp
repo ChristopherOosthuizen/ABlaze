@@ -14,6 +14,7 @@
 #include "ByteGen.h"
 #include "Vm.h"
 #include "ByteLexer.h"
+#include "Linker.h"
 using namespace std;
 
 int version(){
@@ -39,7 +40,7 @@ int repl() {
     return 0;
 }
 
-int convertToByte(const string& wholeFile,const string& output){
+int convertToByte(const string& wholeFile,const string& output, const string& path){
     Lexer lexer(wholeFile);
     vector<Token*> tokens = lexer.readAllTokens();
     if(ErrorThrower::hasError){
@@ -56,6 +57,15 @@ int convertToByte(const string& wholeFile,const string& output){
         }
         return 1;
     }
+    Linker linker(path,body);
+    linker.linkFiles();
+    if(ErrorThrower::hasError){
+        for(string s:*ErrorThrower::errors){
+            cout<<s<<endl;
+        }
+        return 1;
+    }
+ 
     SematicAn an(body);
 	an.analize();
      if(ErrorThrower::hasError){
@@ -95,7 +105,7 @@ int file(string path,string  output,bool run) {
     }
     reader.close();
     if(!run)
-        return convertToByte(wholeFile,output);
+        return convertToByte(wholeFile,output,path);
     ByteLexer lexer(wholeFile);
     vector<ByteToken*> tokens = lexer.readAllTokens();
     Vm vm(tokens);
