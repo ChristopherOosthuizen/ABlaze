@@ -343,6 +343,22 @@ TEST(ByteCode,arrayss){
         vector<string>* strs = byt.generateByteCode();
 }
 
+TEST(ByteCode,casts){
+        Lexer lexer("(int)12.0;");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),6);
+        ASSERT_EQ(strs->at(0),"call"); 
+        ASSERT_EQ(strs->at(1),"main"); 
+        ASSERT_EQ(strs->at(2),"push"); 
+        ASSERT_EQ(strs->at(3),"12.0"); 
+        ASSERT_EQ(strs->at(4),"cast"); 
+        ASSERT_EQ(strs->at(5),"int"); 
+ 
+}
 
 TEST(ByteCode,structs){
         Lexer lexer("struct Pos{int x; int y;} int main(){Pos position = new Pos; position.x =12; position.y = 14; print(position.x+position.y); }");

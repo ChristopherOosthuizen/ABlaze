@@ -53,6 +53,8 @@ void ByteGen::expressionToByte(Expression* expr){
                 dotToByte((Dot*) expr);
         }else if(name == "BuiltIn"){
                 builtInToByte((BuiltIn*) expr);
+        }else if(name == "Cast"){
+                castToByte((Cast*)expr);
         }
 
 }
@@ -235,6 +237,11 @@ void ByteGen::functionToByte(Body* body){
                 toCommand("halt");
 }
 
+void ByteGen::castToByte(Cast* cast){
+        expressionToByte(cast->m_value);
+        toCommand("cast");
+        toCommand(cast->m_iden->m_token->m_symbol);
+}
 
 void ByteGen::functionCallToByte(FunctionCall* call){
         string symb = call->m_name->m_token->m_symbol;
