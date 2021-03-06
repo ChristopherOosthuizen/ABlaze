@@ -10,6 +10,8 @@ vector<string>* ByteGen::generateByteCode(){
         for(int i=0; i< m_ast->m_lines->size(); i++){
                 if(m_ast->m_lines->at(i)->name() == "Body" && ((Body*)m_ast->m_lines->at(i))->m_control->name() == "Struct"){
                         structToByte((Body*)(m_ast->m_lines->at(i)));
+                }else if(m_ast->m_lines->at(i)->name() == "Decleration"){
+                       decToCommand((Decleration*)(m_ast->m_lines->at(i)) ); 
                 }
         }
         toCommand("call");

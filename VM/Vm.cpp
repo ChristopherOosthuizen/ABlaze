@@ -319,8 +319,12 @@ void Vm::Return(){
 
 void Vm::call(){
         m_jumpBacks.push_back(m_pos+1);
-        m_locals.push_back(new vector<Local*>());
-        m_localCounts.push_back(0);
+        vector<Local*>* locals = new vector<Local*>();
+        for(int i=0; i< m_locals[0]->size(); i++){
+                locals->push_back(m_locals[0]->at(i));
+        }
+        m_locals.push_back(locals);
+        m_localCounts.push_back(1);
         jump();
 }
 
