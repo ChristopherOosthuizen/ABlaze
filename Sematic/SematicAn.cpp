@@ -7,6 +7,9 @@
 SematicAn::SematicAn(Body* body){
 	m_body  = body;
 	m_level =0;
+	m_functions["delete"] = TokenType::VOID;
+	m_functions["input"] = TokenType::STRING;
+	m_functions["append"] = TokenType::VOID;
 }
 
 void SematicAn::analize(){

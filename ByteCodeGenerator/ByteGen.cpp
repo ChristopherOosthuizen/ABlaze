@@ -241,7 +241,7 @@ void ByteGen::functionCallToByte(FunctionCall* call){
         for(int i=0; i< call->m_args->size();i++){
                 expressionToByte(call->m_args->at(i));
         }
-        if(symb == "delete" || symb =="append"){
+        if(symb == "delete" || symb =="append" || symb == "input"){
                 toCommand(symb);
                 return;
         }

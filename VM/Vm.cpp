@@ -80,9 +80,17 @@ void Vm::step(){
                 case ByteType::POPLOCAL:popLocal();break;
                 case ByteType::SET: set(); break;
                 case ByteType::SELECT: select(); break;
+                case ByteType::INPUT: input(); break;
+
  
        }
        collectAllGarbage();
+}
+
+void Vm::input(){
+        string res;
+        std::getline(cin,res);
+        m_stack.push_back(DataVal(ByteType::STRING,Val(0,0,0,res)));
 }
 
 void Vm::set(){
