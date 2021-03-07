@@ -40,7 +40,9 @@ void SematicAn::check(Expression* expr){
 	}else if(name == "Literal"){
 		checkLiteral((Literal*)expr);
 	}else if(name == "BuiltIn"){
-		check(((BuiltIn*)expr)->m_value);
+		BuiltIn* ins = (BuiltIn*)expr;
+		if(ins->m_type->m_token->m_type != TokenType::NEW)
+			check(ins->m_value);
 	}
 }
 
