@@ -11,6 +11,7 @@ ASTGen::ASTGen(vector<Token*> tokens){
     m_pos = 0;
 }
 
+//The inital function to kick of the generation that returns the program as a ast
 Body* ASTGen::generateAST(){
         vector<Expression*>* exprs = new vector<Expression*>();
         while(m_pos < m_tokens.size() && peek()!= nullptr && !peek()->m_symbol.empty()){
@@ -18,32 +19,68 @@ Body* ASTGen::generateAST(){
         }
         return new Body(nullptr, exprs);
 }
-void ASTGen::consume( TokenType type,const string& message ){
-        Token* peeked = peek();
-        if(!(peeked->m_type == type)){
-                ErrorThrower::unNamedError(message,peeked->m_line);
-
-        }else{
-                delete next();
-
-        }
+//return weather the next is a token type
+bool ASTGen::equals(TokenType type){
+        return peek()->m_type == type;
 }
 
+//return weather the next token equals the type and if so delete next
+bool ASTGen::eat(TokenType type){
+        if(equals(type)){
+                delete next();
+                return 1;
+        }
+        return 0;
+}
+
+//return the next token without incremanting pos
+Token* ASTGen::peek(){
+        Token* token = next();
+        m_pos--;
+        return token;
+}
+
+//return the next token as a literal
+Literal* ASTGen::nextLit(){
+        return new Literal(next());
+}
+
+//return next token and increase pos
+Token* ASTGen::next(){
+        if(m_pos >= m_tokens.size()){
+                return nullptr;
+        }
+        return m_tokens[m_pos++];
+}
+
+
+//checks to see if something m_pos+i is a type
+bool ASTGen::equalsForward(int i,TokenType type){
+        return m_tokens.size() >m_pos+i && m_tokens[m_pos+i]->m_type == type;
+}
+
+//eat the next token and if its not right throw error
+void ASTGen::consume( TokenType type,const string& message ){
+        if(!eat(type))
+                ErrorThrower::unNamedError(message,peek()->m_line);
+}
+
+//convert a body token into a body inclusing constrol ststement
 Expression* ASTGen::body(){
        TokenType type = peek()->m_type;
-       Literal* lit = new Literal(next());
+       Literal* lit =nextLit(); 
        Expression* control= nullptr; 
        if(type == TokenType::ELSE){
                control = new ElseStat();
        }else if(type == TokenType::IF){
                control = new IfStat(expression());
        }else if(type == TokenType::FOR){
-               delete next();
+               consume(TokenType::OPEN_PARENTHESE,"missing parenthese for for");
                Expression* inital = lineStat();
                Expression* controlStat = expression();
-               delete next();
+               consume(TokenType::SEMI_COLON,"Missing SemiColon for for");
                Expression* rep = expression();
-               delete next();
+               consume(TokenType::CLOSE_PARENTHESE,"Missing close parenthese");
                control = new ForStat(inital,controlStat,rep);
        }else if(type == TokenType::WHILE){
                control = new WhileStat(expression()); 
@@ -55,37 +92,21 @@ Expression* ASTGen::body(){
        return new Body(control,lines());
 }
 
+//return lines for a function such as {} or single line
 vector<Expression*>* ASTGen::lines(){
         vector<Expression*>* exprs = new vector<Expression*>();
-        if(peek()->m_type == TokenType::OPEN_BRACE){
-                delete next();
-                while(peek()->m_type != TokenType::CLOSE_BRACE){
+        if(eat(TokenType::OPEN_BRACE)){
+                while(!equals(TokenType::CLOSE_BRACE)){
                        exprs->push_back(lineStat());
                 }
-                delete next();
+                consume(TokenType::CLOSE_BRACE,"UNclosed body ");
         }else{
                 exprs->push_back(lineStat());
         }
         return exprs;
 }
 
-Token* ASTGen::next(){
-        if(m_pos >= m_tokens.size()){
-                return nullptr;
-        }
-        return m_tokens[m_pos++];
-}
-
-Token* ASTGen::peek(){
-        Token* token = next();
-        m_pos--;
-        return token;
-}
-
-Token* ASTGen::previous(){
-        return m_tokens[m_pos-1];
-}
-
+//return the order of operations for a given token
 int ASTGen::order(Token* token){
         if(token == NULL)
                 return -1;
@@ -112,6 +133,7 @@ int ASTGen::order(Token* token){
         return -1;
 }
 
+//return weather the token is a type iden
 bool ASTGen::isIden(Token* token){
         switch(token->m_type){
                 case TokenType::VAR:
@@ -125,8 +147,9 @@ bool ASTGen::isIden(Token* token){
         return 0;
 }
 
-bool ASTGen::isBod(Token* token){
-        switch(token->m_type){
+//return weather the next is a contorl type
+bool ASTGen::isBod(){
+        switch(peek()->m_type){
                 case TokenType::FOR:
                 case TokenType::IF:
                 case TokenType::WHILE:
@@ -137,11 +160,11 @@ bool ASTGen::isBod(Token* token){
 
 }
 
+//return the next ststment while 
 Expression* ASTGen::lineExpr(){
         Expression* expr = nullptr;
-        bool isRange = m_pos+1 <m_tokens.size();
-        bool isDec =isIden(peek()) || (isRange &&(m_tokens[m_pos+1]->m_type == TokenType::COLON || (peek()->m_type == TokenType::IDEN&& m_tokens[m_pos+1]->m_type == TokenType::IDEN))); 
-        if( isBod(peek()) ||(isDec && m_tokens[m_pos+2]->m_type == TokenType::OPEN_PARENTHESE)){
+        bool isDec =isIden(peek()) || (equalsForward(1,TokenType::COLON) || (equals(TokenType::IDEN)&& equalsForward(1,TokenType::IDEN))); 
+        if( isBod() ||(isDec && equalsForward(2,TokenType::OPEN_PARENTHESE))){
                 return body();
         }else if(isDec){
                expr = decleration(); 
@@ -151,15 +174,17 @@ Expression* ASTGen::lineExpr(){
  
 }
 
+//return the next while assuming the next is a semicolon
 Expression* ASTGen::lineStat(){
         Expression* expr = lineExpr();
         if(expr->name() !="Body")
-                consume(TokenType::SEMI_COLON, "Error: Missing Semi Colon on line:");
+                consume(TokenType::SEMI_COLON, "Missing Semi Colon");
         return expr;
 }
 
-bool ASTGen::isEquals(Token* token){
-        switch(token->m_type){
+//return weather the next is a equals token
+bool ASTGen::isEquals(){
+        switch(peek()->m_type){
                 case TokenType::EQUAL:
                 case TokenType::TIMES_EQUAL:
                 case TokenType::DIVIDE_EQUAL:
@@ -169,42 +194,41 @@ bool ASTGen::isEquals(Token* token){
         return 0;
 }
 
+//return the next general ststement
 Expression* ASTGen::expression(){
 
         Expression* expression = binaryOperation(6); 
-        if(isEquals(peek())){
+        if(isEquals()){
                 expression = assignment(expression);
-        }else if(peek()->m_type == TokenType::PLUS_PLUS || peek()->m_type == TokenType::MINUS_MINUS){
-                expression = new Unary(new Literal(next()), expression,true);
+        }else if(equals(TokenType::PLUS_PLUS) || equals(TokenType::MINUS_MINUS)){
+                expression = new Unary(nextLit(), expression,true);
         }
 
         return expression; 
 }
 
+//Convert decleration tokens into decleration
 Expression* ASTGen::decleration(){
        Literal* type = new Literal(next());
-       bool isArr = false; 
-       if(peek()->m_type == TokenType::COLON){
-               delete next();
-               isArr = true;
-       }
-       if(peek()->m_type != TokenType::IDEN)
+       bool isArr = eat(TokenType::COLON); 
+       if(!equals(TokenType::IDEN))
                 ErrorThrower::illgalIdentifier(peek()->m_line,peek()->m_symbol);
        Expression* name = literal();
        Expression* value = nullptr;
-       if(peek()->m_type == TokenType::EQUAL){
-               delete next();
+       if(eat(TokenType::EQUAL)){
                 value = expression();
        }
        return new Decleration(type,name,nullptr,value,true,isArr);
 }
 
+//return a asseminet expression
 Expression* ASTGen::assignment(Expression* name){
-       Literal* op = new Literal(next());
+       Literal* op =nextLit(); 
        Expression* value = expression();
        return new Decleration(nullptr,name,op,value,false,false);
 }
 
+//rescursavly go down to keep pemdas in a binary operation
 Expression* ASTGen::binaryOperation(int precidence){
         
         if(precidence <= 0){
@@ -222,7 +246,7 @@ Expression* ASTGen::binaryOperation(int precidence){
 
 Expression* ASTGen::unary(){
 
-        if(order(peek()) == 0 || peek()->m_type == TokenType::MINUS ){
+        if(order(peek()) == 0 || equals(TokenType::MINUS)){
                 Token* op = next();
                 Expression* right = unary();               
                 return new Unary(new Literal(op), right,0);
@@ -231,28 +255,27 @@ Expression* ASTGen::unary(){
 }
 
 Expression* ASTGen::parans(){
-        delete next();
         Expression* expr = expression();
-        consume(TokenType::CLOSE_PARENTHESE,"Error: Unclosed parethese on line:");
+        consume(TokenType::CLOSE_PARENTHESE,"Unclosed ");
         return expr; 
 
 }
 
 Expression* ASTGen::functionCall(){
-        Literal* lit = new Literal(next());
-        delete next();
+        Literal* lit = nextLit();
+        consume(TokenType::OPEN_PARENTHESE,"Exprected open parenthese");
         vector<Expression*>* args = new vector<Expression*>();
-        while(peek()->m_type != TokenType::CLOSE_PARENTHESE){
+        while(!equals(TokenType::CLOSE_PARENTHESE)){
                 args->push_back(lineExpr());
-                if(peek()->m_type == TokenType::COMMA)
-                        delete next();
+                eat(TokenType::COMMA);
         }
         consume(TokenType::CLOSE_PARENTHESE,"Error: Unclosed function call on line:");
         return new FunctionCall(lit,args);
 }
 
-bool ASTGen::isFunc(Token* token){
-        switch(token->m_type){
+//return weather a token is a builtin function
+bool ASTGen::isFunc(){
+        switch(peek()->m_type){
                 case TokenType::IMPORT:
                 case TokenType::RETURN:
                 case TokenType::NEW:
@@ -263,7 +286,7 @@ bool ASTGen::isFunc(Token* token){
 }
 
 Expression* ASTGen::literal(){
-        if(peek()->m_type == TokenType::OPEN_PARENTHESE){
+        if(eat(TokenType::OPEN_PARENTHESE)){
                 Expression* expr = parans();
                 if( expr->name() == "Literal" && isIden(((Literal*)expr)->m_token) ){
                        expr = new Cast((Literal*)expr,literal()); 
@@ -271,32 +294,28 @@ Expression* ASTGen::literal(){
                 }
                 return expr;
         }
-        if(peek()->m_type == TokenType::IDEN &&m_tokens[m_pos+1]->m_type == TokenType::OPEN_PARENTHESE){
+        if(equals(TokenType::IDEN) &&equalsForward(1,TokenType::OPEN_PARENTHESE)){
                 return functionCall();
-        }
-
-        bool isRange = m_pos+1 <m_tokens.size();
-        if(isRange &&m_tokens[m_pos+1]->m_type == TokenType::DOT){
-                Literal* name = new Literal(next());
-                delete next();
-                Literal* sub= new Literal(next());
-                return new Dot(name,sub);
-        }else if (isRange && m_tokens[m_pos+1]->m_type == TokenType::OPEN_BRACKET) {
-                Literal* name = new Literal(next());
-                delete next();
-                Expression* value = nullptr;
-                if(peek()->m_type != TokenType::CLOSE_BRACKET){
-                        value = expression();
-                }
-                consume(TokenType::CLOSE_BRACKET,"Error: Unclosed array on line :");
-                return new ArrayLiteral(name,value);
-        }else if(isFunc(peek())){
+        }else if(isFunc()){
                 return builtIn();
         }
-
-        return new Literal(next());
+        
+        Literal* literal = nextLit();
+        
+        if(eat(TokenType::DOT)){
+                Literal* sub= nextLit(); 
+                return new Dot(literal,sub);
+        }else if (eat(TokenType::OPEN_BRACKET)) {
+                Expression* value = nullptr;
+                if(!equals(TokenType::CLOSE_BRACKET)){
+                        value = expression();
+                }
+                consume(TokenType::CLOSE_BRACKET," Unclosed array ");
+                return new ArrayLiteral(literal,value);
+        }
+        return literal; 
 }
 
 Expression* ASTGen::builtIn(){
-        return new BuiltIn(new Literal(next()),expression());
+        return new BuiltIn(nextLit(),expression());
 }
