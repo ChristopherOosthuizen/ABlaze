@@ -1,0 +1,13 @@
+
+var min(var a, var b){
+    if(a<b)
+        return a;
+    reutn b;
+
+}
+
+var max( var a,var b){
+   if(a >b)
+        return a;
+    return b; 
+}

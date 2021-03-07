@@ -10,16 +10,22 @@ void Linker::findAllPaths(Body* body){
         if( isImport(body->m_lines->at(i))){
             Literal* lit =(Literal*)((BuiltIn*)body->m_lines->at(i))->m_value; 
             string origin = lit->m_token->m_symbol;
+            string path;
+            if(lit->m_token->m_type == TokenType::STRING){
+                path =string(realpath(origin.c_str(),nullptr)); 
+            }else if(lit->m_token->m_type == TokenType::IDEN){
+                path = "/usr/lib/ABlaze/"+origin+".abz";
+            }
             ifstream ifile;
-            ifile.open(origin);
+            ifile.open(path);
             if(!ifile){
-                ErrorThrower::unNamedError("File "+origin+" does not exist",0);
+                ErrorThrower::unNamedError("File "+path+" does not exist",0);
                 ifile.close();
                 i++;
                 continue;
             }
             ifile.close();
-            string path =string(realpath(origin.c_str(),nullptr)); 
+ 
             if(paths.find(path) == paths.end()){
                 paths.insert(path);
                 Body* body = readBody(path); 

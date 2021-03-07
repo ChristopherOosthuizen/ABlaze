@@ -18,6 +18,12 @@ SematicAn::SematicAn(Body* body){
 }
 
 void SematicAn::analize(){
+	for(int i=0; i< m_body->m_lines->size(); i++){
+		if(m_body->m_lines->at(i)->name() == "Body"){
+			Body* body = (Body*)m_body->m_lines->at(i); 
+			controlStatements(body->m_control);
+		}	
+	}
 	check(m_body);
 }
 
