@@ -88,6 +88,7 @@ public:
         void newObj();
         void execute();
         void step();
+        void println();
         void print();
         void pushToStack();
         void jump();

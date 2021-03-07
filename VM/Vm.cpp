@@ -73,6 +73,7 @@ void Vm::step(){
                 case ByteType::JMP: jump();break;
                 case ByteType::RETURN: Return();break;
                 case ByteType::CALL: call(); break;
+                case ByteType::PRINTLN: println(); break;
                 case ByteType::PRINT: print(); break;
                 case ByteType::NEW: newObj();break;
                 case ByteType::DELETE: del(); break;
@@ -428,8 +429,13 @@ void Vm::call(){
 
 void Vm::print(){
         string val = popStackString();
-        cout<< val<<endl;
+        cout<< val;
 
+}
+
+void Vm::println(){
+        string val = popStackString();
+        cout << val<<endl;
 }
 
 void Vm::binOP(ByteType type){

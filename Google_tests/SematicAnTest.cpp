@@ -99,6 +99,6 @@ TEST(Sematic,Functions){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),3);
+	ASSERT_EQ(ErrorThrower::errors->size(),2);
 	
 }

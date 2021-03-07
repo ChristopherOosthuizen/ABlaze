@@ -24,6 +24,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["jif"] = ByteType::JIF;
         m_types["call"] = ByteType::CALL;
         m_types["return"] = ByteType::RETURN;
+        m_types["println"] = ByteType::PRINTLN;
         m_types["print"] = ByteType::PRINT;
         m_types["startlocal"] = ByteType::CREATELOCAL;
         m_types["poplocal"] = ByteType::POPLOCAL;
