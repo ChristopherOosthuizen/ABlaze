@@ -46,4 +46,71 @@ enum class TokenType{
        IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,
 	  
 };
+
+//turn a type into a string 
+static string typeToString(TokenType type){
+	switch(type){
+		case TokenType::PLUS:return "add";
+		case TokenType::MINUS  :return "minus";
+		case TokenType::TIMES  :return "times";
+		case TokenType::DIVIDE  :return "divide";
+		case TokenType::REMAND :return "reman";
+		case TokenType::PLUS_PLUS  :return "plus_plus";
+		case TokenType::MINUS_MINUS  :return "minus_minus";
+		case TokenType::TIMES_TIMES :return "pow";
+		case TokenType::DIVIDE_DIVIDE :return "sqrt";
+		case TokenType::EQUAL :return "equal";
+		case TokenType::EQUAL_EQUAL :return "equal_equal";
+		case TokenType::PLUS_EQUAL :return "plus_equal";
+		case TokenType::MINUS_EQUAL :return "minus_equal";
+		case TokenType::TIMES_EQUAL :return "times_equal";
+		case TokenType::DIVIDE_EQUAL :return "divide_equal";
+		case TokenType::LESS_EQUAL :return "isle";
+		case TokenType::MORE_EQUAL :return "isge";
+		case TokenType::NOT_EQUAL :return "not_equal";
+		case TokenType::MOD_EQUAL :return "mod_equal";
+		case TokenType::AND :return "and";
+		case TokenType::OR :return "or";
+		case TokenType::XOR :return "xor";
+		case TokenType::NOT :return "not";
+		case TokenType::GREATER :return "isgt";
+		case TokenType::LESS :return "islt";
+		case TokenType::OR_OR :return "or_or";
+		case TokenType::AND_AND :return "and_and";
+		case TokenType::INT: return "int";  
+		case TokenType::DOUBLE : return "double";  
+		case TokenType::CHAR : return "char";  
+		case TokenType::STRING : return "string";  
+		case TokenType::BOOL : return "bool";  
+		case TokenType::IDEN : return "iden";  
+		case TokenType::OPEN_PARENTHESE : return "open_parenthese";  
+		case TokenType::CLOSE_PARENTHESE : return "close_parenthese";  
+		case TokenType::OPEN_BRACKET : return "open_bracket";  
+		case TokenType::CLOSE_BRACKET : return "close_bracket";  
+		case TokenType::OPEN_BRACE : return "open_brace";  
+		case TokenType::CLOSE_BRACE : return "close_brace";  
+		case TokenType::SEMI_COLON : return "semi_colon";  
+		case TokenType::COLON : return "colon";  
+		case TokenType::DOT : return "dot";  
+		case TokenType::COMMA : return "comma";  
+		case TokenType::END : return "end";  
+		case TokenType::PRINT : return "print";  
+		case TokenType::PRINTLN : return "println";  
+		case TokenType::IMPORT : return "import";  
+		case TokenType::VAR : return "var";  
+		case TokenType::VOID : return "void";  
+		case TokenType::RETURN : return "return";  
+		case TokenType::IF : return "if";  
+		case TokenType::FOR : return "for";  
+		case TokenType::WHILE : return "while";  
+		case TokenType::IDEN_INT : return "iden_int";  
+		case TokenType::IDEN_BOOL : return "iden_bool";  
+		case TokenType::IDEN_STRING : return "iden_string";  
+		case TokenType::IDEN_DOUBLE : return "iden_double";  
+		case TokenType::ELSE : return "else";  
+		case TokenType::NEW : return "new";  
+		case TokenType::LEN: return "len";
+	}
+	return "";
+}
 #endif //ABLAZE_TOKENTYPE_H

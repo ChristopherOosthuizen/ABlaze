@@ -65,14 +65,14 @@ void ByteGen::expressionToByte(Expression* expr){
 void ByteGen::builtInToByte(BuiltIn* builtin){
         TokenType name = builtin->m_type->m_token->m_type;
         if(name ==TokenType::NEW){
-                toCommand(Lexer::typeToString(name));
+                toCommand(typeToString(name));
                 Literal* value = (Literal*)builtin->m_value;
                 toCommand(value->m_token->m_symbol);
                 return;
         }
 
         expressionToByte(builtin->m_value);
-        toCommand(Lexer::typeToString(name));
+        toCommand(typeToString(name));
 }
 
 
@@ -220,7 +220,7 @@ void ByteGen::decToCommand(Decleration* dec){
 void ByteGen::binToCommand(BinOP* op){
                 expressionToByte(op->m_left);
                 expressionToByte(op->m_right);
-                toCommand(Lexer::typeToString(op->m_op->m_type));
+                toCommand(typeToString(op->m_op->m_type));
 }
 
 void ByteGen::functionToByte(Body* body){

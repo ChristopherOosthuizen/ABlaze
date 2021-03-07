@@ -22,17 +22,18 @@ public:
     Lexer(const string& input);
     vector<Token*> readAllTokens(); //reads turns all of input into Tokens then returns.
     Token* next();		   //returns the token at pos and increments
-    static string typeToString(TokenType type);
 
 private:
     char peek();     // returns the character one in front of pos
     bool isAtEnd();  //tells weather pos is at the end
-    Token* strings(); // extract all of next token;
-    Token* number(); // distinguish between doubles and ints and return its value
+    bool isNum(char c); //returns weather char is a int
+    bool isLetter(char c); //returns weather a char is a letter
+    bool peekIs(char c); // return true if the peek equals a char
+    bool consume(char c); //if peekIs m_pos pluss plus as well
+    Token* strings(char ender,TokenType resultType); // extract all of next token;
     Token* Double(); // convert a double to a token
     Token* Integer(); // convert a integer to a token
     Token* Iden(); // convert identifiers and reserved keywords to correct token type
-    Token* chars();
 };
 
 #endif //ABLAZE_LEXER_H
