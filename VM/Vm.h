@@ -82,6 +82,9 @@ public:
         int m_pos;
         vector<int> m_localCounts;
         Vm(vector<ByteToken*>& tokens);
+        DataVal popStack();
+        string popStackString();
+        ByteToken* nextToken();
         void newObj();
         void execute();
         void step();

@@ -1,9 +1,22 @@
 #include "Vm.h"
 #include <math.h>
 #include<stdio.h>
-#include <iostream>     // std::cout
+#include <iostream>     
 #include <fstream>  
 #include <cstdio>
+
+DataVal Vm::popStack(){
+        DataVal val =m_stack[m_stack.size()-1];
+        m_stack.pop_back(); 
+        return val;
+}
+
+string Vm::popStackString(){
+        return popStack().m_val.m_string;
+}
+ByteToken* Vm::nextToken(){
+        return m_tokens[m_pos++];
+}
 
 Vm::Vm(vector<ByteToken*>& tokens){
        m_pos =0;
@@ -24,6 +37,7 @@ void Vm::execute(){
                 step();
         }
 }
+
 
 void Vm::garbageCollect(int pos){
         for(vector<Local*>* local:m_locals){
@@ -51,7 +65,7 @@ void Vm::collectAllGarbage(){
 }
 
 void Vm::step(){
-        ByteToken* token = m_tokens[m_pos++];
+        ByteToken* token = nextToken(); 
         ByteType type = token->m_type;
        switch(type){
                 case ByteType::PUSH:pushToStack();break;
@@ -108,8 +122,7 @@ void Vm::runTimeError(string error){
 }
 
 void Vm::len(){
-       DataVal val = m_stack[m_stack.size()-1];
-       m_stack.pop_back();
+       DataVal val = popStack();
        int res; 
        if(val.m_type == ByteType::OBJ){
                DataObj* obj =m_objs[val.m_val.m_int]; 
@@ -128,7 +141,7 @@ void Vm::len(){
 
 void Vm::exists(){
         ifstream ifile;
-        string str = m_stack[m_stack.size()-1].m_val.m_string;
+        string str = popStackString();
         ifile.open(str);
         m_stack.pop_back();
         int res = 0;
@@ -140,8 +153,7 @@ void Vm::exists(){
 
 void Vm::readFile(){
         string line = "";
-        string path= m_stack[m_stack.size()-1].m_val.m_string;
-        m_stack.pop_back();
+        string path= popStackString(); 
 
         vector<string>* strs = new vector<string>();
         ifstream reader(path);
@@ -161,10 +173,8 @@ void Vm::readFile(){
 }
 
 void Vm::writeFile(){
-        string content =m_stack[m_stack.size()-1].m_val.m_string;
-        m_stack.pop_back(); 
-        string str = m_stack[m_stack.size()-1].m_val.m_string;
-        m_stack.pop_back();
+        string content = popStackString();
+        string str = popStackString();
 
         ofstream file(str, std::ios_base::app);
                 file << content;
@@ -173,23 +183,20 @@ void Vm::writeFile(){
 }
 
 void Vm::deleteFile(){
-        string str = m_stack[m_stack.size()-1].m_val.m_string;
-        m_stack.pop_back();
+        string str = popStackString(); 
         remove(str.c_str());
 }
 
 void Vm::createFile(){
-        string str = m_stack[m_stack.size()-1].m_val.m_string;
-        m_stack.pop_back();
+        string str = popStackString(); 
 
         ofstream file(str);
         file.close();
 }
 
 void Vm::cast(){
-        DataVal val = m_stack[m_stack.size()-1];
-        m_stack.pop_back();
-        string name = m_tokens[m_pos++]->m_symbol;
+        DataVal val = popStack(); 
+        string name = nextToken()->m_symbol; 
         if(name == "int"){
                 if(val.m_type == ByteType::STRING){
                         int value = stoi(val.m_val.m_string);
@@ -228,20 +235,17 @@ void Vm::input(){
 }
 
 void Vm::set(){
-        DataVal two = m_stack[m_stack.size()-1];
-        m_stack.pop_back();
-        DataVal one = m_stack[m_stack.size()-1];
-        m_stack.pop_back();
+        DataVal two = popStack(); 
+        DataVal one = popStack(); 
         StructObj* obj = (StructObj*)m_objs[two.m_val.m_int]->m_pointer;
-        obj->m_vals[m_tokens[m_pos++]->m_symbol] = one;
+        obj->m_vals[nextToken()->m_symbol] = one;
 }
 
 
 void Vm::select(){
-        DataVal two = m_stack[m_stack.size()-1];
-        m_stack.pop_back();
+        DataVal two = popStack(); 
         StructObj* obj = (StructObj*)m_objs[two.m_val.m_int]->m_pointer;
-        m_stack.push_back(obj->m_vals[m_tokens[m_pos++]->m_symbol]);
+        m_stack.push_back(obj->m_vals[nextToken()->m_symbol]);
 }
 
 void Vm::structDec(){
@@ -255,15 +259,13 @@ void Vm::structDec(){
         }
         if(m_localCounts[m_localCounts.size()-1]!=0)
                 m_localCounts[m_localCounts.size()-1]--;
-        ByteToken* token= m_tokens[m_pos++];
+        ByteToken* token= nextToken();
         (m_structs)[token->m_symbol] = strs;
 }
 
 void Vm::append(){
-        DataVal two = m_stack[m_stack.size()-1];
-        m_stack.pop_back();
-        DataVal one = m_stack[m_stack.size()-1];
-        m_stack.pop_back();
+        DataVal two = popStack(); 
+        DataVal one = popStack(); 
           
         DataObj* obj = m_objs[one.m_val.m_int];
         vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
@@ -271,11 +273,9 @@ void Vm::append(){
 }
 
 void Vm::at(){
-        DataVal two= m_stack[m_stack.size()-1];
-        m_stack.pop_back();
-        DataVal one= m_stack[m_stack.size()-1];
-        m_stack.pop_back();
-          
+        DataVal two= popStack(); 
+        DataVal one= popStack();          
+
         DataObj* obj = m_objs[one.m_val.m_int];
         vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
         int index =two.m_val.m_int; 
@@ -288,10 +288,8 @@ void Vm::at(){
 }
 
 void Vm::del(){
-        DataVal two= m_stack[m_stack.size()-1];
-        m_stack.pop_back();
-        DataVal one= m_stack[m_stack.size()-1];
-        m_stack.pop_back();
+        DataVal two= popStack(); 
+        DataVal one= popStack(); 
           
         DataObj* obj = m_objs[one.m_val.m_int];
         vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
@@ -301,7 +299,7 @@ void Vm::del(){
 }
 
 void Vm::newObj(){
-        ByteToken* token= m_tokens[m_pos++]; 
+        ByteToken* token= nextToken(); 
         int pos = -1;
         for(int i =0; i< m_objs.size(); i++){
                 if(m_objs[i] == nullptr){
@@ -325,7 +323,7 @@ void Vm::newObj(){
 
 void Vm::asi(){
         Local* local = NULL;
-        string name =m_tokens[m_pos++]->m_symbol; 
+        string name =nextToken()->m_symbol; 
         vector<Local*>* locals = m_locals[m_locals.size()-1];
         for(int i = locals->size()-1; i>=0; i--){
                 if(locals->at(i)->m_name == name){
@@ -370,13 +368,14 @@ void Vm::pushToStack(){
         double value =0;
         if(m_tokens[m_pos]->m_type != ByteType::STRING)
                 value = stod(m_tokens[m_pos]->m_symbol); 
-        DataVal val(m_tokens[m_pos]->m_type,Val(m_tokens[m_pos]->m_value, value ,m_tokens[m_pos]->m_value,m_tokens[m_pos]->m_symbol));
+        ByteToken* token = m_tokens[m_pos];
+        DataVal val(token->m_type,Val(token->m_value, value ,token->m_value,token->m_symbol));
         m_pos++;
         m_stack.push_back(val);
 }
 
 void Vm::load(){
-        string name=m_tokens[m_pos++]->m_symbol; 
+        string name=nextToken()->m_symbol; 
         vector<Local*>* locals = m_locals[m_locals.size()-1];
         for(int i=locals->size()-1;i >=0;i--){
                 if(locals->at(i)->m_name ==name){
@@ -388,7 +387,7 @@ void Vm::load(){
 
 void Vm::store(){
         Local* local = NULL;
-        string name =m_tokens[m_pos++]->m_symbol;
+        string name = nextToken()->m_symbol;
         vector<Local*>* locals = m_locals[m_locals.size()-1];
         for(int i = locals->size()-1; i>=0&&locals->at(i)->m_depth == m_localCounts[m_localCounts.size()-1] ; i--){
                 if(locals->at(i)->m_name == name){
@@ -428,16 +427,15 @@ void Vm::call(){
 }
 
 void Vm::print(){
-        cout<< m_stack[m_stack.size()-1].m_val.m_string<<endl;
+        string val = popStackString();
+        cout<< val<<endl;
 
-        m_stack.pop_back();
 }
 
 void Vm::binOP(ByteType type){
         int result =0;
 
-        DataVal one = m_stack[m_stack.size()-1];
-        m_stack.pop_back();
+        DataVal one = popStack(); 
         if(type==ByteType::NOT){
                 int result =1;
                 if(one.m_val.m_int ==1){
@@ -449,8 +447,7 @@ void Vm::binOP(ByteType type){
 
                 return;
         }
-        DataVal two = m_stack[m_stack.size()-1];
-        m_stack.pop_back();
+        DataVal two = popStack(); 
         if(two.m_type == ByteType::STRING||one.m_type == ByteType::STRING){
                 binOPSTRING(type, one.m_val.m_string, two.m_val.m_string);
                 return;
