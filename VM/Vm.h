@@ -111,6 +111,7 @@ public:
         void createFile();
         void deleteFile();
         void exists();
+        void len();
         void binOP(ByteType type);
         void binOPDouble(ByteType type,double one,double two);
         void binOPSTRING(ByteType type, string one,string two);

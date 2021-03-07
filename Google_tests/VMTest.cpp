@@ -165,6 +165,16 @@ TEST(VM,labels){
        ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,13);
 }
 
+TEST(VM,len){
+        ByteLexer lexer("push \"Hello\" len halt");
+          vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),1);
+       ASSERT_EQ(vm.m_stack[vm.m_stack.size()-1].m_val.m_int ,5);
+}
+
+
 TEST(VM,locals){
         ByteLexer lexer("call  main  main:  push  12  store  i  startlocal  push  1  jif  startif7  jmp  endif7  startif7:  push  14  store  i  load  i  print  endif7:  poplocal  startlocal  push  1  jif  startif24  jmp  endif24  startif24:  push  15  store  i  load  i  print  endif24:  poplocal  load  i  print  halt  ");
           vector<ByteToken*> tokens = lexer.readAllTokens();

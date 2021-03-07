@@ -94,10 +94,30 @@ void Vm::step(){
                 case ByteType::DELETEFILE: deleteFile(); break;
                 case ByteType::CREATEFILE: createFile(); break;
                 case ByteType::INPUT: input(); break;
+                case ByteType::LEN: len();break;
 
  
        }
        collectAllGarbage();
+}
+
+void Vm::len(){
+       DataVal val = m_stack[m_stack.size()-1];
+       m_stack.pop_back();
+       int res; 
+       if(val.m_type == ByteType::OBJ){
+               DataObj* obj =m_objs[val.m_val.m_int]; 
+                if(obj->m_type == ByteType::LIST){
+                        vector<DataVal>* list = (vector<DataVal>*)obj->m_pointer;
+                        res = list->size();
+                } else
+                        res = -1;
+       }else{
+               res = val.m_val.m_string.size();
+       }
+       DataVal vals(ByteType::INT,Val(res,res,res,to_string(res)));
+       m_stack.push_back(vals);
+
 }
 
 void Vm::exists(){

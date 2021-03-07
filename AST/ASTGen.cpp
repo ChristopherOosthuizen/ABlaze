@@ -256,6 +256,7 @@ bool ASTGen::isFunc(Token* token){
                 case TokenType::IMPORT:
                 case TokenType::RETURN:
                 case TokenType::NEW:
+                case TokenType::LEN:
                 case TokenType::PRINT: return 1;
         }
         return 0;

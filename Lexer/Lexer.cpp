@@ -30,6 +30,7 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["char"] = TokenType::IDEN_CHAR;
 			m_built_in_words["struct"] = TokenType::STRUCT;
 			m_built_in_words["new"] = TokenType::NEW;
+			m_built_in_words["len"] = TokenType::LEN;
 
 		}
 }
@@ -119,6 +120,7 @@ string Lexer::typeToString(TokenType type){
 		case TokenType::IDEN_DOUBLE : return "iden_double";  
 		case TokenType::ELSE : return "else";  
 		case TokenType::NEW : return "new";  
+		case TokenType::LEN: return "len";
 	}
 	return "";
 }

@@ -40,7 +40,7 @@ enum class TokenType{
   VAR,VOID, RETURN,
 
   //control stuctures
-  IF,FOR,WHILE,ELSE,STRUCT,LIST,
+  IF,FOR,WHILE,ELSE,STRUCT,LIST,LEN,
 
   //Primitve idententifers
        IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,
