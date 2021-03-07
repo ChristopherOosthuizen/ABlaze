@@ -10,6 +10,11 @@ SematicAn::SematicAn(Body* body){
 	m_functions["delete"] = TokenType::VOID;
 	m_functions["input"] = TokenType::STRING;
 	m_functions["append"] = TokenType::VOID;
+	m_functions["deleteFile"]= TokenType::VOID;
+	m_functions["createFile"]= TokenType::VOID;
+	m_functions["exists"]= TokenType::INT;
+	m_functions["writeFile"]= TokenType::VOID;
+	m_functions["readFile"]= TokenType::LIST;
 }
 
 void SematicAn::analize(){
@@ -34,6 +39,8 @@ void SematicAn::check(Expression* expr){
 		checkArrayLiteral((ArrayLiteral*) expr);
 	}else if(name == "Literal"){
 		checkLiteral((Literal*)expr);
+	}else if(name == "BuiltIn"){
+		check(((BuiltIn*)expr)->m_value);
 	}
 }
 

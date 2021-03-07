@@ -1,5 +1,6 @@
 
 #include "ByteGen.h"
+#include <algorithm>
 
 ByteGen::ByteGen(Body* ast){
         m_ast = ast;
@@ -245,12 +246,20 @@ void ByteGen::castToByte(Cast* cast){
         toCommand(cast->m_iden->m_token->m_symbol);
 }
 
+bool ByteGen::isBuiltIn(string name){
+        vector<string> funcs = {"delete","append","input","readFile","writeFile","exists","deleteFile","createFile"};
+        if(find(funcs.begin(),funcs.end(),name) != funcs.end())
+                return 1;
+        return 0;
+
+}
+
 void ByteGen::functionCallToByte(FunctionCall* call){
         string symb = call->m_name->m_token->m_symbol;
         for(int i=0; i< call->m_args->size();i++){
                 expressionToByte(call->m_args->at(i));
         }
-        if(symb == "delete" || symb =="append" || symb == "input"){
+        if(isBuiltIn(symb)){
                 toCommand(symb);
                 return;
         }

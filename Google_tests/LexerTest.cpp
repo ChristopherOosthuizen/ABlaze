@@ -299,7 +299,7 @@ TEST(IDEN,basic){
  */
 
 TEST(IDEN,reserved){
-	Lexer lexer("print println import readFile writeFile var if for while return int double string bool else char");
+	Lexer lexer("print println import var if for while return int double string bool else char");
 	
 	Token* token;
 
@@ -317,16 +317,6 @@ TEST(IDEN,reserved){
 	token = lexer.next();
 	ASSERT_EQ(token->m_type,TokenType::IMPORT);
 	ASSERT_EQ(token->m_symbol,"import");
-	delete token;
-
-	token = lexer.next();
-	ASSERT_EQ(token->m_type,TokenType::READFILE);
-	ASSERT_EQ(token->m_symbol,"readFile");
-	delete token;
-
-	token = lexer.next();
-	ASSERT_EQ(token->m_type,TokenType::WRITEFILE);
-	ASSERT_EQ(token->m_symbol,"writeFile");
 	delete token;
 
 	token = lexer.next();

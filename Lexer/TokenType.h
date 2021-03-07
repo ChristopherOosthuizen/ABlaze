@@ -36,11 +36,11 @@ enum class TokenType{
   END,NEW,
 
   //built in functions
-  PRINT,PRINTLN, IMPORT, READFILE,WRITEFILE,
+  PRINT,PRINTLN, IMPORT, 
   VAR,VOID, RETURN,
 
   //control stuctures
-  IF,FOR,WHILE,ELSE,STRUCT,
+  IF,FOR,WHILE,ELSE,STRUCT,LIST,
 
   //Primitve idententifers
        IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,

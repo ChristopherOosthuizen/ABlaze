@@ -106,6 +106,11 @@ public:
         void collectAllGarbage();
         void input();
         void cast();
+        void readFile();
+        void writeFile();
+        void createFile();
+        void deleteFile();
+        void exists();
         void binOP(ByteType type);
         void binOPDouble(ByteType type,double one,double two);
         void binOPSTRING(ByteType type, string one,string two);

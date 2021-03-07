@@ -14,8 +14,6 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["print"] = TokenType::PRINT;
 			m_built_in_words["println"] = TokenType::PRINTLN;
 			m_built_in_words["import"] = TokenType::IMPORT;
-			m_built_in_words["readFile"] = TokenType::READFILE;
-			m_built_in_words["writeFile"] = TokenType::WRITEFILE;
 			m_built_in_words["while"] = TokenType::WHILE;
 			m_built_in_words["for"] = TokenType::FOR;
 			m_built_in_words["if"] = TokenType::IF;
@@ -109,8 +107,6 @@ string Lexer::typeToString(TokenType type){
 		case TokenType::PRINT : return "print";  
 		case TokenType::PRINTLN : return "println";  
 		case TokenType::IMPORT : return "import";  
-		case TokenType::READFILE : return "readfile";  
-		case TokenType::WRITEFILE : return "writefile";  
 		case TokenType::VAR : return "var";  
 		case TokenType::VOID : return "void";  
 		case TokenType::RETURN : return "return";  

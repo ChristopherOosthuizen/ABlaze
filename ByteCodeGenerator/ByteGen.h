@@ -25,6 +25,7 @@ class ByteGen{
         void arrayToByte(ArrayLiteral* literal);
         void builtInToByte(BuiltIn* builtin);
         void castToByte(Cast* cast);
+        bool isBuiltIn(string name);
         public:
                 ByteGen(Body* ast);
                 vector<string>* generateByteCode();

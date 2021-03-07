@@ -1,6 +1,9 @@
 #include "Vm.h"
 #include <math.h>
-
+#include<stdio.h>
+#include <iostream>     // std::cout
+#include <fstream>  
+#include <cstdio>
 
 Vm::Vm(vector<ByteToken*>& tokens){
        m_pos =0;
@@ -85,11 +88,72 @@ void Vm::step(){
                 case ByteType::SET: set(); break;
                 case ByteType::SELECT: select(); break;
                 case ByteType::CAST: cast(); break;
+                case ByteType::EXISTS: exists(); break;
+                case ByteType::READFILE: readFile(); break;
+                case ByteType::WRITEFILE: writeFile(); break;
+                case ByteType::DELETEFILE: deleteFile(); break;
+                case ByteType::CREATEFILE: createFile(); break;
                 case ByteType::INPUT: input(); break;
 
  
        }
        collectAllGarbage();
+}
+
+void Vm::exists(){
+        ifstream ifile;
+        string str = m_stack[m_stack.size()-1].m_val.m_string;
+        ifile.open(str);
+        m_stack.pop_back();
+        int res = 0;
+        if(ifile)
+                res =1;
+        DataVal val(ByteType::INT,Val(res,res,res,to_string(res)));
+        m_stack.push_back(val);
+}
+
+void Vm::readFile(){
+        string line = "";
+        string path= m_stack[m_stack.size()-1].m_val.m_string;
+        m_stack.pop_back();
+
+        vector<string>* strs = new vector<string>();
+        ifstream reader(path);
+        while ( getline ( reader , line ) ) {
+                strs->push_back(line);
+        }
+        int pos = m_objs.size();
+        DataVal val(ByteType::OBJ, Val(pos,pos,pos,""));     
+        m_objs.push_back(new DataObj(ByteType::LIST,strs));
+        m_stack.push_back(val);
+ 
+
+}
+
+void Vm::writeFile(){
+        string content =m_stack[m_stack.size()-1].m_val.m_string;
+        m_stack.pop_back(); 
+        string str = m_stack[m_stack.size()-1].m_val.m_string;
+        m_stack.pop_back();
+
+        ofstream file(str, std::ios_base::app);
+                file << content;
+        file.close();
+
+}
+
+void Vm::deleteFile(){
+        string str = m_stack[m_stack.size()-1].m_val.m_string;
+        m_stack.pop_back();
+        remove(str.c_str());
+}
+
+void Vm::createFile(){
+        string str = m_stack[m_stack.size()-1].m_val.m_string;
+        m_stack.pop_back();
+
+        ofstream file(str);
+        file.close();
 }
 
 void Vm::cast(){

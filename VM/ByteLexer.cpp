@@ -39,6 +39,11 @@ ByteLexer::ByteLexer(const string& input){
         m_types["pow"] = ByteType::POW;
         m_types["sqrt"] = ByteType::SQRT;
         m_types["cast"] = ByteType::CAST;
+        m_types["readFile"] = ByteType::READFILE;
+        m_types["writeFile"] = ByteType::WRITEFILE;
+        m_types["exists"] = ByteType::EXISTS;
+        m_types["createFile"] = ByteType::CREATEFILE;
+        m_types["deleteFile"] = ByteType::DELETEFILE;
         m_types["select"] = ByteType::SELECT;
 }
 
