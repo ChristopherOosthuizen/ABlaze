@@ -9,6 +9,7 @@ Vm::Vm(vector<ByteToken*>& tokens){
        m_pos =0;
         m_tokens = tokens;
         m_halted = false;
+        m_hasError = false;
         m_localCounts.push_back(0);
         m_locals.push_back(new vector<Local*>());
 }
@@ -19,7 +20,7 @@ void Vm::execute(){
                         m_labels[m_tokens[i]->m_symbol] = i;
                 }
         }
-        while(!m_halted){
+        while(!m_halted && !m_hasError){
                 step();
         }
 }
@@ -101,6 +102,11 @@ void Vm::step(){
        collectAllGarbage();
 }
 
+void Vm::runTimeError(string error){
+        perror(error.c_str());
+        m_hasError = true;
+}
+
 void Vm::len(){
        DataVal val = m_stack[m_stack.size()-1];
        m_stack.pop_back();
@@ -139,6 +145,10 @@ void Vm::readFile(){
 
         vector<string>* strs = new vector<string>();
         ifstream reader(path);
+        if(!reader.good()){
+                runTimeError("File "+path+" does not exist");
+                return;
+        }
         while ( getline ( reader , line ) ) {
                 strs->push_back(line);
         }
@@ -268,7 +278,12 @@ void Vm::at(){
           
         DataObj* obj = m_objs[one.m_val.m_int];
         vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
-        m_stack.push_back(vals->at(two.m_val.m_int));
+        int index =two.m_val.m_int; 
+        if(index >=vals->size()){
+                runTimeError("Index out of bounds for value "+to_string(index));
+                return;
+        }
+        m_stack.push_back(vals->at(index));
 
 }
 
@@ -515,6 +530,7 @@ void Vm::binOPDouble(ByteType type, double one , double two){
                 case ByteType::ISGT: 
                 case ByteType::ISLT: 
                 case ByteType::ISLE: 
+                case ByteType::EQUAL:
                 case ByteType::ISGE: typer = ByteType::INT;
 
 

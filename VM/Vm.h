@@ -78,6 +78,7 @@ public:
         vector<int> m_jumpBacks;
         map<string,int> m_labels;
         bool m_halted;
+        bool m_hasError;
         int m_pos;
         vector<int> m_localCounts;
         Vm(vector<ByteToken*>& tokens);
@@ -115,5 +116,6 @@ public:
         void binOP(ByteType type);
         void binOPDouble(ByteType type,double one,double two);
         void binOPSTRING(ByteType type, string one,string two);
+        void runTimeError(string message);
 };
 #endif
