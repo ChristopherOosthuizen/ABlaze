@@ -30,36 +30,24 @@ git clone https://github.com/ChristopherOosthuizen/ABlaze.git
 ```
 cd ABlaze/
 ```
-3. Add the Google Test source
+3. run install script 
 ```
-cd Google_tests/
-git clone https://github.com/google/googletest.git
-cd ../
+./install.sh
+```
+4. install ablaze
+```
+sudo make install
 ```
 
 ### Running
-1. Create a build dir
+1. Compile Program 
 ```
-mkdir build/
+ablaze [filename]
 ```
-2. Clone google test
+2. Run Program 
 ```
-cd Google_tests
-git clone https://github.com/google/googletest.git
-cd ../
+ablaze -r a.laze
 ```
-3. build cmake project
-```
-cd build/
-cmake ../
-make
-```
-3. compile and run file 
-```
-./ABlaze [filename]
-./ABlaze -r a.laze
-```
-
 ## Usage
 
 ABlaze is a multipurpose programming language with little to no enfisis in any direction. This can not be used for webdev that I have seen and can not be used for low level programming. But can be used for basic and scripting tasks. 
