@@ -14,7 +14,7 @@ void Linker::findAllPaths(Body* body){
             if(lit->m_token->m_type == TokenType::STRING){
                 path =string(realpath(origin.c_str(),nullptr)); 
             }else if(lit->m_token->m_type == TokenType::IDEN){
-                path = "/usr/lib/ABlaze/"+origin+".abz";
+                path = "/usr/lib/ablaze/"+origin+".abz";
             }
             ifstream ifile;
             ifile.open(path);
