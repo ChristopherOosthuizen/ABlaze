@@ -6,23 +6,37 @@
 #include <map>
 #include "Lexer.h"
 
+class TypeInfo{
+	public:
+		string m_symbol;
+		bool m_isArray;
+		TokenType m_type;
+		TypeInfo(string symbol,TokenType type, bool isArray){
+			m_isArray = isArray;
+			m_symbol = symbol;
+			m_type = type;
+		}
+		TypeInfo(){}
+};
+
 class Lock{
 	public:
 		int m_level;
 		string m_symbol;
-		TokenType m_type;
-		Lock(int level, string symbol, TokenType type){
+		TypeInfo m_type;
+		Lock(int level, string symbol, TypeInfo type){
 			m_level = level;
 			m_symbol = symbol;
 			m_type = type;
 		}
+		Lock(){}
 };
 
 class SematicAn{
 	Body* m_body;
 	vector<Lock> m_vars;
-	map<string,TokenType> m_functions;
-	map<string,map<string,TokenType>> m_structs;
+	map<string,TypeInfo> m_functions;
+	map<string,map<string,TypeInfo>> m_structs;
 	int m_level;
 	public:
 		SematicAn(Body* body);
@@ -38,6 +52,7 @@ class SematicAn{
 		void checkArrayLiteral(ArrayLiteral* literal);
 		void checkLiteral(Literal* literal);
 		bool containsVar(string str);
+		Lock getVar(string str);
 		void popLevel();
 		void increaseLevel();
 		void checkFunction(Function* function);

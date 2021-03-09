@@ -7,14 +7,14 @@
 SematicAn::SematicAn(Body* body){
 	m_body  = body;
 	m_level =0;
-	m_functions["delete"] = TokenType::VOID;
-	m_functions["input"] = TokenType::STRING;
-	m_functions["append"] = TokenType::VOID;
-	m_functions["deleteFile"]= TokenType::VOID;
-	m_functions["createFile"]= TokenType::VOID;
-	m_functions["exists"]= TokenType::INT;
-	m_functions["writeFile"]= TokenType::VOID;
-	m_functions["readFile"]= TokenType::LIST;
+	m_functions["delete"] = TypeInfo("void",TokenType::VOID,false);
+	m_functions["input"] = TypeInfo("string",TokenType::STRING,false);
+	m_functions["append"] = TypeInfo("void",TokenType::VOID,false);
+	m_functions["deleteFile"]= TypeInfo("void",TokenType::VOID,false);
+	m_functions["createFile"]= TypeInfo("void",TokenType::VOID,false);
+	m_functions["exists"]= TypeInfo("int",TokenType::INT,false);
+	m_functions["writeFile"]= TypeInfo("void",TokenType::VOID,false);
+	m_functions["readFile"]= TypeInfo("string",TokenType::LIST,true);
 }
 
 void SematicAn::analize(){
@@ -72,6 +72,13 @@ bool SematicAn::containsVar(string str){
 	return false;
 }
 
+Lock SematicAn::getVar(string str){
+	for(int i=0; i<m_vars.size();i++){
+		if(m_vars[i].m_symbol == str)
+			return m_vars[i];
+	}
+	return Lock();
+}
 
 void SematicAn::checkLiteral(Literal* literal){
 	Token* token = literal->m_token;	
@@ -83,7 +90,17 @@ void SematicAn::checkLiteral(Literal* literal){
 }
 
 
-void SematicAn::checkDot(Dot* dot){}
+void SematicAn::checkDot(Dot* dot){
+	check(dot->m_iden);	
+	if(containsVar(dot->m_iden->m_token->m_symbol)){
+		string type = getVar(dot->m_iden->m_token->m_symbol).m_type.m_symbol;
+		Token* sub = dot->m_subIden->m_token;
+		if(m_structs[type].count(sub->m_symbol) ==0){
+			ErrorThrower::unNamedError("unkown type",sub->m_line);
+		}
+	}
+}
+
 void SematicAn::checkBinOP(BinOP* binop){
 	check(binop->m_right);
 	check(binop->m_left);
@@ -105,7 +122,7 @@ void SematicAn::checkBody(Body* body){
 void SematicAn::checkStructs(Body* body){
 	Struct* control = (Struct*)body->m_control;
 	string name = control->m_iden->m_token->m_symbol;
-	map<string,TokenType> vars;
+	map<string,TypeInfo> vars;
 	for(int i=0; i< body->m_lines->size(); i++){
 		Expression* expr =body->m_lines->at(i); 
 		check(expr);
@@ -123,8 +140,8 @@ void SematicAn::checkStructs(Body* body){
 			continue;
 		}
 		string name = ((Literal*)dect->m_name)->m_token->m_symbol;
-		TokenType type =dect->m_type->m_token->m_type; 
-		vars[name] = type;
+		Token* type =dect->m_type->m_token;
+		vars[name] =  TypeInfo(type->m_symbol,type->m_type, dect->m_isArray);
 		
 	}
 	m_structs[name] = vars;
@@ -152,7 +169,8 @@ void SematicAn::controlStatements(Expression* expression){
 }
 
 void SematicAn::checkFunction(Function* expr){
-	m_functions[expr->m_call->m_name->m_token->m_symbol] =  expr->m_type->m_token->m_type;
+	Token* token =expr->m_type->m_token; 
+	m_functions[expr->m_call->m_name->m_token->m_symbol] =  TypeInfo(token->m_symbol,token->m_type,false);
 	checkFunctionCall(expr->m_call);
 }
 
@@ -173,7 +191,7 @@ void SematicAn::checkDecleration(Decleration* decleration){
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
 
-		m_vars.push_back(Lock(m_level,name->m_symbol,type->m_type));
+		m_vars.push_back(Lock(m_level,name->m_symbol,TypeInfo(type->m_symbol,type->m_type,decleration->m_isArray)));
 
 		if(type->m_type ==TokenType::IDEN){
 			if(m_structs.count(type->m_symbol) ==0){
