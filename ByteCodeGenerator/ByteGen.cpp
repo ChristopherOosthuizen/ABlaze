@@ -89,8 +89,7 @@ void ByteGen::arrayToByte(ArrayLiteral* literal){
                 toCommand("Array");
                 return;
         }
-        toCommand("load");
-        toCommand(literal->m_iden->m_token->m_symbol);
+        expressionToByte(literal->m_iden);
         expressionToByte(literal->m_value);
         toCommand("at");
 }

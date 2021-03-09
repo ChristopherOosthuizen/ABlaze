@@ -276,14 +276,22 @@ void Vm::append(){
 void Vm::at(){
         DataVal two= popStack(); 
         DataVal one= popStack();          
-
+       int index =two.m_val.m_int; 
+        
+        if(one.m_type == ByteType::STRING){
+                char c = one.m_val.m_string[index];
+                string symbol;
+                symbol =c;
+                DataVal val(ByteType::CHAR,Val(c,c,c,symbol));
+                m_stack.push_back(val);
+                return;
+        }
         DataObj* obj = m_objs[one.m_val.m_int];
         vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
-        int index =two.m_val.m_int; 
         if(index >=vals->size()){
                 runTimeError("Index out of bounds for value "+to_string(index));
                 return;
-        }
+        } 
         m_stack.push_back(vals->at(index));
 
 }
