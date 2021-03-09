@@ -51,6 +51,21 @@ TEST(Sematic,structures){
 
 } 
 
+TEST(Sematic,structs){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	Lexer lexer("struct Pos{int x; int y;} int main(){Pos pos = new Pos; Position posses = new Pos;}");
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
+
+
+}
+
+
 /*
 //check to see if the sematic anlisis will throw a error if the wrong type of decleration is used on a varible
 TEST(SematicAn,wrongUse){

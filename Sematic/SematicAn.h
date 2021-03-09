@@ -22,6 +22,7 @@ class SematicAn{
 	Body* m_body;
 	vector<Lock> m_vars;
 	map<string,TokenType> m_functions;
+	map<string,map<string,TokenType>> m_structs;
 	int m_level;
 	public:
 		SematicAn(Body* body);
@@ -32,6 +33,7 @@ class SematicAn{
 		void checkBody(Body* body);
 		void checkDecleration(Decleration* dec);
 		void checkFunctionCall(FunctionCall* call);
+		void checkStructs(Body* body);
 		void checkDot(Dot* dot);
 		void checkArrayLiteral(ArrayLiteral* literal);
 		void checkLiteral(Literal* literal);

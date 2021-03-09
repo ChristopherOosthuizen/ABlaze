@@ -91,10 +91,43 @@ void SematicAn::checkBinOP(BinOP* binop){
 
 void SematicAn::checkBody(Body* body){
 	increaseLevel();
+	if(body->m_control != nullptr &&body->m_control->name() == "Struct"){
+		checkStructs(body);
+		return;
+	}
 	controlStatements(body->m_control);
 	for(int i=0; i< body->m_lines->size(); i++){
 		check(body->m_lines->at(i));
 	}
+	popLevel();
+}
+
+void SematicAn::checkStructs(Body* body){
+	Struct* control = (Struct*)body->m_control;
+	string name = control->m_iden->m_token->m_symbol;
+	map<string,TokenType> vars;
+	for(int i=0; i< body->m_lines->size(); i++){
+		Expression* expr =body->m_lines->at(i); 
+		check(expr);
+		if(expr->name() != "Decleration"){
+			ErrorThrower::unNamedError("Non decleration in struct",control->m_iden->m_token->m_line);
+			continue;
+		}
+		Decleration* dect = (Decleration*)expr;
+		if(!dect->m_initalize){
+			ErrorThrower::unNamedError("Loose variable calls are illigal in structs ",control->m_iden->m_token->m_line);
+			continue;
+		}
+		else if(dect->m_value != nullptr){
+			ErrorThrower::unNamedError("Variables can not have values in struct",control->m_iden->m_token->m_line);
+			continue;
+		}
+		string name = ((Literal*)dect->m_name)->m_token->m_symbol;
+		TokenType type =dect->m_type->m_token->m_type; 
+		vars[name] = type;
+		
+	}
+	m_structs[name] = vars;
 	popLevel();
 }
 
@@ -135,11 +168,18 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 }
 
 void SematicAn::checkDecleration(Decleration* decleration){
+	
 	Token* name = ((Literal*)decleration->m_name)->m_token;
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
 
 		m_vars.push_back(Lock(m_level,name->m_symbol,type->m_type));
+
+		if(type->m_type ==TokenType::IDEN){
+			if(m_structs.count(type->m_symbol) ==0){
+				ErrorThrower::unNamedError("Unkown type",type->m_line);
+			}
+		}
 	}else{
 		check(decleration->m_name);
 
