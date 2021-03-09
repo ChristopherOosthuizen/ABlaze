@@ -9,4 +9,5 @@ cd ../
 
 echo -e "\ninstall:">> Makefile
 echo -e "\tcp build/ablaze /usr/bin/" >> Makefile
-echo -e "\tcp -r Lib/ /usr/lib/ablaze/" >> Makefile
+echo -e "\trm -rf /usr/lib/ablaze/" >> Makefile
+echo -e "\tcp -R Lib/ /usr/lib/ablaze/" >> Makefile
