@@ -55,12 +55,12 @@ TEST(Sematic,structs){
 	ErrorThrower::hasError = false;
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
-	Lexer lexer("struct Pos{int x; int y;} int main(){Pos pos = new Pos; Position posses = new Pos; pos.t = 12;}");
+	Lexer lexer("struct Pos{int x; int y;} int main(){Pos pos = new Pos; Position posses = new Position; pos.t = 12;}");
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
 	SematicAn an(body);
 	an.analize();
-	ASSERT_EQ(ErrorThrower::errors->size(),2);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
 }
 
 

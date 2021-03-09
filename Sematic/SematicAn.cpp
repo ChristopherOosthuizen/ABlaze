@@ -49,6 +49,12 @@ void SematicAn::check(Expression* expr){
 		BuiltIn* ins = (BuiltIn*)expr;
 		if(ins->m_type->m_token->m_type != TokenType::NEW)
 			check(ins->m_value);
+		else{
+			Literal* lit = (Literal*)ins->m_value;
+			if(m_structs.count(lit->m_token->m_symbol) == 0){
+				ErrorThrower::unNamedError("Undefined struct",lit->m_token->m_line);
+			}
+		}
 	}
 }
 
