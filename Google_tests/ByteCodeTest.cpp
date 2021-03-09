@@ -362,6 +362,32 @@ TEST(ByteCode,casts){
  
 }
 
+TEST(ByteCode,min){
+        Lexer lexer("var min(var a, var b){ if(a>b) return a; return b;}");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        ASSERT_EQ(strs->size(),27);
+        int i =0;
+        ASSERT_EQ(strs->at(i++),"call"); 
+        ASSERT_EQ(strs->at(i++),"main"); 
+        ASSERT_EQ(strs->at(i++),"min:"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"a"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"b"); 
+        i+= 16;
+        ASSERT_EQ(strs->at(i++),"load"); 
+        ASSERT_EQ(strs->at(i++),"b"); 
+        ASSERT_EQ(strs->at(i++),"return"); 
+ 
+}
+
+
+
+
 TEST(ByteCode,structs){
         Lexer lexer("struct Pos{int x; int y;} int main(){Pos position = new Pos; position.x =12; position.y = 14; print(position.x+position.y); }");
         vector<Token*> tokens = lexer.readAllTokens();

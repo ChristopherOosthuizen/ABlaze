@@ -2,7 +2,7 @@
 var min(var a, var b){
     if(a<b)
         return a;
-    reutn b;
+    return b;
 
 }
 
