@@ -98,14 +98,15 @@ void SematicAn::checkLiteral(Literal* literal){
 
 void SematicAn::checkDot(Dot* dot){
 	check(dot->m_iden);	
-	if(containsVar(dot->m_iden->m_token->m_symbol)){
+	/*if(containsVar(dot->m_iden->m_token->m_symbol)){
 		string type = getVar(dot->m_iden->m_token->m_symbol).m_type.m_symbol;
 		Token* sub = dot->m_subIden->m_token;
 		if(m_structs[type].count(sub->m_symbol) ==0){
 			ErrorThrower::unNamedError("unkown type",sub->m_line);
 		}
-	}
+	}*/
 }
+
 
 void SematicAn::checkBinOP(BinOP* binop){
 	check(binop->m_right);

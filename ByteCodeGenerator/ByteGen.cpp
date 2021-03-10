@@ -77,10 +77,9 @@ void ByteGen::builtInToByte(BuiltIn* builtin){
 
 
 void ByteGen::dotToByte(Dot* dot){
-        toCommand("load");
-        toCommand(dot->m_iden->m_token->m_symbol);
+        expressionToByte(dot->m_iden);
         toCommand("select");
-        toCommand(dot->m_subIden->m_token->m_symbol);
+        toCommand(((Literal*)dot->m_subIden)->m_token->m_symbol);
 }
 
 void ByteGen::arrayToByte(ArrayLiteral* literal){
@@ -201,10 +200,9 @@ void ByteGen::decToCommand(Decleration* dec){
         
         if(dec->m_name->name() =="Dot"){
                 Dot* dot = (Dot*)dec->m_name;
-                toCommand("load");
-                toCommand(dot->m_iden->m_token->m_symbol);
+                expressionToByte(dot->m_iden);
                 toCommand("set");
-                toCommand(dot->m_subIden->m_token->m_symbol);
+                toCommand(((Literal*)dot->m_subIden)->m_token->m_symbol);
                 return;
         }
 

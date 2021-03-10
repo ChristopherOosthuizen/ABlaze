@@ -145,6 +145,18 @@ ArrayLiteral::~ArrayLiteral(){
         delete m_iden;
 }
 
+string Class::name(){return "Class";}
+
+Class::Class(Literal* iden){
+        m_iden = iden;
+}
+
+Class::~Class(){
+        delete m_iden;
+}
+
+
+
 string Struct::name(){return "Struct";}
 
 Struct::Struct(Literal* iden){
@@ -159,7 +171,7 @@ Struct::~Struct(){
 
 string Dot::name(){return "Dot";}
 
-Dot::Dot(Literal* iden, Literal* subIden){
+Dot::Dot(Expression* iden, Expression* subIden){
         m_iden = iden;
         m_subIden = subIden;
 }

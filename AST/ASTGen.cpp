@@ -85,7 +85,9 @@ Expression* ASTGen::body(){
        }else if(type == TokenType::WHILE){
                control = new WhileStat(expression()); 
        }else if(type == TokenType::STRUCT){
-               control = new Struct(new Literal(next()));
+               control = new Struct(nextLit());
+       }else if(type == TokenType::CLASS){
+               control = new Class(nextLit());
        }else if(isIden(lit->m_token)){
                 control = new Function(lit,(FunctionCall*)functionCall());
        }
@@ -154,6 +156,7 @@ bool ASTGen::isBod(){
                 case TokenType::IF:
                 case TokenType::WHILE:
                 case TokenType::ELSE:
+                case TokenType::CLASS:
                 case TokenType::STRUCT:return 1;
         }
         return 0;
@@ -251,7 +254,12 @@ Expression* ASTGen::unary(){
                 Expression* right = unary();               
                 return new Unary(new Literal(op), right,0);
         }
-        return literal();
+        Expression* lit = literal();
+        if(eat(TokenType::DOT)){
+                Expression* sub= unary(); 
+                return new Dot(lit,sub);
+        }
+        return lit;
 }
 
 Expression* ASTGen::parans(){
@@ -290,7 +298,7 @@ Expression* ASTGen::literal(){
         if(eat(TokenType::OPEN_PARENTHESE)){
                 Expression* expr = parans();
                 if( expr->name() == "Literal" && isIden(((Literal*)expr)->m_token) ){
-                       expr = new Cast((Literal*)expr,literal()); 
+                       expr = new Cast((Literal*)expr,unary()); 
 
                 }
                 return expr;
@@ -303,10 +311,7 @@ Expression* ASTGen::literal(){
         
         Literal* literal = nextLit();
         
-        if(eat(TokenType::DOT)){
-                Literal* sub= nextLit(); 
-                return new Dot(literal,sub);
-        }else if (eat(TokenType::OPEN_BRACKET)) {
+        if (eat(TokenType::OPEN_BRACKET)) {
                 Expression* value = nullptr;
                 if(!equals(TokenType::CLOSE_BRACKET)){
                         value = expression();

@@ -23,6 +23,21 @@ TEST(ASTGeneral,prints){
  
 }
 
+TEST(ASTGeneral,classs){
+        ErrorThrower::hasError = false;
+        ErrorThrower::errors = new vector<string>();
+        string end = "class name{int i; int o; void strut(int x, int y){ i=x; o=y;} }";
+        Lexer lexer(end);
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_TRUE(!ErrorThrower::hasError);
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Body");
+
+ 
+}
+
+
 TEST(ASTGeneral,Structs){
         ErrorThrower::hasError = false;
         ErrorThrower::errors = new vector<string>();

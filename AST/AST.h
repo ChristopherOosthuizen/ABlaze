@@ -141,6 +141,17 @@ class Struct: public Expression{
 
 };
 
+class Class: public Expression{
+
+        public:
+                string name() override;
+                Class(Literal* iden);
+                ~Class(); 
+                Literal* m_iden;
+
+};
+
+
 class BuiltIn: public Expression{
         public:
                 string name() override;
@@ -166,10 +177,10 @@ class Dot: public Expression{
 
         public:
                 string name() override;
-                Dot(Literal* iden,Literal* subIden);
+                Dot(Expression* iden,Expression* subIden);
                 ~Dot(); 
-                Literal* m_iden;
-                Literal* m_subIden;
+                Expression* m_iden;
+                Expression* m_subIden;
 
 };
 

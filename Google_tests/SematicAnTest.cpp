@@ -51,6 +51,7 @@ TEST(Sematic,structures){
 
 } 
 
+/*
 TEST(Sematic,structs){
 	ErrorThrower::hasError = false;
 	delete ErrorThrower::errors;
@@ -62,7 +63,7 @@ TEST(Sematic,structs){
 	an.analize();
 	ASSERT_EQ(ErrorThrower::errors->size(),3);
 }
-
+*/
 
 
 

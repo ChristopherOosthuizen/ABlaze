@@ -40,7 +40,7 @@ enum class TokenType{
   VAR,VOID, RETURN,
 
   //control stuctures
-  IF,FOR,WHILE,ELSE,STRUCT,LIST,LEN,
+  IF,FOR,WHILE,ELSE,STRUCT,LIST,LEN,CLASS,
 
   //Primitve idententifers
        IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,
@@ -110,6 +110,7 @@ static string typeToString(TokenType type){
 		case TokenType::ELSE : return "else";  
 		case TokenType::NEW : return "new";  
 		case TokenType::LEN: return "len";
+		case TokenType::CLASS: return "class";
 	}
 	return "";
 }

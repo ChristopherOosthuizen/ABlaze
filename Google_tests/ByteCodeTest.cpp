@@ -439,4 +439,3 @@ TEST(ByteCode,structs){
         ASSERT_EQ(strs->at(i++),"halt");
 
 }
-
