@@ -133,22 +133,14 @@ void SematicAn::checkStructs(Body* body){
 	for(int i=0; i< body->m_lines->size(); i++){
 		Expression* expr =body->m_lines->at(i); 
 		check(expr);
-		if(expr->name() != "Decleration"){
-			ErrorThrower::unNamedError("Non decleration in struct",control->m_iden->m_token->m_line);
-			continue;
+		if(expr->name() == "Decleration"){
+		
+			Decleration* dect = (Decleration*)expr;
+		
+			string name = ((Literal*)dect->m_name)->m_token->m_symbol;
+			Token* type =dect->m_type->m_token;
+			vars[name] =  TypeInfo(type->m_symbol,type->m_type, dect->m_isArray);
 		}
-		Decleration* dect = (Decleration*)expr;
-		if(!dect->m_initalize){
-			ErrorThrower::unNamedError("Loose variable calls are illigal in structs ",control->m_iden->m_token->m_line);
-			continue;
-		}
-		else if(dect->m_value != nullptr){
-			ErrorThrower::unNamedError("Variables can not have values in struct",control->m_iden->m_token->m_line);
-			continue;
-		}
-		string name = ((Literal*)dect->m_name)->m_token->m_symbol;
-		Token* type =dect->m_type->m_token;
-		vars[name] =  TypeInfo(type->m_symbol,type->m_type, dect->m_isArray);
 		
 	}
 	m_structs[name] = vars;
