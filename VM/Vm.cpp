@@ -111,10 +111,20 @@ void Vm::step(){
                 case ByteType::CREATEFILE: createFile(); break;
                 case ByteType::INPUT: input(); break;
                 case ByteType::LEN: len();break;
+                case ByteType::LOADCLASS: loadclass(); break;
 
  
        }
        collectAllGarbage();
+}
+
+void Vm::loadclass(){
+        vector<Local*>* locals = m_locals[m_locals.size()-1];
+        DataVal val = m_stack[m_stack.size()-1];
+        StructObj* obj = (StructObj*)m_objs[val.m_val.m_int]->m_pointer;
+        for(Local* local:*obj->m_vals){
+                locals->push_back(local);
+        }
 }
 
 void Vm::runTimeError(string error){

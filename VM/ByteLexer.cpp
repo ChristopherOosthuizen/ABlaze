@@ -46,6 +46,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["createFile"] = ByteType::CREATEFILE;
         m_types["deleteFile"] = ByteType::DELETEFILE;
         m_types["len"] = ByteType::LEN;
+        m_types["loadclass"] = ByteType::LOADCLASS;
         m_types["select"] = ByteType::SELECT;
 }
 

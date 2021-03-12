@@ -109,6 +109,7 @@ public:
         void at();
         void del();
         void structDec();
+        void loadclass();
         void createLocal();
         void set();
         void select();
