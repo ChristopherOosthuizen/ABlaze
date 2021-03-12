@@ -237,31 +237,21 @@ void Vm::input(){
 
 void Vm::set(){
         DataVal two = popStack(); 
-        DataVal one = popStack(); 
         StructObj* obj = (StructObj*)m_objs[two.m_val.m_int]->m_pointer;
-        obj->m_vals[nextToken()->m_symbol] = one;
+        asi(obj->m_vals);
 }
 
 
 void Vm::select(){
         DataVal two = popStack(); 
         StructObj* obj = (StructObj*)m_objs[two.m_val.m_int]->m_pointer;
-        m_stack.push_back(obj->m_vals[nextToken()->m_symbol]);
+        load(obj->m_vals,nextToken()->m_symbol); 
 }
 
 void Vm::structDec(){
-        vector<string>* strs = new vector<string>();
-        vector<Local*>* locals = m_locals.at(m_locals.size()-1);
-        while(locals->size() > 0 && locals->at(locals->size()-1)->m_depth == m_localCounts[m_localCounts.size()-1]){
-              Local* local =locals->at(m_locals.size()-1);   
-              locals->pop_back();
-              strs->push_back(local->m_val.m_val.m_string);
-              delete local;
-        }
-        if(m_localCounts[m_localCounts.size()-1]!=0)
-                m_localCounts[m_localCounts.size()-1]--;
-        ByteToken* token= nextToken();
-        (m_structs)[token->m_symbol] = strs;
+        vector<Local*>* locals = m_locals[m_locals.size()-1];
+        m_structs[nextToken()->m_symbol] = locals; 
+        popLocal();
 }
 
 void Vm::append(){
@@ -331,9 +321,12 @@ void Vm::newObj(){
 
 
 void Vm::asi(){
+        asi(m_locals[m_locals.size()-1]);        
+}
+
+void Vm::asi(vector<Local*>* locals){
         Local* local = NULL;
         string name =nextToken()->m_symbol; 
-        vector<Local*>* locals = m_locals[m_locals.size()-1];
         for(int i = locals->size()-1; i>=0; i--){
                 if(locals->at(i)->m_name == name){
                         local = locals->at(i);
@@ -342,7 +335,7 @@ void Vm::asi(){
                 }
         }
         m_stack.pop_back();
-        
+
 }
 
 void Vm::createLocal(){
@@ -386,19 +379,24 @@ void Vm::pushToStack(){
 void Vm::load(){
         string name=nextToken()->m_symbol; 
         vector<Local*>* locals = m_locals[m_locals.size()-1];
+        load(locals,name); 
+}
+
+void Vm::load(vector<Local*>* locals, const string& name){
         for(int i=locals->size()-1;i >=0;i--){
                 if(locals->at(i)->m_name ==name){
                         m_stack.push_back(locals->at(i)->m_val);
                         return;
                 }
         }
+
 }
 
 void Vm::store(){
         Local* local = NULL;
         string name = nextToken()->m_symbol;
         vector<Local*>* locals = m_locals[m_locals.size()-1];
-        for(int i = locals->size()-1; i>=0&&locals->at(i)->m_depth == m_localCounts[m_localCounts.size()-1] ; i--){
+        for(int i = locals->size()-1; i>=0&&locals->at(i)->m_depth == (m_localCounts.back()-1) ; i--){
                 if(locals->at(i)->m_name == name){
                         local = locals->at(i);
                         local->m_val =m_stack[m_stack.size()-1]; 
@@ -409,14 +407,14 @@ void Vm::store(){
                 DataVal val(ByteType::INT,Val(0,0,0,""));
                 if(m_stack.size() >0)
                         val = m_stack[m_stack.size()-1];
-                locals->push_back(new Local(m_localCounts[m_localCounts.size()-1],name, val));
+                locals->push_back(new Local(m_localCounts.back()-1,name, val));
         }
         if(m_stack.size() >0)
                 m_stack.pop_back();
 }
 
 void Vm::Return(){
-        m_pos = m_jumpBacks[m_jumpBacks.size()-1];
+        m_pos = m_jumpBacks.back()-1;
         vector<Local*>* locals = m_locals[m_locals.size()-1];
         m_locals.pop_back();
         delete locals;

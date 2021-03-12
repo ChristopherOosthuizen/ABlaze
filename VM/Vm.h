@@ -36,16 +36,7 @@ public:
         }
         DataVal(){}
 };
-class StructObj{
-public:
-        map<string,DataVal> m_vals;
-        StructObj(vector<string>* vals){
-                for(int i=0; i< vals->size(); i++){
-                        m_vals[vals->at(i)]=DataVal(ByteType::NIL, Val(0,0,0,""));
-                }
-        }
 
-};
 class DataObj{
 public:
         ByteType m_type;
@@ -68,12 +59,25 @@ public:
         }
 };
 
+class StructObj{
+public:
+        vector<Local*>* m_vals;
+        StructObj(vector<Local*>* vals){
+                m_vals = new vector<Local*>();
+                int depth = vals->at(vals->size()-1)->m_depth;
+                for(int i=vals->size()-1; i>=0 && depth == vals->at(i)->m_depth; i--){
+                        m_vals->push_back(new Local(0,vals->at(i)->m_name,vals->at(i)->m_val));
+                }
+        }
+
+};
+
 class Vm{
 public:
         vector<DataVal> m_stack;   
         vector<DataObj*> m_objs;
         vector<ByteToken*> m_tokens;
-        map<string,vector<string>*> m_structs; 
+        map<string,vector<Local*>*> m_structs; 
         vector<vector<Local*>*> m_locals;
         vector<int> m_jumpBacks;
         map<string,int> m_labels;
@@ -94,8 +98,10 @@ public:
         void jump();
         void jumpIf();
         void load();
+        void load(vector<Local*>* locals, const string& name);
         void store();
         void asi();
+        void asi(vector<Local*>* locals);
         void call();
         void Return();
         void label();
