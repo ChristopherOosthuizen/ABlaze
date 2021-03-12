@@ -10,6 +10,7 @@ using namespace std;
 class ByteGen{
         Body* m_ast;
         vector<string>* m_lines;
+        void argsToBye(vector<Expression*>* args);
         void expressionToByte(Expression* expr);
         void toCommand(const string& com);
         void binToCommand(BinOP* op);

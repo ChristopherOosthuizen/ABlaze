@@ -86,6 +86,11 @@ void ByteGen::builtInToByte(BuiltIn* builtin){
         toCommand(typeToString(name));
 }
 
+void ByteGen::argsToBye(vector<Expression*>* args){
+        for(Expression* expr:*args){
+                expressionToByte(expr);
+        }
+}
 
 void ByteGen::dotToByte(Dot* dot){
         expressionToByte(dot->m_iden);
@@ -94,9 +99,8 @@ void ByteGen::dotToByte(Dot* dot){
                 toCommand(((Literal*)dot->m_subIden)->m_token->m_symbol);
         }else if(dot->m_subIden->name() == "FunctionCall"){
                 FunctionCall* call = (FunctionCall*)dot->m_subIden;
-                for(Expression* expr:*call->m_args){
-                        expressionToByte(expr);
-                }
+                argsToBye(call->m_args);
+                
                 toCommand("classcall");
                 toCommand(call->m_name->m_token->m_symbol);
         }
@@ -165,10 +169,8 @@ void ByteGen::classFunc(string name, Body* body){
        toCommand("loadclass");
        toCommand("store");
        toCommand("this");
-        for(int i=0; i< call->m_args->size();i++){
-                toCommand("store");
-                Decleration* dec =(Decleration*)call->m_args->at(i) ;
-                toCommand(((Literal*)dec->m_name)->m_token->m_symbol);
+        for(int i=call->m_args->size()-1; i>=0 ;i--){
+                expressionToByte(call->m_args->at(i));
         }
        bodyToByte(body);
        if(name == subname){
@@ -286,10 +288,8 @@ void ByteGen::functionToByte(Body* body){
         FunctionCall* control = (FunctionCall*)((Function*)body->m_control)->m_call;
         string name = control->m_name->m_token->m_symbol; 
         toCommand(name+":");  
-        for(int i=0; i< control->m_args->size();i++){
-                toCommand("store");
-                Decleration* dec =(Decleration*)control->m_args->at(i) ;
-                toCommand(((Literal*)dec->m_name)->m_token->m_symbol);
+        for(int i=control->m_args->size()-1; i>=0 ;i--){
+                expressionToByte(control->m_args->at(i));
         }
         bodyToByte(body);
         if(name != "main"){
@@ -314,9 +314,7 @@ bool ByteGen::isBuiltIn(string name){
 
 void ByteGen::functionCallToByte(FunctionCall* call){
         string symb = call->m_name->m_token->m_symbol;
-        for(int i=0; i< call->m_args->size();i++){
-                expressionToByte(call->m_args->at(i));
-        }
+        argsToBye(call->m_args); 
         if(isBuiltIn(symb)){
                 toCommand(symb);
                 return;

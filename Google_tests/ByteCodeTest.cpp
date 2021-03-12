@@ -375,9 +375,9 @@ TEST(ByteCode,min){
         ASSERT_EQ(strs->at(i++),"main"); 
         ASSERT_EQ(strs->at(i++),"min:"); 
         ASSERT_EQ(strs->at(i++),"store"); 
-        ASSERT_EQ(strs->at(i++),"a"); 
-        ASSERT_EQ(strs->at(i++),"store"); 
         ASSERT_EQ(strs->at(i++),"b"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"a"); 
         i+= 16;
         ASSERT_EQ(strs->at(i++),"load"); 
         ASSERT_EQ(strs->at(i++),"b"); 
@@ -467,9 +467,9 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"store");
         ASSERT_EQ(strs->at(i++),"this");
         ASSERT_EQ(strs->at(i++),"store");
-        ASSERT_EQ(strs->at(i++),"x");
-        ASSERT_EQ(strs->at(i++),"store");
         ASSERT_EQ(strs->at(i++),"y");
+        ASSERT_EQ(strs->at(i++),"store");
+        ASSERT_EQ(strs->at(i++),"x");
         ASSERT_EQ(strs->at(i++),"load");
         ASSERT_EQ(strs->at(i++),"x");
         ASSERT_EQ(strs->at(i++),"load");
