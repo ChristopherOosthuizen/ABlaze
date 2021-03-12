@@ -325,6 +325,10 @@ void Vm::newObj(){
                 m_objs[pos] = new DataObj(ByteType::LIST,new vector<DataVal>());
         }else{            
                 m_objs[pos] = new DataObj(ByteType::STRUCT,new StructObj(m_structs[token->m_symbol]));
+                if(m_labels.count(token->m_symbol) ==1){
+                        m_pos--;
+                        call();
+                }
         }
         m_stack.push_back(val);
 }

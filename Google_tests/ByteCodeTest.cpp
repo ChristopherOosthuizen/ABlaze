@@ -387,7 +387,6 @@ TEST(ByteCode,min){
 
 
 
-
 TEST(ByteCode,structs){
         Lexer lexer("struct Pos{int x; int y;} int main(){Pos position = new Pos; position.x =12; position.y = 14; print(position.x+position.y); }");
         vector<Token*> tokens = lexer.readAllTokens();
