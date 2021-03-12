@@ -135,9 +135,11 @@ class Struct: public Expression{
 
         public:
                 string name() override;
-                Struct(Literal* iden);
+                Struct(Literal* iden, bool extends,Literal* m_extender);
                 ~Struct(); 
                 Literal* m_iden;
+                bool m_extends;
+                Literal* m_extender;
 
 };
 

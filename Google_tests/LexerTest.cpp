@@ -299,7 +299,7 @@ TEST(IDEN,basic){
  */
 
 TEST(IDEN,reserved){
-	Lexer lexer("print println import var if for while return int double string bool else char");
+	Lexer lexer("print println import var if for while return int double string bool else char extends ");
 	
 	Token* token;
 
@@ -375,6 +375,12 @@ TEST(IDEN,reserved){
 	ASSERT_EQ(token->m_type,TokenType::IDEN_CHAR);
 	ASSERT_EQ(token->m_symbol,"char");
 	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::EXTENDS);
+	ASSERT_EQ(token->m_symbol,"extends");
+	delete token;
+
 
 
 }

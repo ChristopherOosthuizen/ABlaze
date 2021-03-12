@@ -85,7 +85,14 @@ Expression* ASTGen::body(){
        }else if(type == TokenType::WHILE){
                control = new WhileStat(expression()); 
        }else if(type == TokenType::STRUCT){
-               control = new Struct(nextLit());
+               Literal* name = nextLit();
+               bool extends= false;
+               Literal* extender = nullptr; 
+               if(eat(TokenType::EXTENDS)){
+                       extends = true;
+                       extender =nextLit();
+               }
+               control = new Struct(name,extends,extender);
        }else if(type == TokenType::CLASS){
                control = new Class(nextLit());
        }else if(isIden(lit->m_token)){

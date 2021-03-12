@@ -32,6 +32,7 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["struct"] = TokenType::STRUCT;
 			m_built_in_words["new"] = TokenType::NEW;
 			m_built_in_words["class"] = TokenType::CLASS;
+			m_built_in_words["extends"] = TokenType::EXTENDS;
 			m_built_in_words["len"] = TokenType::LEN;
 
 		}

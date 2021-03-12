@@ -159,8 +159,10 @@ Class::~Class(){
 
 string Struct::name(){return "Struct";}
 
-Struct::Struct(Literal* iden){
+Struct::Struct(Literal* iden,bool extends,Literal* extender){
         m_iden = iden;
+        m_extends = extends;
+        m_extender = extender;
 }
 
 Struct::~Struct(){

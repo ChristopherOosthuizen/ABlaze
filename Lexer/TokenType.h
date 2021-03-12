@@ -43,7 +43,7 @@ enum class TokenType{
   IF,FOR,WHILE,ELSE,STRUCT,LIST,LEN,CLASS,
 
   //Primitve idententifers
-       IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,
+       IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,EXTENDS,
 	  
 };
 
@@ -111,6 +111,7 @@ static string typeToString(TokenType type){
 		case TokenType::NEW : return "new";  
 		case TokenType::LEN: return "len";
 		case TokenType::CLASS: return "class";
+		case TokenType::EXTENDS: return "extends";
 	}
 	return "";
 }

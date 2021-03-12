@@ -129,3 +129,13 @@ TEST(ASTGenetal,equals){
         ASSERT_EQ(body->m_lines->size(),1);
 
 }
+
+TEST(ASTGenetal,extends){
+        Lexer lexer("struct Left extends Direction{int i=12;}");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+
+}
+
