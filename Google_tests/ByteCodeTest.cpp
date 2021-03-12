@@ -438,3 +438,81 @@ TEST(ByteCode,structs){
         ASSERT_EQ(strs->at(i++),"halt");
 
 }
+
+
+TEST(ByteCode,classes){
+        Lexer lexer("struct Pos{int x; int y; void Pos(int x, int y){this.x = x; this.y = y;} void xup(){x++;} } int main(){Pos position = new Pos(12,14);  position.xup();  }");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size() , 2);
+        ASSERT_EQ(body->m_lines->at(0)->name() , "Body");
+        ASSERT_EQ(body->m_lines->at(1)->name() , "Body");
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        //ASSERT_EQ(strs->size(),33);
+        int i =0;
+        ASSERT_EQ(strs->at(i++),"startlocal"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"x"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"y"); 
+        ASSERT_EQ(strs->at(i++),"structdec"); 
+        ASSERT_EQ(strs->at(i++),"Pos"); 
+        ASSERT_EQ(strs->at(i++),"call"); 
+        ASSERT_EQ(strs->at(i++),"main");
+
+        ASSERT_EQ(strs->at(i++),"Pos:");
+        ASSERT_EQ(strs->at(i++),"loadclass");
+        ASSERT_EQ(strs->at(i++),"store");
+        ASSERT_EQ(strs->at(i++),"this");
+        ASSERT_EQ(strs->at(i++),"store");
+        ASSERT_EQ(strs->at(i++),"x");
+        ASSERT_EQ(strs->at(i++),"store");
+        ASSERT_EQ(strs->at(i++),"y");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"x");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"this");
+        ASSERT_EQ(strs->at(i++),"set");
+        ASSERT_EQ(strs->at(i++),"x");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"y");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"this");
+        ASSERT_EQ(strs->at(i++),"set");
+        ASSERT_EQ(strs->at(i++),"y");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"this");
+        ASSERT_EQ(strs->at(i++),"return");
+
+        ASSERT_EQ(strs->at(i++),"Pos.xup:");
+        ASSERT_EQ(strs->at(i++),"loadclass");
+        ASSERT_EQ(strs->at(i++),"store");
+        ASSERT_EQ(strs->at(i++),"this");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"x");
+        ASSERT_EQ(strs->at(i++),"push");
+        ASSERT_EQ(strs->at(i++),"1");
+        ASSERT_EQ(strs->at(i++),"add");
+        ASSERT_EQ(strs->at(i++),"asi");
+        ASSERT_EQ(strs->at(i++),"x");
+        ASSERT_EQ(strs->at(i++),"return");
+
+
+        ASSERT_EQ(strs->at(i++),"main:");
+        ASSERT_EQ(strs->at(i++),"push");
+        ASSERT_EQ(strs->at(i++),"12");
+        ASSERT_EQ(strs->at(i++),"push");
+        ASSERT_EQ(strs->at(i++),"14");
+        ASSERT_EQ(strs->at(i++),"new");
+        ASSERT_EQ(strs->at(i++),"Pos");
+        ASSERT_EQ(strs->at(i++),"store");
+        ASSERT_EQ(strs->at(i++),"position");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"position");
+        ASSERT_EQ(strs->at(i++),"classcall");
+        ASSERT_EQ(strs->at(i++),"xup");
+
+
+}

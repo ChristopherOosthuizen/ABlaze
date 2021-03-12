@@ -10,7 +10,8 @@ ByteGen::ByteGen(Body* ast){
 vector<string>* ByteGen::generateByteCode(){
         for(int i=0; i< m_ast->m_lines->size(); i++){
                 if(m_ast->m_lines->at(i)->name() == "Body" && ((Body*)m_ast->m_lines->at(i))->m_control->name() == "Struct"){
-                        structToByte((Body*)(m_ast->m_lines->at(i)));
+
+                        structDec((Body*)(m_ast->m_lines->at(i)));
                 }else if(m_ast->m_lines->at(i)->name() == "Decleration"){
                        decToCommand((Decleration*)(m_ast->m_lines->at(i)) ); 
                 }
@@ -20,7 +21,6 @@ vector<string>* ByteGen::generateByteCode(){
         bodyToByte(m_ast);
         return m_lines;
 }
-
 void ByteGen::toCommand(const string& com){
         m_lines->push_back(com);
 }
@@ -65,9 +65,20 @@ void ByteGen::expressionToByte(Expression* expr){
 void ByteGen::builtInToByte(BuiltIn* builtin){
         TokenType name = builtin->m_type->m_token->m_type;
         if(name ==TokenType::NEW){
-                toCommand(typeToString(name));
-                Literal* value = (Literal*)builtin->m_value;
-                toCommand(value->m_token->m_symbol);
+                if(builtin->m_value->name() == "Literal"){
+                        Literal* value = (Literal*)builtin->m_value;
+                        toCommand(typeToString(name));
+
+                        toCommand(value->m_token->m_symbol);
+                }else{
+                        FunctionCall* call = (FunctionCall*)builtin->m_value;
+                        for(Expression* expr:*call->m_args){
+                                expressionToByte(expr);
+                        }
+                        toCommand(typeToString(name));
+                        toCommand(call->m_name->m_token->m_symbol);
+
+                }
                 return;
         }
 
@@ -78,8 +89,17 @@ void ByteGen::builtInToByte(BuiltIn* builtin){
 
 void ByteGen::dotToByte(Dot* dot){
         expressionToByte(dot->m_iden);
-        toCommand("select");
-        toCommand(((Literal*)dot->m_subIden)->m_token->m_symbol);
+        if(dot->m_subIden->name() == "Literal"){
+                toCommand("select");
+                toCommand(((Literal*)dot->m_subIden)->m_token->m_symbol);
+        }else if(dot->m_subIden->name() == "FunctionCall"){
+                FunctionCall* call = (FunctionCall*)dot->m_subIden;
+                for(Expression* expr:*call->m_args){
+                        expressionToByte(expr);
+                }
+                toCommand("classcall");
+                toCommand(call->m_name->m_token->m_symbol);
+        }
 }
 
 void ByteGen::arrayToByte(ArrayLiteral* literal){
@@ -121,7 +141,7 @@ void ByteGen::bodyToByte(Body* body){
                         }else if(bod->m_control->name() == "Function"){
                                 functionToByte(bod);
                         }else if(bod->m_control->name() == "Struct"){
-                                continue;
+                                structToByte(bod);
                         }
                 }
                 else 
@@ -132,11 +152,52 @@ void ByteGen::bodyToByte(Body* body){
 
 }
 
+void ByteGen::classFunc(string name, Body* body){
+        Function* function = (Function*)body->m_control;
+        FunctionCall* call = (FunctionCall*)function->m_call;
+        string subname =call->m_name->m_token->m_symbol; 
+        string address;
+        if(name != subname)
+                address = name +"."+subname+":";
+        else 
+                address = name+":";
+       toCommand(address);
+       toCommand("loadclass");
+       toCommand("store");
+       toCommand("this");
+        for(int i=0; i< call->m_args->size();i++){
+                toCommand("store");
+                Decleration* dec =(Decleration*)call->m_args->at(i) ;
+                toCommand(((Literal*)dec->m_name)->m_token->m_symbol);
+        }
+       bodyToByte(body);
+       if(name == subname){
+        toCommand("load");
+        toCommand("this");
+       }
+       toCommand("return");
+}
+
 void ByteGen::structToByte(Body* body){
-         toCommand("startlocal");
-        bodyToByte(body);
+        string name = ((Struct*)body->m_control)->m_iden->m_token->m_symbol;
+         for(Expression* expression: *body->m_lines){
+                 if(expression->name() == "Body")
+                        classFunc(name,(Body*)expression);
+         }
+
+
+}
+
+
+void ByteGen::structDec(Body* body){
+        toCommand("startlocal");
+         for(Expression* expression: *body->m_lines){
+                 if(expression->name() == "Decleration")
+                        decToCommand((Decleration*)expression);
+         }
         toCommand("structdec");
         toCommand(((Struct*)body->m_control)->m_iden->m_token->m_symbol);
+
 }
 
 

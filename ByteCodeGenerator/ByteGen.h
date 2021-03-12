@@ -21,6 +21,8 @@ class ByteGen{
         void functionToByte(Body* body);
         void unToByte(Unary* unary);
         void structToByte(Body* body);
+        void structDec(Body* body);
+        void classFunc(string name,Body* body);
         void dotToByte(Dot* dot);
         void arrayToByte(ArrayLiteral* literal);
         void builtInToByte(BuiltIn* builtin);
