@@ -256,7 +256,6 @@ void ByteGen::forToByte(Body* body,string line){
 
 
 void ByteGen::decToCommand(Decleration* dec){
-        string nameer=((Literal*)dec->m_name)->m_token->m_symbol;  
         if(dec->m_value != nullptr)
                 expressionToByte(dec->m_value);
 
