@@ -232,6 +232,17 @@ TEST(Vm,constructor){
 
 }
 
+TEST(Vm,classcall){
+       ByteLexer lexer("startlocal store y store x structdec pos call main pos.xup: loadclass store this load y push 1 add asi y return pos: loadclass store this push 14 asi y load this return main: new pos store position push 13 load position set x load position select x load position classcall xup load position select y halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),2);
+       ASSERT_EQ(vm.m_stack[1].m_val.m_int,15);
+
+}
+
+
 
 TEST(VM,casts){
        ByteLexer lexer("startlocal push 12 cast double push 14  cast string push \"15\" cast int halt");

@@ -112,10 +112,29 @@ void Vm::step(){
                 case ByteType::INPUT: input(); break;
                 case ByteType::LEN: len();break;
                 case ByteType::LOADCLASS: loadclass(); break;
+                case ByteType::CLASSCALL: classcall(); break;
 
  
        }
        collectAllGarbage();
+}
+
+void Vm::classcall(){
+      DataVal val = m_stack[m_stack.size()-1]; 
+      StructObj* obj = (StructObj*)m_objs[val.m_val.m_int]->m_pointer;
+      string objectName = (obj->m_name);
+      string funcName = nextToken()->m_symbol;
+      string name = objectName+"."+funcName;
+        m_jumpBacks.push_back(m_pos+1);
+        vector<Local*>* locals = new vector<Local*>();
+        for(int i=0; i< m_locals[0]->size(); i++){
+                locals->push_back(m_locals[0]->at(i));
+        }
+        m_locals.push_back(locals);
+        m_localCounts.push_back(1);
+
+        m_pos = m_labels[name];
+      
 }
 
 void Vm::loadclass(){
@@ -324,7 +343,7 @@ void Vm::newObj(){
         if(token->m_symbol == "list"){          
                 m_objs[pos] = new DataObj(ByteType::LIST,new vector<DataVal>());
         }else{            
-                m_objs[pos] = new DataObj(ByteType::STRUCT,new StructObj(m_structs[token->m_symbol]));
+                m_objs[pos] = new DataObj(ByteType::STRUCT,new StructObj((token->m_symbol), m_structs[token->m_symbol]));
                 if(m_labels.count(token->m_symbol) ==1){
                         m_pos--;
                         call();

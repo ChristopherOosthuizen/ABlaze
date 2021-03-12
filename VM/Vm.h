@@ -62,7 +62,9 @@ public:
 class StructObj{
 public:
         vector<Local*>* m_vals;
-        StructObj(vector<Local*>* vals){
+        string m_name;
+        StructObj(string name,vector<Local*>* vals){
+                m_name  = name;
                 m_vals = new vector<Local*>();
                 int depth = vals->at(vals->size()-1)->m_depth;
                 for(int i=vals->size()-1; i>=0 && depth == vals->at(i)->m_depth; i--){
@@ -120,6 +122,7 @@ public:
         void cast();
         void readFile();
         void writeFile();
+        void classcall();
         void createFile();
         void deleteFile();
         void exists();
