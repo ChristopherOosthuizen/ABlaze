@@ -242,6 +242,19 @@ TEST(Vm,classcall){
 
 }
 
+TEST(Vm,extendsFunctions){
+       ByteLexer lexer("functionPush price functionPush pris structdec Pos functionPush price functionPush pric structdecEx Loc Pos call main Pos.price: store this push 13 return Pos.pris: store this push 15 return Loc.price: store this push 19 return Loc.pric: store this push 20 return main: new Loc store l load l classcall price load l classcall pric load l classcall pris halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),3);
+       ASSERT_EQ(vm.m_stack[0].m_val.m_int,19);
+       ASSERT_EQ(vm.m_stack[1].m_val.m_int,20);
+       ASSERT_EQ(vm.m_stack[2].m_val.m_int,15);
+
+}
+
+
 
 
 TEST(VM,casts){

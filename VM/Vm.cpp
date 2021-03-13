@@ -284,6 +284,8 @@ void Vm::select(){
 }
 
 void Vm::pushLocals(vector<Local*>* ins,vector<Local*>* outs){
+        if(outs->size() ==0)
+                return;
         int depth = outs->at(outs->size()-1)->m_depth;
         for(int i=outs->size()-1; i>=0 && outs->at(i)->m_depth == depth;i--){
                 Local* local = outs->at(i);
@@ -304,6 +306,10 @@ void Vm::structDecEx(){
         pushLocals(locals,m_structs[extends]->m_vals);
         pushLocals(locals,m_locals[m_locals.size()-1]);
         map<string,string>* functions = new map<string,string>(); 
+        map<string,string>::iterator it;
+        for(it= m_structs[extends]->m_functions->begin(); it != m_structs[extends]->m_functions->end();it++){
+                (*functions)[it->first]= it->second;
+        }
         for(string s:m_functionStack ){
                 (*functions)[s] = name+"."+s;
         }
