@@ -202,8 +202,16 @@ void ByteGen::structDec(Body* body){
                         toCommand(call->m_name->m_token->m_symbol);
                 }
          }
-        toCommand("structdec");
-        toCommand(((Struct*)body->m_control)->m_iden->m_token->m_symbol);
+         Struct* control = (Struct*)body->m_control;
+         bool extends = control->m_extends;
+        if(!extends){
+                toCommand("structdec");
+                toCommand(((Struct*)body->m_control)->m_iden->m_token->m_symbol);
+        }else{
+                toCommand("structdecEx");
+                toCommand(((Struct*)body->m_control)->m_iden->m_token->m_symbol);
+                toCommand(control->m_extender->m_token->m_symbol);
+        }
 
 }
 

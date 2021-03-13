@@ -385,6 +385,32 @@ TEST(ByteCode,min){
  
 }
 
+TEST(ByteCode,extends){
+        Lexer lexer("struct Pos{int x; int y;} struct Place extends Pos{string name;}");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        int i =0;
+        ASSERT_EQ(strs->at(i++),"startlocal"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"x"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"y"); 
+        ASSERT_EQ(strs->at(i++),"structdec"); 
+        ASSERT_EQ(strs->at(i++),"Pos"); 
+        ASSERT_EQ(strs->at(i++),"startlocal"); 
+
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"name"); 
+        ASSERT_EQ(strs->at(i++),"structdecEx"); 
+        ASSERT_EQ(strs->at(i++),"Place"); 
+        ASSERT_EQ(strs->at(i++),"Pos"); 
+ 
+}
+
+
 
 
 TEST(ByteCode,structs){
