@@ -49,6 +49,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["len"] = ByteType::LEN;
         m_types["loadclass"] = ByteType::LOADCLASS;
         m_types["classcall"] = ByteType::CLASSCALL;
+        m_types["functionPush"] = ByteType::FUNCTIONPUSH;
         m_types["select"] = ByteType::SELECT;
 }
 

@@ -62,8 +62,10 @@ public:
 class StructObj{
 public:
         vector<Local*>* m_vals;
+        map<string,string>* m_functions;
         string m_name;
-        StructObj(string name,vector<Local*>* vals){
+        StructObj(string name,vector<Local*>* vals,map<string,string>* functions){
+                m_functions = functions;
                 m_name  = name;
                 m_vals = new vector<Local*>();
                 for(Local* local: *vals){
@@ -73,12 +75,25 @@ public:
 
 };
 
+class StructDef{
+        public:
+                vector<Local*>* m_vals;
+                map<string,string>* m_functions;
+                string m_name;
+                StructDef(string name,vector<Local*>* vals, map<string,string>* functions){
+                        m_name = name;
+                        m_vals = vals;
+                        m_functions = functions;
+                }
+};
+
 class Vm{
 public:
         vector<DataVal> m_stack;   
+        vector<string> m_functionStack;
         vector<DataObj*> m_objs;
         vector<ByteToken*> m_tokens;
-        map<string,vector<Local*>*> m_structs; 
+        map<string,StructDef*> m_structs; 
         vector<vector<Local*>*> m_locals;
         vector<int> m_jumpBacks;
         map<string,int> m_labels;
@@ -97,6 +112,8 @@ public:
         void println();
         void print();
         void pushToStack();
+        void functionPush();
+        void functionPop();
         void jump();
         void jumpIf();
         void load();

@@ -196,6 +196,11 @@ void ByteGen::structDec(Body* body){
          for(Expression* expression: *body->m_lines){
                  if(expression->name() == "Decleration")
                         decToCommand((Decleration*)expression);
+                else if(expression->name() == "Body" && ((Body*)expression)->m_control->name() =="Function"){
+                        toCommand("functionPush");
+                        FunctionCall* call = ((Function*)((Body*)expression)->m_control)->m_call;
+                        toCommand(call->m_name->m_token->m_symbol);
+                }
          }
         toCommand("structdec");
         toCommand(((Struct*)body->m_control)->m_iden->m_token->m_symbol);
