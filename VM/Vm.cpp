@@ -94,6 +94,7 @@ void Vm::step(){
                 case ByteType::SQRT:
                 case ByteType::ISGE:
                 case ByteType::DIVIDE: binOP(token->m_type);break;
+                case ByteType::STRUCTCONSTEX: structDecEx();break;
                 case ByteType::STRUCTCONST: structDec();break;
                 case ByteType::LOAD: load(); break;
                 case ByteType::STORE: store(); break;
@@ -277,8 +278,28 @@ void Vm::select(){
         load(obj->m_vals,nextToken()->m_symbol); 
 }
 
+void Vm::pushLocals(vector<Local*>* ins,vector<Local*>* outs){
+        int depth = outs->at(outs->size()-1)->m_depth;
+        for(int i=outs->size()-1; i>=0 && outs->at(i)->m_depth == depth;i--){
+                Local* local = outs->at(i);
+                ins->push_back(new Local(0,local->m_name,local->m_val));
+        }
+}
+
+void Vm::structDecEx(){
+        string name = nextToken()->m_symbol;
+        string extends = nextToken()->m_symbol;
+        vector<Local*>* locals = new vector<Local*>();
+        pushLocals(locals,m_structs[extends]);
+        pushLocals(locals,m_locals[m_locals.size()-1]);
+        m_structs[name] = locals; 
+        popLocal();
+}
+
+
 void Vm::structDec(){
-        vector<Local*>* locals = m_locals[m_locals.size()-1];
+        vector<Local*>* locals = new vector<Local*>();
+        pushLocals(locals,m_locals[m_locals.size()-1]);
         m_structs[nextToken()->m_symbol] = locals; 
         popLocal();
 }
@@ -440,7 +461,7 @@ void Vm::store(){
                 DataVal val(ByteType::INT,Val(0,0,0,""));
                 if(m_stack.size() >0)
                         val = m_stack[m_stack.size()-1];
-                locals->push_back(new Local(m_localCounts.back()-1,name, val));
+                locals->push_back(new Local(m_localCounts[m_localCounts.size()-1],name, val));
         }
         if(m_stack.size() >0)
                 m_stack.pop_back();

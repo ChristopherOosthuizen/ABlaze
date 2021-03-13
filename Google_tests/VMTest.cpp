@@ -256,3 +256,17 @@ TEST(VM,casts){
        ASSERT_EQ(vm.m_stack[2].m_val.m_int ,15);
 }
 
+TEST(VM,extens){
+       ByteLexer lexer("startlocal push 12 store x push 14 store y structdec Pos  startlocal push \"Hello\" store name structdecEx Location Pos startlocal push \"none\" store type structdecEx Place Location new Location store loc new Place store pl load pl select x load pl select name load pl select type load loc select y halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),4);
+       ASSERT_EQ(vm.m_stack[0].m_val.m_int,12);
+       ASSERT_EQ(vm.m_stack[1].m_val.m_string,"Hello");
+       ASSERT_EQ(vm.m_stack[2].m_val.m_string,"none");
+       ASSERT_EQ(vm.m_stack[3].m_val.m_int ,14);
+}
+
+
+

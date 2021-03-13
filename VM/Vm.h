@@ -66,9 +66,8 @@ public:
         StructObj(string name,vector<Local*>* vals){
                 m_name  = name;
                 m_vals = new vector<Local*>();
-                int depth = vals->at(vals->size()-1)->m_depth;
-                for(int i=vals->size()-1; i>=0 && depth == vals->at(i)->m_depth; i--){
-                        m_vals->push_back(new Local(0,vals->at(i)->m_name,vals->at(i)->m_val));
+                for(Local* local: *vals){
+                        m_vals->push_back(new Local(0,local->m_name,local->m_val));
                 }
         }
 
@@ -91,6 +90,7 @@ public:
         DataVal popStack();
         string popStackString();
         ByteToken* nextToken();
+        void pushLocals(vector<Local*>* ins,vector<Local*>* outs);
         void newObj();
         void execute();
         void step();
@@ -111,6 +111,7 @@ public:
         void at();
         void del();
         void structDec();
+        void structDecEx();
         void loadclass();
         void createLocal();
         void set();
