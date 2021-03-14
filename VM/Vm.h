@@ -125,6 +125,7 @@ public:
         void Return();
         void label();
         void append();
+        void trig(ByteType type);
         void at();
         void del();
         void structDec();

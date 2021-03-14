@@ -4,6 +4,7 @@
 #include <iostream>     
 #include <fstream>  
 #include <cstdio>
+#include <math.h>
 
 DataVal Vm::popStack(){
         DataVal val =m_stack[m_stack.size()-1];
@@ -96,6 +97,9 @@ void Vm::step(){
                 case ByteType::ISGE:
                 case ByteType::MOD:
                 case ByteType::DIVIDE: binOP(token->m_type);break;
+                case ByteType::SINE:
+                case ByteType::COS:
+                case ByteType::TAN: trig(token->m_type);break;
                 case ByteType::STRUCTCONSTEX: structDecEx();break;
                 case ByteType::STRUCTCONST: structDec();break;
                 case ByteType::LOAD: load(); break;
@@ -120,6 +124,17 @@ void Vm::step(){
  
        }
        collectAllGarbage();
+}
+
+void Vm::trig(ByteType type){
+        double angle = popStack().m_val.m_double;
+        double result;
+        switch(type){
+                case ByteType::SINE: result = sin(angle);break;
+                case ByteType::COS: result = cos(angle);break;
+                case ByteType::TAN: result = tan(angle);break;
+        }
+        m_stack.push_back(DataVal(ByteType::DOUBLE,Val(result,result,result,to_string(result))));
 }
 
 void Vm::functionPush(){

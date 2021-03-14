@@ -331,7 +331,7 @@ void ByteGen::castToByte(Cast* cast){
 }
 
 bool ByteGen::isBuiltIn(string name){
-        vector<string> funcs = {"delete","append","input","readFile","writeFile","exists","deleteFile","createFile"};
+        vector<string> funcs = {"delete","append","input","readFile","writeFile","exists","deleteFile","createFile","sin","cos","tan"};
         if(find(funcs.begin(),funcs.end(),name) != funcs.end())
                 return 1;
         return 0;

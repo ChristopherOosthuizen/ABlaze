@@ -51,6 +51,9 @@ ByteLexer::ByteLexer(const string& input){
         m_types["loadclass"] = ByteType::LOADCLASS;
         m_types["classcall"] = ByteType::CLASSCALL;
         m_types["functionPush"] = ByteType::FUNCTIONPUSH;
+        m_types["sin"] = ByteType::SINE;
+        m_types["cos"] = ByteType::COS;
+        m_types["tan"] = ByteType::TAN;
         m_types["select"] = ByteType::SELECT;
 }
 
