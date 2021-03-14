@@ -517,14 +517,36 @@ void Vm::call(){
 }
 
 void Vm::print(){
-        string val = popStackString();
+        DataVal value = popStack();
+        string val;
+        if(value.m_type !=ByteType::OBJ){
+                val = value.m_val.m_string;
+        }else{
+                DataObj* obj = m_objs[value.m_val.m_int];
+                if(obj->m_type == ByteType::LIST){
+                        vector<DataVal>* list = (vector<DataVal>*)obj->m_pointer;
+
+                        if(list->size() !=0){
+                                val+="[";
+                                for(int i=0; i< list->size()-1;i++){
+                                        val+=list->at(i).m_val.m_string;
+                                        val+=",";
+                                }
+                                val+=list->at(list->size()-1).m_val.m_string;
+
+                                val+="]";
+                        }else{
+                                val ="[]";
+                        }
+                }
+        }
         cout<< val;
 
 }
 
 void Vm::println(){
-        string val = popStackString();
-        cout << val<<endl;
+        print();
+        cout<<endl;
 }
 
 void Vm::binOP(ByteType type){

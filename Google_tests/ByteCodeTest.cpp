@@ -316,7 +316,7 @@ TEST(ByteCode,arrays){
         ASSERT_EQ(strs->at(i++),"main"); 
         ASSERT_EQ(strs->at(i++),"main:"); 
         ASSERT_EQ(strs->at(i++),"new");
-        ASSERT_EQ(strs->at(i++),"Array");
+        ASSERT_EQ(strs->at(i++),"list");
         ASSERT_EQ(strs->at(i++),"store");
         ASSERT_EQ(strs->at(i++),"i");
         ASSERT_EQ(strs->at(i++),"load");

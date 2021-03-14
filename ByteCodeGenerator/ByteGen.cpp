@@ -109,7 +109,7 @@ void ByteGen::dotToByte(Dot* dot){
 void ByteGen::arrayToByte(ArrayLiteral* literal){
         if(literal->m_value == nullptr){
                 toCommand("new");
-                toCommand("Array");
+                toCommand("list");
                 return;
         }
         expressionToByte(literal->m_iden);
