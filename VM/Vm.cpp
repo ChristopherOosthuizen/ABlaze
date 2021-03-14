@@ -288,8 +288,17 @@ void Vm::input(){
 
 void Vm::set(){
         DataVal two = popStack(); 
-        StructObj* obj = (StructObj*)m_objs[two.m_val.m_int]->m_pointer;
-        asi(obj->m_vals);
+        DataObj* data = m_objs[two.m_val.m_int];
+        if(data->m_type == ByteType::STRUCT){
+                StructObj* obj = (StructObj*)data->m_pointer;
+                asi(obj->m_vals);
+        }else{
+                vector<DataVal>* obj = (vector<DataVal>*)data->m_pointer;
+                int index = popStack().m_val.m_int;
+                DataVal value = popStack();
+                obj->at(index)=value;
+ 
+        }
 }
 
 

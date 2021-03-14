@@ -279,7 +279,15 @@ void ByteGen::decToCommand(Decleration* dec){
                 toCommand("set");
                 toCommand(((Literal*)dot->m_subIden)->m_token->m_symbol);
                 return;
+        }else if(dec->m_name->name() == "ArrayLiteral"){
+                ArrayLiteral* lit = (ArrayLiteral*)dec->m_name;
+                expressionToByte(lit->m_value);
+                expressionToByte(lit->m_iden);
+
+                toCommand("set");
+                return;
         }
+
         string name =((Literal*)dec->m_name)->m_token->m_symbol; 
         if(dec->m_initalize)
                 toCommand("store");

@@ -304,13 +304,12 @@ TEST(ByteCode,functions){
 }
 
 TEST(ByteCode,arrays){
-        Lexer lexer("int main(){int: i = int[]; append(i,12); i[0]; delete(i,0);}");
+        Lexer lexer("int main(){int: i = int[]; append(i,12); i[0]; i[0] = 12; delete(i,0);}");
         vector<Token*> tokens = lexer.readAllTokens();
         ASTGen gen(tokens);
         Body* body = gen.generateAST();
         ByteGen byt(body);
         vector<string>* strs = byt.generateByteCode();
-        ASSERT_EQ(strs->size(),23);
         int i=0;
         ASSERT_EQ(strs->at(i++),"call"); 
         ASSERT_EQ(strs->at(i++),"main"); 
@@ -329,6 +328,15 @@ TEST(ByteCode,arrays){
         ASSERT_EQ(strs->at(i++),"push");
         ASSERT_EQ(strs->at(i++),"0");
         ASSERT_EQ(strs->at(i++),"at");
+
+        ASSERT_EQ(strs->at(i++),"push");
+        ASSERT_EQ(strs->at(i++),"12");
+        ASSERT_EQ(strs->at(i++),"push");
+        ASSERT_EQ(strs->at(i++),"0");
+        ASSERT_EQ(strs->at(i++),"load");
+        ASSERT_EQ(strs->at(i++),"i");
+        ASSERT_EQ(strs->at(i++),"set");
+
         ASSERT_EQ(strs->at(i++),"load");
         ASSERT_EQ(strs->at(i++),"i");
         ASSERT_EQ(strs->at(i++),"push");
