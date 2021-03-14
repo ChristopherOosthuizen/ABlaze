@@ -4,6 +4,7 @@
 ByteLexer::ByteLexer(const string& input){
         m_input = input+" ";
         m_pos =0;
+        m_types["mod"] = ByteType::MOD;
         m_types["add"] = ByteType::ADD;
         m_types["divide"] = ByteType::DIVIDE;
         m_types["times"] = ByteType::TIMES;

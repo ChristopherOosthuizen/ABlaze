@@ -54,7 +54,7 @@ static string typeToString(TokenType type){
 		case TokenType::MINUS  :return "minus";
 		case TokenType::TIMES  :return "times";
 		case TokenType::DIVIDE  :return "divide";
-		case TokenType::REMAND :return "reman";
+		case TokenType::REMAND :return "mod";
 		case TokenType::PLUS_PLUS  :return "plus_plus";
 		case TokenType::MINUS_MINUS  :return "minus_minus";
 		case TokenType::TIMES_TIMES :return "pow";

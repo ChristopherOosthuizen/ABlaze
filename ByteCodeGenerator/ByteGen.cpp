@@ -280,12 +280,26 @@ void ByteGen::decToCommand(Decleration* dec){
                 toCommand(((Literal*)dot->m_subIden)->m_token->m_symbol);
                 return;
         }
-
+        string name =((Literal*)dec->m_name)->m_token->m_symbol; 
         if(dec->m_initalize)
                 toCommand("store");
-        else
+        else{
+                TokenType type = dec->m_op->m_token->m_type;
+                if(type != TokenType::EQUAL){
+                        toCommand("load");
+                        toCommand(name);
+                        switch(type){
+                                case TokenType::PLUS_EQUAL:toCommand("plus");break; 
+                                case TokenType::MINUS_EQUAL:toCommand("minus");break; 
+                                case TokenType::DIVIDE_EQUAL:toCommand("divide");break; 
+                                case TokenType::TIMES_EQUAL:toCommand("times");break; 
+                                case TokenType::MOD_EQUAL:toCommand("mod");break; 
+                        }
+
+                }
                 toCommand("asi");
-        toCommand(((Literal*)dec->m_name)->m_token->m_symbol); 
+        }
+        toCommand(name); 
 
 }
 

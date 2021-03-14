@@ -94,6 +94,7 @@ void Vm::step(){
                 case ByteType::POW:
                 case ByteType::SQRT:
                 case ByteType::ISGE:
+                case ByteType::MOD:
                 case ByteType::DIVIDE: binOP(token->m_type);break;
                 case ByteType::STRUCTCONSTEX: structDecEx();break;
                 case ByteType::STRUCTCONST: structDec();break;
@@ -559,6 +560,9 @@ void Vm::binOP(ByteType type){
                         result = two.m_val.m_int - one.m_val.m_int;break;
                 case ByteType::TIMES:
                         result = two.m_val.m_int * one.m_val.m_int;break;
+                case ByteType::MOD:
+                        result = two.m_val.m_int % one.m_val.m_int;break;
+
                 case ByteType::DIVIDE:
                         result = two.m_val.m_int / one.m_val.m_int;break;
                 case ByteType::XOR:
@@ -594,6 +598,8 @@ void Vm::binOPDouble(ByteType type, double one , double two){
                         result = two + one;break;
                 case ByteType::MINUS:
                         result = two - one;break;
+                case ByteType::MOD:
+                        result = (int)two % (int)one;break;
                 case ByteType::TIMES:
                         result = two * one;break;
                 case ByteType::DIVIDE:

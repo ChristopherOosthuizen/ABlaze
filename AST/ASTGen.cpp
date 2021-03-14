@@ -132,6 +132,7 @@ int ASTGen::order(Token* token){
                 case TokenType::PLUS:
                 case TokenType::MINUS:return 3;
                 case TokenType::TIMES: 
+                case TokenType::REMAND:
                 case TokenType::DIVIDE:return 2;
                 case TokenType::TIMES_TIMES: 
                 case TokenType::DIVIDE_DIVIDE:return 1;

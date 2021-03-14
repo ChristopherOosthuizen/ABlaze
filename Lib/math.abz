@@ -1,3 +1,7 @@
+double PI=3.14159265359;
+double E=2.71828182846;
+double phi=1.61803398875;
+
 
 var min(var a, var b){
     if(a<b)
@@ -11,3 +15,12 @@ var max( var a,var b){
         return a;
     return b; 
 }
+
+var factorial(var end){
+    var result = 1;
+    for(var i =1;i<=end;i++ ){
+        result =i*result;
+    } 
+    return result;
+}
+
