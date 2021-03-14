@@ -538,6 +538,23 @@ void Vm::print(){
                         }else{
                                 val ="[]";
                         }
+                }else{
+                       StructObj* ob = (StructObj* )obj->m_pointer; 
+                        if(m_labels.count(ob->m_name+".toString") ==1){
+                                m_jumpBacks.push_back(m_pos);
+                                vector<Local*>* locals = new vector<Local*>();
+                                for(int i=0; i< m_locals[0]->size(); i++){
+                                        locals->push_back(m_locals[0]->at(i));
+                                }
+                                m_locals.push_back(locals);
+                                m_localCounts.push_back(1);
+                                m_pos= m_labels[ob->m_name+".toString"];
+                                return;
+
+                        }else{
+                                val = value.m_val.m_string;
+                        }
+              
                 }
         }
         cout<< val;
