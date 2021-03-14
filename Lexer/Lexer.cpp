@@ -124,11 +124,13 @@ Token* Lexer::next() {
 		return new Token(TokenType::EQUAL,"=",m_line);
 	
         case '<':
+		if(consume('<'))return new Token(TokenType::LEFT_SHIFT,"<<",m_line);
 		if(consume('='))return new Token(TokenType::LESS_EQUAL,"<=",m_line);
 		return new Token(TokenType::LESS,"<",m_line);
 
         case '>':
-		if(consume('='))return new Token(TokenType::MORE_EQUAL,"<=",m_line);
+		if(consume('>'))return new Token(TokenType::RIGHT_SHIFT,">>",m_line);
+		if(consume('='))return new Token(TokenType::MORE_EQUAL,">=",m_line);
 		return new Token(TokenType::GREATER,">",m_line);
 
         case '!':

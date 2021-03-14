@@ -95,6 +95,8 @@ void Vm::step(){
                 case ByteType::POW:
                 case ByteType::SQRT:
                 case ByteType::ISGE:
+                case ByteType::LSHIFT:
+                case ByteType::RSHIFT:
                 case ByteType::MOD:
                 case ByteType::DIVIDE: binOP(token->m_type);break;
                 case ByteType::SINE:
@@ -625,6 +627,10 @@ void Vm::binOP(ByteType type){
                         result = two.m_val.m_int * one.m_val.m_int;break;
                 case ByteType::MOD:
                         result = two.m_val.m_int % one.m_val.m_int;break;
+                case ByteType::LSHIFT:
+                        result = two.m_val.m_int << one.m_val.m_int;break;
+                case ByteType::RSHIFT:
+                        result = two.m_val.m_int >> one.m_val.m_int;break;
 
                 case ByteType::DIVIDE:
                         result = two.m_val.m_int / one.m_val.m_int;break;

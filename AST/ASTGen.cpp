@@ -122,13 +122,15 @@ int ASTGen::order(Token* token){
         switch(token->m_type){
                case TokenType::XOR:
                 case TokenType::AND_AND:
-                case TokenType::OR_OR: return 5;
+                case TokenType::OR_OR: return 6;
                 case TokenType::LESS_EQUAL:
                 case TokenType::MORE_EQUAL:
                 case TokenType::GREATER:
                 case TokenType::LESS:
                 case TokenType::EQUAL_EQUAL:
-                case TokenType::NOT_EQUAL:return 4;
+                case TokenType::NOT_EQUAL:return 5;
+                case TokenType::LEFT_SHIFT:
+                case TokenType::RIGHT_SHIFT:return 4;
                 case TokenType::PLUS:
                 case TokenType::MINUS:return 3;
                 case TokenType::TIMES: 
@@ -208,7 +210,7 @@ bool ASTGen::isEquals(){
 //return the next general ststement
 Expression* ASTGen::expression(){
 
-        Expression* expression = binaryOperation(6); 
+        Expression* expression = binaryOperation(7); 
         if(isEquals()){
                 expression = assignment(expression);
         }else if(equals(TokenType::PLUS_PLUS) || equals(TokenType::MINUS_MINUS)){

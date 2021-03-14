@@ -15,8 +15,10 @@ ByteLexer::ByteLexer(const string& input){
         m_types["push"] = ByteType::PUSH;
         m_types["xor"] = ByteType::XOR;
         m_types["not"] = ByteType::NOT;
+        m_types["and"] = ByteType::AND;
         m_types["and_and"] = ByteType::AND;
         m_types["or"] = ByteType::OR;
+        m_types["or_or"] = ByteType::OR;
         m_types["isgt"] = ByteType::ISGT;
         m_types["islt"] = ByteType::ISLT;
         m_types["isle"] = ByteType::ISLE;
@@ -54,6 +56,8 @@ ByteLexer::ByteLexer(const string& input){
         m_types["sin"] = ByteType::SINE;
         m_types["cos"] = ByteType::COS;
         m_types["tan"] = ByteType::TAN;
+        m_types["left_shift"] = ByteType::LSHIFT;
+        m_types["right_shift"] = ByteType::RSHIFT;
         m_types["select"] = ByteType::SELECT;
 }
 
