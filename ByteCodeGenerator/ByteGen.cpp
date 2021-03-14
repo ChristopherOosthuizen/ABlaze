@@ -81,8 +81,8 @@ void ByteGen::builtInToByte(BuiltIn* builtin){
                 }
                 return;
         }
-
-        expressionToByte(builtin->m_value);
+        if(builtin->m_value != nullptr)
+                expressionToByte(builtin->m_value);
         toCommand(typeToString(name));
 }
 

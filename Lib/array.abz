@@ -1,0 +1,53 @@
+
+void merge(var: array, int left, int middle, int right){
+    int lengthLeft = middle-left+1; 
+    int lengthRight = right-middle;
+    var: subArrayLeft = int[];
+    var: subArrayRight = int[];
+    for(int i=0; i<lengthLeft; i++)
+        append(subArrayLeft,array[left+i]);
+
+    for(int i=0; i<lengthRight; i++)
+        append(subArrayRight,array[middle+1+i]);
+
+    int leftIndex =0;
+    int rightIndex =0;
+
+    int indexMerged = left;
+    while((leftIndex< lengthLeft) && (rightIndex < lengthRight)){
+        if(subArrayLeft[leftIndex] <= subArrayRight[rightIndex]){
+            array[indexMerged] = subArrayLeft[leftIndex]; 
+            leftIndex++;
+        }else{
+            array[indexMerged] = subArrayRight[rightIndex];
+            rightIndex++;
+        }
+        indexMerged++;
+    }
+    while(leftIndex < lengthLeft){
+        array[indexMerged] = subArrayLeft[leftIndex];
+        leftIndex++;
+        indexMerged++;
+    }
+
+    while(rightIndex < lengthRight){
+        array[indexMerged] = subArrayRight[rightIndex];
+        rightIndex++;
+        indexMerged++;
+    }
+}
+
+void mergeSort(var: array, int left,int right){
+    if(left>=right){
+        return;
+    }
+    int middle = left+(right-left)/2;
+    mergeSort(array,left,middle);
+    mergeSort(array,middle+1,right);
+    merge(array,left,middle,right);
+
+}
+
+void sort(var: array){
+    mergeSort(array,0, (len array)-1);
+}

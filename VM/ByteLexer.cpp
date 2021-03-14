@@ -15,7 +15,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["push"] = ByteType::PUSH;
         m_types["xor"] = ByteType::XOR;
         m_types["not"] = ByteType::NOT;
-        m_types["and"] = ByteType::AND;
+        m_types["and_and"] = ByteType::AND;
         m_types["or"] = ByteType::OR;
         m_types["isgt"] = ByteType::ISGT;
         m_types["islt"] = ByteType::ISLT;

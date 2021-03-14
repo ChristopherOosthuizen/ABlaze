@@ -253,7 +253,7 @@ Token* Lexer::Integer(){
 //convert iden to token
 Token* Lexer::Iden(){
 	int start = m_pos-1;
-	while( isLetter(peek()))m_pos++;
+	while( isLetter(peek()) ||isNum(peek()))m_pos++;
 	
 	string word = m_input.substr(start, m_pos-start);
 	if(m_built_in_words.find(word) != m_built_in_words.end()  ){

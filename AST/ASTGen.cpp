@@ -331,5 +331,9 @@ Expression* ASTGen::literal(){
 }
 
 Expression* ASTGen::builtIn(){
-        return new BuiltIn(nextLit(),expression());
+        Literal* lit = nextLit();
+        if(equals(TokenType::SEMI_COLON)){
+                return new BuiltIn(lit,nullptr);
+        }
+        return new BuiltIn(lit,expression());
 }
