@@ -1,0 +1,12 @@
+
+string substring(string str, int start,int end){
+    string result =""; 
+    for(int i=start; i<end; i++){
+        result = result+str[i];
+    } 
+    return result;
+}
+
+string substring(string str, int start){
+    return substring(str,start,len str);
+}
