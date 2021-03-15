@@ -145,6 +145,7 @@ public:
         void createFile();
         void deleteFile();
         void exists();
+        void pop();
         void len();
         void binOP(ByteType type);
         void binOPDouble(ByteType type,double one,double two);

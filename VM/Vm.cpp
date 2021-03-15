@@ -122,11 +122,16 @@ void Vm::step(){
                 case ByteType::INPUT: input(); break;
                 case ByteType::LEN: len();break;
                 case ByteType::LOADCLASS: loadclass(); break;
+                case ByteType::POP: pop(); break;
                 case ByteType::CLASSCALL: classcall(); break;
 
  
        }
        collectAllGarbage();
+}
+
+void Vm::pop(){
+        m_stack.pop_back();
 }
 
 void Vm::trig(ByteType type){
@@ -147,9 +152,14 @@ void Vm::functionPush(){
 
 void Vm::classcall(){
       DataVal val = m_stack[m_stack.size()-1]; 
-      StructObj* obj = (StructObj*)m_objs[val.m_val.m_int]->m_pointer;
       string funcName = nextToken()->m_symbol;
-      string name = (*obj->m_functions)[funcName];
+        string name;
+        if(val.m_type == ByteType::NIL){
+                name = (*m_structs[val.m_val.m_string]->m_functions)[funcName];
+        }else{
+                StructObj* obj = (StructObj*)m_objs[val.m_val.m_int]->m_pointer;
+                name = (*obj->m_functions)[funcName];
+        }
         m_jumpBacks.push_back(m_pos+1);
         vector<Local*>* locals = new vector<Local*>();
         for(int i=0; i< m_locals[0]->size(); i++){
@@ -505,6 +515,8 @@ void Vm::load(vector<Local*>* locals, const string& name){
                         return;
                 }
         }
+        DataVal val(ByteType::NIL,Val(0,0,0,name));
+        m_stack.push_back(val);
 
 }
 

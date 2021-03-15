@@ -194,23 +194,28 @@ void ByteGen::structToByte(Body* body){
 
 void ByteGen::structDec(Body* body){
         toCommand("startlocal");
+        string className =((Struct*)body->m_control)->m_iden->m_token->m_symbol; 
          for(Expression* expression: *body->m_lines){
                  if(expression->name() == "Decleration")
                         decToCommand((Decleration*)expression);
                 else if(expression->name() == "Body" && ((Body*)expression)->m_control->name() =="Function"){
                         toCommand("functionPush");
                         FunctionCall* call = ((Function*)((Body*)expression)->m_control)->m_call;
-                        toCommand(call->m_name->m_token->m_symbol);
+                        string name =call->m_name->m_token->m_symbol; 
+                        if(name != className )
+                                toCommand(name+to_string(call->m_args->size()));
+                        else
+                                toCommand(name);
                 }
          }
          Struct* control = (Struct*)body->m_control;
          bool extends = control->m_extends;
         if(!extends){
                 toCommand("structdec");
-                toCommand(((Struct*)body->m_control)->m_iden->m_token->m_symbol);
+                toCommand(className);
         }else{
                 toCommand("structdecEx");
-                toCommand(((Struct*)body->m_control)->m_iden->m_token->m_symbol);
+                toCommand(className);
                 toCommand(control->m_extender->m_token->m_symbol);
         }
 

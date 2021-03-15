@@ -254,7 +254,17 @@ TEST(Vm,extendsFunctions){
 
 }
 
+TEST(Vm,staticFuncs){
+       ByteLexer lexer("startlocal functionPush right0 functionPush left0 structdec Pos call main0 Pos.right0: pop push 12 return Pos.left0: pop push 14 return main0: new Pos store pos load pos classcall right0 load Pos classcall left0 halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),2);
+       ASSERT_EQ(vm.m_stack[0].m_val.m_int,12);
+       ASSERT_EQ(vm.m_stack[1].m_val.m_int,14);
 
+
+}
 
 
 TEST(VM,casts){

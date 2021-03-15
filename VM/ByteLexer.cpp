@@ -60,6 +60,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["right_shift"] = ByteType::RSHIFT;
         m_types["nil"] = ByteType::NIL;
         m_types["neg"] = ByteType::NEG;
+        m_types["pop"] = ByteType::POP;
         m_types["select"] = ByteType::SELECT;
 }
 

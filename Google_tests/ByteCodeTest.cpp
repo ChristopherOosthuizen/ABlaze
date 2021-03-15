@@ -494,7 +494,7 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"functionPush"); 
         ASSERT_EQ(strs->at(i++),"Pos"); 
         ASSERT_EQ(strs->at(i++),"functionPush"); 
-        ASSERT_EQ(strs->at(i++),"xup"); 
+        ASSERT_EQ(strs->at(i++),"xup0"); 
         ASSERT_EQ(strs->at(i++),"structdec"); 
         ASSERT_EQ(strs->at(i++),"Pos"); 
         ASSERT_EQ(strs->at(i++),"call"); 
