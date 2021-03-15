@@ -178,16 +178,18 @@ TEST(Boolean, comparison){
 
 //Unary operators
 TEST(Unary, basic){
-        Lexer lexer("++lets; --lets; !bool;");
+        Lexer lexer("++lets; --lets; !bool;-12;");
         ASTGen gen (lexer.readAllTokens());
         Body* body = gen.generateAST();
-        ASSERT_EQ(body->m_lines->size(),3);
+        ASSERT_EQ(body->m_lines->size(),4);
         ASSERT_TRUE(body->m_lines->at(0) != nullptr);
         ASSERT_EQ(body->m_lines->at(0)->name(),"UnOP");
         ASSERT_TRUE(body->m_lines->at(1) != nullptr);
         ASSERT_EQ(body->m_lines->at(1)->name(),"UnOP");
         ASSERT_TRUE(body->m_lines->at(2) != nullptr);
         ASSERT_EQ(body->m_lines->at(2)->name(),"UnOP");
+        ASSERT_TRUE(body->m_lines->at(3) != nullptr);
+        ASSERT_EQ(body->m_lines->at(3)->name(),"UnOP");
 
 }
 

@@ -219,6 +219,10 @@ void ByteGen::structDec(Body* body){
 void ByteGen::unToByte(Unary* unary){
         TokenType type = unary->m_op->m_token->m_type;
         expressionToByte(unary->m_iden);
+        if(type == TokenType::MINUS){
+                toCommand("neg");
+                return;
+        }
         toCommand("push");
         toCommand("1");
         switch(type){

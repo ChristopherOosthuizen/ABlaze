@@ -51,3 +51,27 @@ void mergeSort(var: array, int left,int right){
 void sort(var: array){
     mergeSort(array,0, (len array)-1);
 }
+
+int binarySearcher(var array,int start, int end, var value){
+    if(start >= end)
+        return -1;
+
+    int middle = start+(end-start)/2;
+    if(array[middle] == value)
+        return middle;
+    if(array[middle] > value){
+        return binarySearcher(array,start,middle-1,value);
+    }
+    return binarySearcher(array,middle+1,end,value);
+}
+
+int binarySearch(var array,var value){
+    return binarySearcher(array,0,(len array)-1,value);
+}
+int indexOf(var array,var value){
+    for(int i=0; i< len array; i++){
+        if(value == array[i])
+            return i;
+    } 
+    return -1;
+}

@@ -94,6 +94,7 @@ void Vm::step(){
                 case ByteType::ISLE:
                 case ByteType::POW:
                 case ByteType::SQRT:
+                case ByteType::NEG:
                 case ByteType::ISGE:
                 case ByteType::LSHIFT:
                 case ByteType::RSHIFT:
@@ -595,8 +596,22 @@ void Vm::println(){
 void Vm::binOP(ByteType type){
         int result =0;
 
-        DataVal one = popStack(); 
-        if(type==ByteType::NOT){
+        DataVal one = popStack();
+
+        if(type == ByteType::NEG){
+                string name;
+                if(one.m_val.m_string[0] =='-'){
+                       name = one.m_val.m_string.substr(1);
+                }else{
+                        name = "-"+one.m_val.m_string;
+
+                }
+                DataVal val(one.m_type,Val(-one.m_val.m_int,-one.m_val.m_double,one.m_val.m_char,name));
+                m_stack.push_back(val);
+                return;
+        } 
+
+        if(type==ByteType::NOT ){
                 int result =1;
                 if(one.m_val.m_int ==1){
                         result = 0;

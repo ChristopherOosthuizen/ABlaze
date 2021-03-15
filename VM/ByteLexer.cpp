@@ -58,6 +58,7 @@ ByteLexer::ByteLexer(const string& input){
         m_types["tan"] = ByteType::TAN;
         m_types["left_shift"] = ByteType::LSHIFT;
         m_types["right_shift"] = ByteType::RSHIFT;
+        m_types["neg"] = ByteType::NEG;
         m_types["select"] = ByteType::SELECT;
 }
 
