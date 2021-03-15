@@ -10,9 +10,10 @@
 TEST(ErrorThrowerAST,basics){
         ErrorThrower::hasError= false;
         ErrorThrower::errors = new vector<string>();
-        Lexer lexer("int main(){int hello = there; 12; print(\"hello\") int 2 = 12;}");
+        string content ="int main(){int hello = there; 12; print(\"hello\") int 2 = 12;}"; 
+        ErrorThrower::m_content;
+        Lexer lexer(content);
         ASTGen gen(lexer.readAllTokens());
         Body* body = gen.generateAST();
         ASSERT_TRUE(ErrorThrower::hasError);
-        ASSERT_EQ(ErrorThrower::errors->at(0),"Error: Missing Semi Colon on line: 1");
 }

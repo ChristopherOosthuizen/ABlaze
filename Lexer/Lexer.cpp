@@ -8,7 +8,7 @@
 
 
 Lexer::Lexer(const string& input) {
-    m_line =0;
+    m_line =1;
     m_pos =0;
     m_input = input+"\0";
 		if(m_built_in_words.size() ==0){

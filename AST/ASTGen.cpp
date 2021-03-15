@@ -62,7 +62,7 @@ bool ASTGen::equalsForward(int i,TokenType type){
 //eat the next token and if its not right throw error
 void ASTGen::consume( TokenType type,const string& message ){
         if(!eat(type))
-                ErrorThrower::unNamedError(message,peek()->m_line);
+                ErrorThrower::error(peek()->m_line,message);
 }
 
 //convert a body token into a body inclusing constrol ststement
@@ -75,12 +75,12 @@ Expression* ASTGen::body(){
        }else if(type == TokenType::IF){
                control = new IfStat(expression());
        }else if(type == TokenType::FOR){
-               consume(TokenType::OPEN_PARENTHESE,"missing parenthese for for");
+               consume(TokenType::OPEN_PARENTHESE,"for has no opening parenthese");
                Expression* inital = lineStat();
                Expression* controlStat = expression();
-               consume(TokenType::SEMI_COLON,"Missing SemiColon for for");
+               consume(TokenType::SEMI_COLON,"Missing SemiColon");
                Expression* rep = expression();
-               consume(TokenType::CLOSE_PARENTHESE,"Missing close parenthese");
+               consume(TokenType::CLOSE_PARENTHESE,"Unclosed parentehse");
                control = new ForStat(inital,controlStat,rep);
        }else if(type == TokenType::WHILE){
                control = new WhileStat(expression()); 
@@ -110,7 +110,7 @@ vector<Expression*>* ASTGen::lines(){
                 while(!equals(TokenType::CLOSE_BRACE)){
                        exprs->push_back(lineStat());
                 }
-                consume(TokenType::CLOSE_BRACE,"UNclosed body ");
+                consume(TokenType::CLOSE_BRACE,"unclosed Brace");
         }else{
                 exprs->push_back(lineStat());
         }
@@ -193,8 +193,13 @@ Expression* ASTGen::lineExpr(){
 //return the next while assuming the next is a semicolon
 Expression* ASTGen::lineStat(){
         Expression* expr = lineExpr();
-        if(expr->name() !="Body")
-                consume(TokenType::SEMI_COLON, "Missing Semi Colon");
+        if(expr->name() !="Body"){
+                if(!eat(TokenType::SEMI_COLON)){
+                        m_pos--;
+                        consume(TokenType::SEMI_COLON, "Missing Semi Colon");
+                        m_pos++;
+                }
+        }
         return expr;
 }
 
@@ -277,20 +282,20 @@ Expression* ASTGen::unary(){
 
 Expression* ASTGen::parans(){
         Expression* expr = expression();
-        consume(TokenType::CLOSE_PARENTHESE,"Unclosed ");
+        consume(TokenType::CLOSE_PARENTHESE,"Unclosed parenthese");
         return expr; 
 
 }
 
 Expression* ASTGen::functionCall(){
         Literal* lit = nextLit();
-        consume(TokenType::OPEN_PARENTHESE,"Exprected open parenthese");
+        consume(TokenType::OPEN_PARENTHESE,"unopend function ");
         vector<Expression*>* args = new vector<Expression*>();
         while(!equals(TokenType::CLOSE_PARENTHESE)){
                 args->push_back(lineExpr());
                 eat(TokenType::COMMA);
         }
-        consume(TokenType::CLOSE_PARENTHESE,"Error: Unclosed function call on line:");
+        consume(TokenType::CLOSE_PARENTHESE,"unclosed parenthese");
         return new FunctionCall(lit,args);
 }
 

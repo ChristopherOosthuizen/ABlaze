@@ -41,6 +41,7 @@ int repl() {
 }
 
 int convertToByte(const string& wholeFile,const string& output, const string& path){
+    ErrorThrower::m_content = wholeFile;
     Lexer lexer(wholeFile);
     vector<Token*> tokens = lexer.readAllTokens();
     if(ErrorThrower::hasError){
