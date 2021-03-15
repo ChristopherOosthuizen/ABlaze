@@ -95,8 +95,10 @@ Expression* ASTGen::body(){
                control = new Struct(name,extends,extender);
        }else if(type == TokenType::CLASS){
                control = new Class(nextLit());
+        }else if(type == TokenType::STATIC){
+                control = new Function(true,nextLit(),(FunctionCall*)functionCall() );
        }else if(isIden(lit->m_token)){
-                control = new Function(lit,(FunctionCall*)functionCall());
+                control = new Function(false,lit,(FunctionCall*)functionCall());
        }
        return new Body(control,lines());
 }
@@ -167,6 +169,7 @@ bool ASTGen::isBod(){
                 case TokenType::WHILE:
                 case TokenType::ELSE:
                 case TokenType::CLASS:
+                case TokenType::STATIC:
                 case TokenType::STRUCT:return 1;
         }
         return 0;

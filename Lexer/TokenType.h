@@ -42,7 +42,7 @@ enum class TokenType{
   //control stuctures
   IF,FOR,WHILE,ELSE,STRUCT,LIST,LEN,CLASS,
   //Primitve idententifers
-       IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,EXTENDS,LEFT_SHIFT,RIGHT_SHIFT,
+       IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,EXTENDS,LEFT_SHIFT,RIGHT_SHIFT,STATIC,
 	  
 };
 
@@ -113,6 +113,7 @@ static string typeToString(TokenType type){
 		case TokenType::LEFT_SHIFT: return "left_shift";
 		case TokenType::RIGHT_SHIFT: return "right_shift";
 		case TokenType::NIL: return "NIL";
+		case TokenType::STATIC: return "static";
 		case TokenType::EXTENDS: return "extends";
 	}
 	return "";

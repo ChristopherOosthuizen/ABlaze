@@ -139,3 +139,13 @@ TEST(ASTGenetal,extends){
 
 }
 
+TEST(ASTGenetal,Static){
+        Lexer lexer("struct Left {int i=12; static int make(){return 12;}}");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_EQ(((Body*)body->m_lines->at(0))->m_lines->size(),2);
+}
+
+
