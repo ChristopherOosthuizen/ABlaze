@@ -26,6 +26,36 @@ TEST(ByteCode,pluss){
         ASSERT_EQ(strs->at(10),"halt"); 
 }
 
+TEST(ByteCode,arraysLi){
+        Lexer lexer("int main(){var: vas = {12,14,15};}");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        int i =0;
+        ASSERT_EQ(strs->at(i++),"call"); 
+        ASSERT_EQ(strs->at(i++),"main0"); 
+        ASSERT_EQ(strs->at(i++),"main0:"); 
+        ASSERT_EQ(strs->at(i++),"new"); 
+        ASSERT_EQ(strs->at(i++),"list"); 
+        ASSERT_EQ(strs->at(i++),"dup"); 
+        ASSERT_EQ(strs->at(i++),"4"); 
+        ASSERT_EQ(strs->at(i++),"push"); 
+        ASSERT_EQ(strs->at(i++),"12"); 
+        ASSERT_EQ(strs->at(i++),"append"); 
+        ASSERT_EQ(strs->at(i++),"push"); 
+        ASSERT_EQ(strs->at(i++),"14"); 
+        ASSERT_EQ(strs->at(i++),"append"); 
+        ASSERT_EQ(strs->at(i++),"push"); 
+        ASSERT_EQ(strs->at(i++),"15"); 
+        ASSERT_EQ(strs->at(i++),"append"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"vas"); 
+        ASSERT_EQ(strs->at(i++),"halt"); 
+}
+
+
+
 
 TEST(ByteCode,returns){
         Lexer lexer("int one(){return 1;} int main(){one();}");

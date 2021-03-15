@@ -59,6 +59,8 @@ void ByteGen::expressionToByte(Expression* expr){
                 builtInToByte((BuiltIn*) expr);
         }else if(name == "Cast"){
                 castToByte((Cast*)expr);
+        }else if(name == "Array"){
+                array((Array*)expr);
         }
 
 }
@@ -97,6 +99,17 @@ void ByteGen::argsToBye(vector<Expression*>* args){
         }
 }
 
+void ByteGen::array(Array* array){
+        toCommand("new");
+        toCommand("list");
+        toCommand("dup");
+        toCommand(to_string(array->m_args->size()+1));
+        for(Expression* expr:* array->m_args){
+                expressionToByte(expr);
+                toCommand("append");
+        }
+
+}
 void ByteGen::dotToByte(Dot* dot){
         expressionToByte(dot->m_iden);
         if(dot->m_subIden->name() == "Literal"){

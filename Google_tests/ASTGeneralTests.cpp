@@ -38,6 +38,23 @@ TEST(ASTGeneral,classs){
 }
 
 
+TEST(ASTGeneral,array){
+        ErrorThrower::hasError = false;
+        ErrorThrower::errors = new vector<string>();
+        string end = "int i = {12,14,15,16}; ";
+        Lexer lexer(end);
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_TRUE(!ErrorThrower::hasError);
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Decleration");
+        ASSERT_EQ(((Decleration*)body->m_lines->at(0))->m_value->name(),"Array");
+
+ 
+}
+
+
+
 TEST(ASTGeneral,Structs){
         ErrorThrower::hasError = false;
         ErrorThrower::errors = new vector<string>();

@@ -291,5 +291,19 @@ TEST(VM,extens){
        ASSERT_EQ(vm.m_stack[3].m_val.m_int ,14);
 }
 
+TEST(VM,dup){
+       ByteLexer lexer("push 12 dup 4 halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),4);
+       ASSERT_EQ(vm.m_stack[0].m_val.m_int,12);
+       ASSERT_EQ(vm.m_stack[1].m_val.m_int,12 );
+       ASSERT_EQ(vm.m_stack[2].m_val.m_int,12);
+       ASSERT_EQ(vm.m_stack[3].m_val.m_int ,12);
+}
+
+
+
 
 

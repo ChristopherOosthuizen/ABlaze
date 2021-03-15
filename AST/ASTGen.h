@@ -42,6 +42,7 @@ class ASTGen{
         Expression* lineExpr(); // lineStat but does not assume semicolon
         Expression* postfix(); // turns postfix into a expression
         Expression* builtIn(); // deals with builtin functions such as return
+        Array* array();
         Literal* nextLit(); //return new new Literal(next());
 
 };

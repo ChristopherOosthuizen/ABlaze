@@ -116,6 +116,7 @@ public:
         void functionPop();
         void jump();
         void jumpIf();
+        void dup();
         void load();
         void load(vector<Local*>* locals, const string& name);
         void store();

@@ -132,6 +132,14 @@ class ArrayLiteral: public Expression{
                 Expression* m_value;
 };
 
+class Array: public Expression{
+        public:
+                string name() override;
+                Array(vector<Expression*>* args);
+                ~Array();
+                vector<Expression*>* m_args;
+};
+
 class Struct: public Expression{
 
         public:

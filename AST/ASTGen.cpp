@@ -299,6 +299,18 @@ Expression* ASTGen::functionCall(){
         return new FunctionCall(lit,args);
 }
 
+Array* ASTGen::array(){
+        vector<Expression*>* args = new vector<Expression*>();
+
+        while(!equals(TokenType::CLOSE_BRACE)){
+                args->push_back(lineExpr());
+                eat(TokenType::COMMA);
+        }
+        consume(TokenType::CLOSE_BRACE,"unclosed array");
+        return new Array(args);
+ 
+}
+
 //return weather a token is a builtin function
 bool ASTGen::isFunc(){
         switch(peek()->m_type){
@@ -315,6 +327,9 @@ bool ASTGen::isFunc(){
 Expression* ASTGen::literal(){
         if(equals(TokenType::NIL)){
                 return nextLit();
+        }
+        if(eat(TokenType::OPEN_BRACE)){
+                return array();
         }
         if(eat(TokenType::OPEN_PARENTHESE)){
                 Expression* expr = parans();

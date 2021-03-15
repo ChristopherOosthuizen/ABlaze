@@ -146,6 +146,17 @@ ArrayLiteral::~ArrayLiteral(){
         delete m_iden;
 }
 
+Array::Array(vector<Expression*>* args){
+        m_args =args;
+}
+
+string Array::name(){ return "Array";};
+
+Array::~Array(){
+        delete m_args;
+}
+
+
 string Class::name(){return "Class";}
 
 Class::Class(Literal* iden){

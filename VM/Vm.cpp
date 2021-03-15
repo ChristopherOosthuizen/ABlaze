@@ -124,10 +124,20 @@ void Vm::step(){
                 case ByteType::LOADCLASS: loadclass(); break;
                 case ByteType::POP: pop(); break;
                 case ByteType::CLASSCALL: classcall(); break;
+                case ByteType::DUP: dup(); break;
 
  
        }
        collectAllGarbage();
+}
+
+void Vm::dup(){
+        pushToStack();
+        int times = popStack().m_val.m_int;
+        DataVal val = popStack();
+        for(int i=0; i< times;i++){
+                m_stack.push_back(val);
+        }
 }
 
 void Vm::pop(){
