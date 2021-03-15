@@ -33,7 +33,7 @@ enum class TokenType{
   //COLONS
   SEMI_COLON, COLON, DOT, COMMA,
 
-  END,NEW,
+  END,NEW,NIL,
 
   //built in functions
   PRINT,PRINTLN, IMPORT, 
@@ -41,7 +41,6 @@ enum class TokenType{
 
   //control stuctures
   IF,FOR,WHILE,ELSE,STRUCT,LIST,LEN,CLASS,
-
   //Primitve idententifers
        IDEN_INT,IDEN_BOOL,IDEN_STRING, IDEN_DOUBLE,IDEN_CHAR,EXTENDS,LEFT_SHIFT,RIGHT_SHIFT,
 	  
@@ -113,6 +112,7 @@ static string typeToString(TokenType type){
 		case TokenType::CLASS: return "class";
 		case TokenType::LEFT_SHIFT: return "left_shift";
 		case TokenType::RIGHT_SHIFT: return "right_shift";
+		case TokenType::NIL: return "NIL";
 		case TokenType::EXTENDS: return "extends";
 	}
 	return "";

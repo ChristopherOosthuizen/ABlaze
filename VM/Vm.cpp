@@ -478,6 +478,12 @@ void Vm::jump(){
 
 void Vm::pushToStack(){
         double value =0;
+        if(m_tokens[m_pos]->m_type == ByteType::NIL){
+                DataVal val(ByteType::NIL,Val(0,0,0,"nil"));
+                m_pos++;
+                m_stack.push_back(val);
+                return;
+        }
         if(m_tokens[m_pos]->m_type != ByteType::STRING)
                 value = stod(m_tokens[m_pos]->m_symbol); 
         ByteToken* token = m_tokens[m_pos];

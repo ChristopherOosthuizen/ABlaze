@@ -21,6 +21,7 @@ vector<string>* ByteGen::generateByteCode(){
         bodyToByte(m_ast);
         return m_lines;
 }
+
 void ByteGen::toCommand(const string& com){
         m_lines->push_back(com);
 }

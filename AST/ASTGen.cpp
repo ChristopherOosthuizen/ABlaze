@@ -305,6 +305,9 @@ bool ASTGen::isFunc(){
 }
 
 Expression* ASTGen::literal(){
+        if(equals(TokenType::NIL)){
+                return nextLit();
+        }
         if(eat(TokenType::OPEN_PARENTHESE)){
                 Expression* expr = parans();
                 if( expr->name() == "Literal" && isIden(((Literal*)expr)->m_token) ){
