@@ -492,7 +492,7 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"store"); 
         ASSERT_EQ(strs->at(i++),"y"); 
         ASSERT_EQ(strs->at(i++),"functionPush"); 
-        ASSERT_EQ(strs->at(i++),"Pos"); 
+        ASSERT_EQ(strs->at(i++),"Pos2"); 
         ASSERT_EQ(strs->at(i++),"functionPush"); 
         ASSERT_EQ(strs->at(i++),"xup0"); 
         ASSERT_EQ(strs->at(i++),"structdec"); 
@@ -500,7 +500,7 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"call"); 
         ASSERT_EQ(strs->at(i++),"main0");
 
-        ASSERT_EQ(strs->at(i++),"Pos:");
+        ASSERT_EQ(strs->at(i++),"Pos.Pos2:");
         ASSERT_EQ(strs->at(i++),"loadclass");
         ASSERT_EQ(strs->at(i++),"store");
         ASSERT_EQ(strs->at(i++),"this");
@@ -545,6 +545,8 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"14");
         ASSERT_EQ(strs->at(i++),"new");
         ASSERT_EQ(strs->at(i++),"Pos");
+        ASSERT_EQ(strs->at(i++),"classcall");
+        ASSERT_EQ(strs->at(i++),"Pos2");
         ASSERT_EQ(strs->at(i++),"store");
         ASSERT_EQ(strs->at(i++),"position");
         ASSERT_EQ(strs->at(i++),"load");

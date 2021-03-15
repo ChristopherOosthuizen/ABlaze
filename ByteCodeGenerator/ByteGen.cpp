@@ -71,6 +71,7 @@ void ByteGen::builtInToByte(BuiltIn* builtin){
                         toCommand(typeToString(name));
 
                         toCommand(value->m_token->m_symbol);
+                        
                 }else{
                         FunctionCall* call = (FunctionCall*)builtin->m_value;
                         for(Expression* expr:*call->m_args){
@@ -78,6 +79,9 @@ void ByteGen::builtInToByte(BuiltIn* builtin){
                         }
                         toCommand(typeToString(name));
                         toCommand(call->m_name->m_token->m_symbol);
+                        toCommand("classcall");
+                        toCommand(call->m_name->m_token->m_symbol+ to_string(call->m_args->size()));
+
 
                 }
                 return;
@@ -162,10 +166,7 @@ void ByteGen::classFunc(string name, Body* body){
         FunctionCall* call = (FunctionCall*)function->m_call;
         string subname =call->m_name->m_token->m_symbol; 
         string address;
-        if(name != subname)
-                address = name +"."+subname+to_string(call->m_args->size())+":";
-        else 
-                address = name+":";
+        address = name +"."+subname+to_string(call->m_args->size())+":";
        toCommand(address);
        if(!function->m_isStatic){
                 toCommand("loadclass");
@@ -205,10 +206,7 @@ void ByteGen::structDec(Body* body){
                         toCommand("functionPush");
                         FunctionCall* call = ((Function*)((Body*)expression)->m_control)->m_call;
                         string name =call->m_name->m_token->m_symbol; 
-                        if(name != className )
-                                toCommand(name+to_string(call->m_args->size()));
-                        else
-                                toCommand(name);
+                        toCommand(name+to_string(call->m_args->size()));
                 }
          }
          Struct* control = (Struct*)body->m_control;

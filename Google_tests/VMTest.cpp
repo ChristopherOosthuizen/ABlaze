@@ -223,7 +223,7 @@ TEST(VM,structs){
 }
 
 TEST(Vm,constructor){
-       ByteLexer lexer("startlocal functionPush pos store y store x structdec pos call main pos: loadclass store this push 14 asi y load this return main: new pos store position push 13 load position set x load position select x load position select y halt");
+       ByteLexer lexer("startlocal functionPush pos store y store x structdec pos call main pos.pos: loadclass store this push 14 asi y load this return main: new pos classcall pos store position push 13 load position set x load position select x load position select y halt");
        vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
@@ -233,7 +233,7 @@ TEST(Vm,constructor){
 }
 
 TEST(Vm,classcall){
-       ByteLexer lexer("startlocal functionPush pos functionPush xup store y store x structdec pos call main pos.xup: loadclass store this load y push 1 add asi y return pos: loadclass store this push 14 asi y load this return main: new pos store position push 13 load position set x load position select x load position classcall xup load position select y halt");
+       ByteLexer lexer("startlocal functionPush pos functionPush xup store y store x structdec pos call main pos.xup: loadclass store this load y push 1 add asi y return pos.pos: loadclass store this push 14 asi y load this return main: new pos classcall pos store position push 13 load position set x load position select x load position classcall xup load position select y halt");
        vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();
