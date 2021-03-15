@@ -554,3 +554,63 @@ TEST(ByteCode,classes){
 
 
 }
+
+
+TEST(ByteCode,Static){
+        Lexer lexer("struct Pos{static int right(){return 12;} static int left(){return 14;}}int main(){Pos pos = new Pos; pos.right(); Pos.left();} ");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size() , 2);
+        ASSERT_EQ(body->m_lines->at(0)->name() , "Body");
+        ASSERT_EQ(body->m_lines->at(1)->name() , "Body");
+        ByteGen byt(body);
+        vector<string>* strs = byt.generateByteCode();
+        //ASSERT_EQ(strs->size(),33);
+        int i =0;
+        ASSERT_EQ(strs->at(i++),"startlocal"); 
+        ASSERT_EQ(strs->at(i++),"functionPush"); 
+        ASSERT_EQ(strs->at(i++),"right0"); 
+       
+        ASSERT_EQ(strs->at(i++),"functionPush"); 
+        ASSERT_EQ(strs->at(i++),"left0"); 
+
+        ASSERT_EQ(strs->at(i++),"structdec"); 
+        ASSERT_EQ(strs->at(i++),"Pos"); 
+        ASSERT_EQ(strs->at(i++),"call"); 
+        ASSERT_EQ(strs->at(i++),"main0"); 
+
+        ASSERT_EQ(strs->at(i++),"Pos.right0:"); 
+        ASSERT_EQ(strs->at(i++),"pop"); 
+        ASSERT_EQ(strs->at(i++),"push"); 
+        ASSERT_EQ(strs->at(i++),"12"); 
+        ASSERT_EQ(strs->at(i++),"return"); 
+        ASSERT_EQ(strs->at(i++),"return"); 
+
+        ASSERT_EQ(strs->at(i++),"Pos.left0:"); 
+        ASSERT_EQ(strs->at(i++),"pop"); 
+        ASSERT_EQ(strs->at(i++),"push"); 
+        ASSERT_EQ(strs->at(i++),"14"); 
+        ASSERT_EQ(strs->at(i++),"return"); 
+        ASSERT_EQ(strs->at(i++),"return"); 
+
+
+        ASSERT_EQ(strs->at(i++),"main0:"); 
+        ASSERT_EQ(strs->at(i++),"new"); 
+        ASSERT_EQ(strs->at(i++),"Pos"); 
+        ASSERT_EQ(strs->at(i++),"store"); 
+        ASSERT_EQ(strs->at(i++),"pos"); 
+        ASSERT_EQ(strs->at(i++),"load"); 
+        ASSERT_EQ(strs->at(i++),"pos"); 
+        ASSERT_EQ(strs->at(i++),"classcall"); 
+        ASSERT_EQ(strs->at(i++),"right0"); 
+
+        ASSERT_EQ(strs->at(i++),"load"); 
+        ASSERT_EQ(strs->at(i++),"Pos"); 
+        ASSERT_EQ(strs->at(i++),"classcall"); 
+        ASSERT_EQ(strs->at(i++),"left0"); 
+        ASSERT_EQ(strs->at(i++),"halt"); 
+
+
+}
+

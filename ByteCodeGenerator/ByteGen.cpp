@@ -167,9 +167,12 @@ void ByteGen::classFunc(string name, Body* body){
         else 
                 address = name+":";
        toCommand(address);
-       toCommand("loadclass");
-       toCommand("store");
-       toCommand("this");
+       if(!function->m_isStatic){
+                toCommand("loadclass");
+                toCommand("store");
+                toCommand("this");
+       }else
+                toCommand("pop");
         for(int i=call->m_args->size()-1; i>=0 ;i--){
                 expressionToByte(call->m_args->at(i));
         }
