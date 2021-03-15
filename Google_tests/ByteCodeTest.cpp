@@ -14,8 +14,8 @@ TEST(ByteCode,pluss){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),11);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"main:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"main0:"); 
         ASSERT_EQ(strs->at(3),"load"); 
         ASSERT_EQ(strs->at(4),"i"); 
         ASSERT_EQ(strs->at(5),"push"); 
@@ -35,15 +35,15 @@ TEST(ByteCode,returns){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),11);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"one:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"one0:"); 
         ASSERT_EQ(strs->at(3),"push"); 
         ASSERT_EQ(strs->at(4),"1"); 
         ASSERT_EQ(strs->at(5),"return"); 
         ASSERT_EQ(strs->at(6),"return"); 
-        ASSERT_EQ(strs->at(7),"main:"); 
+        ASSERT_EQ(strs->at(7),"main0:"); 
         ASSERT_EQ(strs->at(8),"call"); 
-        ASSERT_EQ(strs->at(9),"one"); 
+        ASSERT_EQ(strs->at(9),"one0"); 
         ASSERT_EQ(strs->at(10),"halt"); 
 }
 
@@ -56,8 +56,8 @@ TEST(ByteCode,equations){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),14);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"main:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"main0:"); 
         ASSERT_EQ(strs->at(3),"push"); 
         ASSERT_EQ(strs->at(4),"12"); 
         ASSERT_EQ(strs->at(5),"push"); 
@@ -81,8 +81,8 @@ TEST(ByteCode,equationsAdvanced){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),23);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"main:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"main0:"); 
         ASSERT_EQ(strs->at(3),"push"); 
         ASSERT_EQ(strs->at(4),"12"); 
         ASSERT_EQ(strs->at(5),"push"); 
@@ -115,8 +115,8 @@ TEST(ByteCode,print){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),13);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"main:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"main0:"); 
         ASSERT_EQ(strs->at(3),"push"); 
         ASSERT_EQ(strs->at(4),"6"); 
         ASSERT_EQ(strs->at(5),"push"); 
@@ -149,8 +149,8 @@ TEST(ByteCode,ifs){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),35);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"main:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"main0:"); 
         ASSERT_EQ(strs->at(3),"push"); 
         ASSERT_EQ(strs->at(4),"12"); 
         ASSERT_EQ(strs->at(5),"store"); 
@@ -194,8 +194,8 @@ TEST(ByteCode,whiles){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),34);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"main:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"main0:"); 
         ASSERT_EQ(strs->at(3),"push"); 
         ASSERT_EQ(strs->at(4),"0"); 
         ASSERT_EQ(strs->at(5),"store"); 
@@ -239,8 +239,8 @@ TEST(ByteCode,fors){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),34);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"main:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"main0:"); 
         ASSERT_EQ(strs->at(3),"startlocal"); 
         ASSERT_EQ(strs->at(4),"push"); 
         ASSERT_EQ(strs->at(5),"0"); 
@@ -283,15 +283,15 @@ TEST(ByteCode,functions){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),19);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
-        ASSERT_EQ(strs->at(2),"runner:"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
+        ASSERT_EQ(strs->at(2),"runner1:"); 
         ASSERT_EQ(strs->at(3),"store"); 
         ASSERT_EQ(strs->at(4),"i"); 
         ASSERT_EQ(strs->at(5),"load"); 
         ASSERT_EQ(strs->at(6),"i"); 
         ASSERT_EQ(strs->at(7),"print"); 
         ASSERT_EQ(strs->at(8),"return"); 
-        ASSERT_EQ(strs->at(9),"main:"); 
+        ASSERT_EQ(strs->at(9),"main0:"); 
         ASSERT_EQ(strs->at(10),"push"); 
         ASSERT_EQ(strs->at(11),"12"); 
         ASSERT_EQ(strs->at(12),"store"); 
@@ -299,7 +299,7 @@ TEST(ByteCode,functions){
         ASSERT_EQ(strs->at(14),"load"); 
         ASSERT_EQ(strs->at(15),"o"); 
         ASSERT_EQ(strs->at(16),"call"); 
-        ASSERT_EQ(strs->at(17),"runner"); 
+        ASSERT_EQ(strs->at(17),"runner1"); 
         ASSERT_EQ(strs->at(18),"halt"); 
 }
 
@@ -312,8 +312,8 @@ TEST(ByteCode,arrays){
         vector<string>* strs = byt.generateByteCode();
         int i=0;
         ASSERT_EQ(strs->at(i++),"call"); 
-        ASSERT_EQ(strs->at(i++),"main"); 
-        ASSERT_EQ(strs->at(i++),"main:"); 
+        ASSERT_EQ(strs->at(i++),"main0"); 
+        ASSERT_EQ(strs->at(i++),"main0:"); 
         ASSERT_EQ(strs->at(i++),"new");
         ASSERT_EQ(strs->at(i++),"list");
         ASSERT_EQ(strs->at(i++),"store");
@@ -362,7 +362,7 @@ TEST(ByteCode,casts){
         vector<string>* strs = byt.generateByteCode();
         ASSERT_EQ(strs->size(),6);
         ASSERT_EQ(strs->at(0),"call"); 
-        ASSERT_EQ(strs->at(1),"main"); 
+        ASSERT_EQ(strs->at(1),"main0"); 
         ASSERT_EQ(strs->at(2),"push"); 
         ASSERT_EQ(strs->at(3),"12.0"); 
         ASSERT_EQ(strs->at(4),"cast"); 
@@ -380,8 +380,8 @@ TEST(ByteCode,min){
         ASSERT_EQ(strs->size(),27);
         int i =0;
         ASSERT_EQ(strs->at(i++),"call"); 
-        ASSERT_EQ(strs->at(i++),"main"); 
-        ASSERT_EQ(strs->at(i++),"min:"); 
+        ASSERT_EQ(strs->at(i++),"main0"); 
+        ASSERT_EQ(strs->at(i++),"min2:"); 
         ASSERT_EQ(strs->at(i++),"store"); 
         ASSERT_EQ(strs->at(i++),"b"); 
         ASSERT_EQ(strs->at(i++),"store"); 
@@ -441,8 +441,8 @@ TEST(ByteCode,structs){
         ASSERT_EQ(strs->at(i++),"structdec"); 
         ASSERT_EQ(strs->at(i++),"Pos"); 
         ASSERT_EQ(strs->at(i++),"call"); 
-        ASSERT_EQ(strs->at(i++),"main");
-        ASSERT_EQ(strs->at(i++),"main:");
+        ASSERT_EQ(strs->at(i++),"main0");
+        ASSERT_EQ(strs->at(i++),"main0:");
         ASSERT_EQ(strs->at(i++),"new");
         ASSERT_EQ(strs->at(i++),"Pos");
         ASSERT_EQ(strs->at(i++),"store");
@@ -498,7 +498,7 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"structdec"); 
         ASSERT_EQ(strs->at(i++),"Pos"); 
         ASSERT_EQ(strs->at(i++),"call"); 
-        ASSERT_EQ(strs->at(i++),"main");
+        ASSERT_EQ(strs->at(i++),"main0");
 
         ASSERT_EQ(strs->at(i++),"Pos:");
         ASSERT_EQ(strs->at(i++),"loadclass");
@@ -524,7 +524,7 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"this");
         ASSERT_EQ(strs->at(i++),"return");
 
-        ASSERT_EQ(strs->at(i++),"Pos.xup:");
+        ASSERT_EQ(strs->at(i++),"Pos.xup0:");
         ASSERT_EQ(strs->at(i++),"loadclass");
         ASSERT_EQ(strs->at(i++),"store");
         ASSERT_EQ(strs->at(i++),"this");
@@ -538,7 +538,7 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"return");
 
 
-        ASSERT_EQ(strs->at(i++),"main:");
+        ASSERT_EQ(strs->at(i++),"main0:");
         ASSERT_EQ(strs->at(i++),"push");
         ASSERT_EQ(strs->at(i++),"12");
         ASSERT_EQ(strs->at(i++),"push");
@@ -550,7 +550,7 @@ TEST(ByteCode,classes){
         ASSERT_EQ(strs->at(i++),"load");
         ASSERT_EQ(strs->at(i++),"position");
         ASSERT_EQ(strs->at(i++),"classcall");
-        ASSERT_EQ(strs->at(i++),"xup");
+        ASSERT_EQ(strs->at(i++),"xup0");
 
 
 }

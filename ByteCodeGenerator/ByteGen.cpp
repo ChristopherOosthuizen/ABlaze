@@ -17,7 +17,7 @@ vector<string>* ByteGen::generateByteCode(){
                 }
         }
         toCommand("call");
-        toCommand("main");
+        toCommand("main0");
         bodyToByte(m_ast);
         return m_lines;
 }
@@ -102,7 +102,7 @@ void ByteGen::dotToByte(Dot* dot){
                 argsToBye(call->m_args);
                 
                 toCommand("classcall");
-                toCommand(call->m_name->m_token->m_symbol);
+                toCommand(call->m_name->m_token->m_symbol+to_string(call->m_args->size()));
         }
 }
 
@@ -162,7 +162,7 @@ void ByteGen::classFunc(string name, Body* body){
         string subname =call->m_name->m_token->m_symbol; 
         string address;
         if(name != subname)
-                address = name +"."+subname+":";
+                address = name +"."+subname+to_string(call->m_args->size())+":";
         else 
                 address = name+":";
        toCommand(address);
@@ -325,7 +325,7 @@ void ByteGen::functionToByte(Body* body){
 
         FunctionCall* control = (FunctionCall*)((Function*)body->m_control)->m_call;
         string name = control->m_name->m_token->m_symbol; 
-        toCommand(name+":");  
+        toCommand(name+to_string(control->m_args->size())+":");  
         for(int i=control->m_args->size()-1; i>=0 ;i--){
                 expressionToByte(control->m_args->at(i));
         }
@@ -359,5 +359,5 @@ void ByteGen::functionCallToByte(FunctionCall* call){
         }
         
         toCommand("call");
-        toCommand(symb);
+        toCommand(symb+to_string(call->m_args->size()));
 }
