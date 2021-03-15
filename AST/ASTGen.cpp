@@ -233,7 +233,7 @@ Expression* ASTGen::decleration(){
        Literal* type = new Literal(next());
        bool isArr = eat(TokenType::COLON); 
        if(!equals(TokenType::IDEN))
-                ErrorThrower::illgalIdentifier(peek()->m_line,peek()->m_symbol);
+                ErrorThrower::error(peek()->m_line,"Illigal idenifier: "+peek()->m_symbol);
        Expression* name = literal();
        Expression* value = nullptr;
        if(eat(TokenType::EQUAL)){

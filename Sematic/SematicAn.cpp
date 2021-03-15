@@ -52,7 +52,7 @@ void SematicAn::check(Expression* expr){
 		else{
 			Literal* lit = (Literal*)ins->m_value;
 			if(m_structs.count(lit->m_token->m_symbol) == 0){
-				ErrorThrower::unNamedError("Undefined struct",lit->m_token->m_line);
+				ErrorThrower::error(lit->m_token->m_line,"Undefinded class refrence" );
 			}
 		}
 	}
@@ -90,7 +90,7 @@ void SematicAn::checkLiteral(Literal* literal){
 	Token* token = literal->m_token;	
 	if(token->m_type == TokenType::IDEN){
 		if(!containsVar(token->m_symbol)){
-			ErrorThrower::unIntiazlizedVarible(token->m_line,token->m_symbol);
+			ErrorThrower::error(token->m_line,"uninitilized variable: "+token->m_symbol);
 		}
 	}
 }
@@ -178,7 +178,7 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	Token* token = functionCall->m_name->m_token; 
 	string name =token->m_symbol;  
 	if(m_functions.count(name) ==0 )
-		ErrorThrower::unIntiazlizedVarible(token->m_line,name);
+		ErrorThrower::error(token->m_line, "Undefined function: "+name);
 	for(int i=0; i< functionCall->m_args->size(); i++){
 		check(functionCall->m_args->at(i));
 	}
@@ -194,7 +194,7 @@ void SematicAn::checkDecleration(Decleration* decleration){
 
 		if(type->m_type ==TokenType::IDEN){
 			if(m_structs.count(type->m_symbol) ==0){
-				ErrorThrower::unNamedError("Unkown type",type->m_line);
+				ErrorThrower::error(type->m_line,"Unkown type");
 			}
 		}
 	}else{

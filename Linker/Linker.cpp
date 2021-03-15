@@ -19,7 +19,7 @@ void Linker::findAllPaths(Body* body){
             ifstream ifile;
             ifile.open(path);
             if(!ifile){
-                ErrorThrower::unNamedError("File "+path+" does not exist",0);
+                ErrorThrower::error(lit->m_token->m_line,"File "+path+" does not exist");
                 ifile.close();
                 i++;
                 continue;

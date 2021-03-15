@@ -170,7 +170,9 @@ Token* Lexer::next() {
 			}else if(isLetter(current)){
 				return Iden();
 			}
-		  ErrorThrower::invalidToken(current,m_line);
+			string chas ="";
+			chas += current;
+		  ErrorThrower::error(m_line,"Unkown character: "+chas);
 		  return new Token(TokenType::END, "", m_line);
     }
 	
@@ -204,13 +206,14 @@ bool Lexer::isAtEnd() {
 Token* Lexer::strings(char ender,TokenType type){
 	int start = m_pos;	
 	bool isEsc = false;
+	int line = m_line;
 	for(;!peekIs('\0') &&!peekIs(ender)||isEsc; m_pos++){ 
 		if(peekIs('\n'))
 			m_line++;
 		isEsc = m_input.at(m_pos) == '\\';
 	}
 
-	if(isAtEnd())ErrorThrower::unterminatedString(m_line);
+	if(isAtEnd())ErrorThrower::error(line,"Unterminated string");
 	
 	m_pos++;
 	return new Token(type,m_input.substr(start, (m_pos-1)-start),m_line);
@@ -227,7 +230,7 @@ Token* Lexer::Double(){
 			m_pos++;
 			if(peekIs('.') ){
 				if(hasDot)
-					ErrorThrower::doubleDot(m_line);
+					ErrorThrower::error(m_line,"Double can not contain two dots");
 				else 
 					hasDot =true;
 			}
