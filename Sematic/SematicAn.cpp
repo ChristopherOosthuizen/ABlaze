@@ -7,14 +7,18 @@
 SematicAn::SematicAn(Body* body){
 	m_body  = body;
 	m_level =0;
-	m_functions["delete"] = TypeInfo("void",TokenType::VOID,false);
-	m_functions["input"] = TypeInfo("string",TokenType::STRING,false);
-	m_functions["append"] = TypeInfo("void",TokenType::VOID,false);
-	m_functions["deleteFile"]= TypeInfo("void",TokenType::VOID,false);
-	m_functions["createFile"]= TypeInfo("void",TokenType::VOID,false);
-	m_functions["exists"]= TypeInfo("int",TokenType::INT,false);
-	m_functions["writeFile"]= TypeInfo("void",TokenType::VOID,false);
-	m_functions["readFile"]= TypeInfo("string",TokenType::LIST,true);
+	string argsMes = " with args count ";
+	m_functions["delete"+argsMes+"2"] = TypeInfo("void",TokenType::VOID,false);
+	m_functions["input"+argsMes+"0"] = TypeInfo("string",TokenType::STRING,false);
+	m_functions["append"+argsMes+"2"] = TypeInfo("void",TokenType::VOID,false);
+	m_functions["deleteFile"+argsMes+"1"]= TypeInfo("void",TokenType::VOID,false);
+	m_functions["createFile"+argsMes+"1"]= TypeInfo("void",TokenType::VOID,false);
+	m_functions["exists"+argsMes+"1"]= TypeInfo("int",TokenType::INT,false);
+	m_functions["writeFile"+argsMes+"2"]= TypeInfo("void",TokenType::VOID,false);
+	m_functions["readFile"+argsMes+"1"]= TypeInfo("string",TokenType::LIST,true);
+	m_functions["sin"+argsMes+"1"]= TypeInfo("double",TokenType::DOUBLE,true);
+	m_functions["cos"+argsMes+"1"]= TypeInfo("double",TokenType::DOUBLE,true);
+	m_functions["tan"+argsMes+"1"]= TypeInfo("double",TokenType::DOUBLE,true);
 }
 
 void SematicAn::analize(){

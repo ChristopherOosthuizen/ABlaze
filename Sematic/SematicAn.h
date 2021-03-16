@@ -35,6 +35,7 @@ class SematicAn{
 	Body* m_body;
 	vector<Lock> m_vars;
 	map<string,TypeInfo> m_functions;
+	map<string,map<string,TypeInfo>> m_structsFunctions;
 	map<string,map<string,TypeInfo>> m_structs;
 	int m_level;
 	public:
