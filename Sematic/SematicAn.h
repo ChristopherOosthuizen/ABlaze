@@ -18,7 +18,6 @@ class TypeInfo{
 		}
 		TypeInfo(){}
 };
-
 class Lock{
 	public:
 		int m_level;

@@ -118,3 +118,19 @@ TEST(Sematic,Functions){
 	ASSERT_EQ(ErrorThrower::errors->size(),2);
 	
 }
+
+// test to see weather the ast can catch wrong typed functions and weather it can handle functions
+TEST(Sematic,paranLength){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "void type(int a, int b){println a+b;}int main(){ type(12,14); type(12);}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
+	
+}

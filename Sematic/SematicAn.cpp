@@ -169,14 +169,17 @@ void SematicAn::controlStatements(Expression* expression){
 
 void SematicAn::checkFunction(Function* expr){
 	Token* token =expr->m_type->m_token; 
-	m_functions[expr->m_call->m_name->m_token->m_symbol] =  TypeInfo(token->m_symbol,token->m_type,false);
+	FunctionCall* call =expr->m_call; 
+	string name =call->m_name->m_token->m_symbol+" with args count "+to_string(call->m_args->size());  
+
+	m_functions[name] =  TypeInfo(token->m_symbol,token->m_type,false);
 	checkFunctionCall(expr->m_call);
 }
 
 
 void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	Token* token = functionCall->m_name->m_token; 
-	string name =token->m_symbol;  
+	string name =token->m_symbol+" with args count "+to_string(functionCall->m_args->size());  
 	if(m_functions.count(name) ==0 )
 		ErrorThrower::error(token->m_line, "Undefined function: "+name);
 	for(int i=0; i< functionCall->m_args->size(); i++){
