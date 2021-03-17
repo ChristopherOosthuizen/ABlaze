@@ -1,0 +1,12 @@
+- title: Documentation
+  url: docs
+  links:
+    - title: "Getting Started"
+      url: "docs/getting-started"
+      children:
+        - title: Installation 
+          url: "docs/getting-started#getting-started"
+        - title: Hello World 
+          url: "docs/getting-started#Hello-World"
+    - title: "About"
+      url: "about"
