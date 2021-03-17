@@ -63,6 +63,9 @@ ABlaze is a multipurpose programming language with little to no emphasis in any 
 ## Docs
 Documentation and additional information can be found [here](https://christopheroosthuizen.github.io/ABlaze/).
 
+## Contributing
+If you want to contribute please do not hesitate to reach out at through one of the contact methods and make a pull request.
+
 ## Licence 
 Distributed under the MIT License See `LICENCE` for more information.  
 
