@@ -87,7 +87,9 @@ void Vm::step(){
                 case ByteType::XOR:
                 case ByteType::NOT:
                 case ByteType::AND:
+                case ByteType::AND_AND:
                 case ByteType::OR:
+                case ByteType::OR_OR:
                 case ByteType::ISGT:
                 case ByteType::EQUAL:
                 case ByteType::ISLT:
@@ -298,6 +300,19 @@ void Vm::cast(){
                 val.m_type = ByteType::CHAR;                
         }else if(name == "string"){
                 val.m_type=ByteType::STRING;
+        }else if(name =="bool"){
+                if(val.m_type == ByteType::STRING){
+                        int value = val.m_val.m_string== "true";
+                        val.m_val.m_double= value;
+                        val.m_val.m_int = value;
+                        val.m_val.m_char = value;
+                }
+                if(val.m_val.m_int == 1)
+                        val.m_val.m_string = "true";
+                else
+                        val.m_val.m_string = "false";
+                val.m_type = ByteType::BOOL;                
+ 
         }
         m_stack.push_back(val);
 
@@ -494,17 +509,27 @@ void Vm::jump(){
 
 void Vm::pushToStack(){
         double value =0;
-        if(m_tokens[m_pos]->m_type == ByteType::NIL){
+        ByteToken* token = nextToken();
+        if(token->m_type ==ByteType::TRUE){
+                DataVal val(ByteType::BOOL,Val(1,1,1,"true"));
+                m_stack.push_back(val);
+                return;
+
+        }
+        if(token->m_type ==ByteType::FALSE){
+                DataVal val(ByteType::BOOL,Val(0,0,0,"false"));
+                m_stack.push_back(val);
+                return;
+
+        }
+        if(token->m_type== ByteType::NIL){
                 DataVal val(ByteType::NIL,Val(0,0,0,"nil"));
-                m_pos++;
                 m_stack.push_back(val);
                 return;
         }
-        if(m_tokens[m_pos]->m_type != ByteType::STRING)
-                value = stod(m_tokens[m_pos]->m_symbol); 
-        ByteToken* token = m_tokens[m_pos];
+        if(token->m_type != ByteType::STRING)
+                value = stod(token->m_symbol); 
         DataVal val(token->m_type,Val(token->m_value, value ,token->m_value,token->m_symbol));
-        m_pos++;
         m_stack.push_back(val);
 }
 
@@ -641,7 +666,7 @@ void Vm::binOP(ByteType type){
                         result = 0;
 
                 }
-                DataVal val(ByteType::INT,Val(result,-1,-1,to_string(result)));
+                DataVal val(ByteType::BOOL,Val(result,result,result,result ==1?"true":"false"));
                 m_stack.push_back(val);
 
                 return;
@@ -656,6 +681,7 @@ void Vm::binOP(ByteType type){
                 binOPDouble(type, one.m_val.m_double , two.m_val.m_double);
                 return;
         }
+        ByteType tip= ByteType::INT;
 
         switch(type){
                 case ByteType::ADD:
@@ -673,28 +699,36 @@ void Vm::binOP(ByteType type){
 
                 case ByteType::DIVIDE:
                         result = two.m_val.m_int / one.m_val.m_int;break;
-                case ByteType::XOR:
+                case ByteType::XOR: tip = two.m_type == ByteType::BOOL && one.m_type == ByteType::BOOL ? ByteType::BOOL: ByteType::INT;
                         result = two.m_val.m_int ^ one.m_val.m_int; break;
+                case ByteType::AND_AND: tip = ByteType::BOOL;
                 case ByteType::AND:
                         result = two.m_val.m_int & one.m_val.m_int; break;
+                case ByteType::OR_OR:tip = ByteType::BOOL;
                 case ByteType::OR:
                         result = two.m_val.m_int | one.m_val.m_int; break;
-                case ByteType::ISGT:
+                case ByteType::ISGT: tip = ByteType::BOOL;
                         result = two.m_val.m_int > one.m_val.m_int; break;
-                case ByteType::ISLT:
+                case ByteType::ISLT: tip = ByteType::BOOL;
                         result = two.m_val.m_int < one.m_val.m_int; break;
-                case ByteType::ISLE:
+                case ByteType::ISLE: tip = ByteType::BOOL;
                         result = two.m_val.m_int <= one.m_val.m_int; break;
-                case ByteType::ISGE:
+                case ByteType::ISGE: tip = ByteType::BOOL;
                         result = two.m_val.m_int >= one.m_val.m_int; break;
 
-                case ByteType::EQUAL:
+                case ByteType::EQUAL: tip = ByteType::BOOL;
                         result = two.m_val.m_int == one.m_val.m_int; break;
 
 
         }
-        ByteType tip= ByteType::INT;
-        DataVal val(tip,Val(result,result,result,to_string(result)));
+        string symbol = to_string(result);
+        if(tip == ByteType::BOOL){
+                if(result ==1)
+                        symbol="true";
+                else
+                        symbol="false";
+        }
+        DataVal val(tip,Val(result,result,result,symbol));
         m_stack.push_back(val);
 
 }
@@ -731,16 +765,21 @@ void Vm::binOPDouble(ByteType type, double one , double two){
 
         }
         ByteType typer = ByteType::DOUBLE;
+        string symbol = to_string(result);
         switch(type){
                 case ByteType::ISGT: 
                 case ByteType::ISLT: 
                 case ByteType::ISLE: 
                 case ByteType::EQUAL:
-                case ByteType::ISGE: typer = ByteType::INT;
+                case ByteType::ISGE: typer = ByteType::BOOL;
+                                        if(result ==1)
+                                                symbol = "true";
+                                        else
+                                                symbol ="false";
 
 
         }
-        DataVal val(typer,Val(result,result,result,to_string(result)));
+        DataVal val(typer,Val(result,result,result,symbol));
         m_stack.push_back(val);
  
 }

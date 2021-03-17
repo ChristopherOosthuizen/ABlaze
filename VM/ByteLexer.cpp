@@ -16,9 +16,9 @@ ByteLexer::ByteLexer(const string& input){
         m_types["xor"] = ByteType::XOR;
         m_types["not"] = ByteType::NOT;
         m_types["and"] = ByteType::AND;
-        m_types["and_and"] = ByteType::AND;
+        m_types["and_and"] = ByteType::AND_AND;
         m_types["or"] = ByteType::OR;
-        m_types["or_or"] = ByteType::OR;
+        m_types["or_or"] = ByteType::OR_OR;
         m_types["isgt"] = ByteType::ISGT;
         m_types["islt"] = ByteType::ISLT;
         m_types["isle"] = ByteType::ISLE;
@@ -62,6 +62,8 @@ ByteLexer::ByteLexer(const string& input){
         m_types["neg"] = ByteType::NEG;
         m_types["dup"] = ByteType::DUP;
         m_types["pop"] = ByteType::POP;
+        m_types["true"] = ByteType::TRUE;
+        m_types["false"] = ByteType::FALSE;
         m_types["select"] = ByteType::SELECT;
 }
 

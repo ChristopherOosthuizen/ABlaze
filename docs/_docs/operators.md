@@ -57,20 +57,19 @@ Like any good programming language ablaze supports boolean operations
 ABlaze supports the following
 ```
 int main(){
-    println 1&&1; # AND
-    println 1||1; # OR
-    println 1^1; # XOR
-    println !1; #NOT
+    println true&&true; # AND
+    println true||true; # OR
+    println true^true; # XOR
+    println !true; #NOT
 }
 ```
 outputting 
 ```
-1
-1
-0
-0
+true
+true
+false
+false
 ```
->Note I'm using 1 as true and 0 as false
 
 I'm writing this with the assumption that ABlaze won't be anyone's first programming language but if you are unfamiliar with boolean operations.
 
@@ -93,12 +92,12 @@ int main(){
 ```
 output
 ```
-1
-0
-1
-0
-0
-1
+true
+false
+true
+false
+false
+true
 ```
 ## Bitwise 
 ABlaze also supports a few bitwise operators 
