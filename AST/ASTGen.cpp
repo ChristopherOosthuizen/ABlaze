@@ -244,6 +244,10 @@ Expression* ASTGen::decleration(){
                 op = nextLit();
 
                 value = expression();
+       }else if(isEquals()){
+               op = nextLit();
+               value = expression();
+               ErrorThrower::error(op->m_token->m_line,"Illigal use of specilized equals in decleration");
        }
        return new Decleration(type,name,op,value,true,isArr);
 }

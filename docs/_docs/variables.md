@@ -90,5 +90,6 @@ int main(){
     char j = (char)c;
     string s = (string)true;
 }
-
 ```
+
+Congratulations you have learned about variables in ABlaze!
