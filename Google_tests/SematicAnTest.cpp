@@ -67,7 +67,6 @@ TEST(Sematic,structs){
 
 
 
-/*
 //check to see if the sematic anlisis will throw a error if the wrong type of decleration is used on a varible
 TEST(SematicAn,wrongUse){
 	ErrorThrower::hasError = false;
@@ -79,9 +78,10 @@ TEST(SematicAn,wrongUse){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),5);
+	ASSERT_EQ(ErrorThrower::errors->size(),2);
 }
 
+/*
 //Test weather the Determine type functions can correctly deduce types
 TEST(SematicAn,typer){
 	ErrorThrower::hasError = false;

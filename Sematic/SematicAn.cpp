@@ -21,6 +21,47 @@ SematicAn::SematicAn(Body* body){
 	m_functions["tan"+argsMes+"1"]= TypeInfo("double",TokenType::DOUBLE,true);
 }
 
+TokenType SematicAn::getTypeBin(BinOP*  op){
+	TokenType os = op->m_op->m_type;
+	switch(os){
+		case TokenType::TIMES_TIMES:
+		case TokenType::DIVIDE_DIVIDE:return TokenType::DOUBLE;
+		case TokenType::OR_OR:
+		case TokenType::AND_AND:
+		case TokenType::LESS:
+		case TokenType::GREATER:
+		case TokenType::MORE_EQUAL:
+		case TokenType::LESS_EQUAL:return TokenType::BOOL;
+	}
+	TokenType left = getType(op->m_left);
+	TokenType right = getType(op->m_right);
+	if(left == TokenType::STRING || right == TokenType::STRING){
+		return TokenType::STRING;
+	}else if(left == TokenType::DOUBLE || right == TokenType::DOUBLE){
+		return TokenType::DOUBLE;
+	}else if(left == TokenType::INT || right == TokenType::INT){
+		return TokenType::INT;
+	}else if(right == TokenType::CHAR ||left == TokenType::CHAR ){
+		return TokenType::INT;
+	}else if(right == TokenType::BOOL || left == TokenType::BOOL){
+		return TokenType::INT;
+	}
+	return TokenType::VAR;
+}
+
+TokenType SematicAn::getType(Expression* expression){
+	if(expression == nullptr)
+		return TokenType::VAR;
+	if(expression->name() == "BinOP"){
+		return  getTypeBin((BinOP*)expression);
+	}else if(expression->name() == "Cast"){
+		return ((Cast*)expression)->m_iden->m_token->m_type;
+	}else if(expression->name() == "Literal"){
+		return ((Literal*)expression)->m_token->m_type;
+	}
+	return TokenType::VAR;
+}
+
 void SematicAn::analize(){
 	for(int i=0; i< m_body->m_lines->size(); i++){
 		if(m_body->m_lines->at(i)->name() == "Body"){
@@ -191,11 +232,39 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	}
 }
 
+int SematicAn::score(TokenType type){
+	switch(type){
+		case TokenType::STRING:
+		case TokenType::IDEN_STRING:return 0;
+		case TokenType::DOUBLE:
+		case TokenType::IDEN_DOUBLE: return 1;
+		case TokenType::IDEN_INT:
+		case TokenType::INT:
+		case TokenType::BOOL:
+		case TokenType::IDEN_BOOL: return 2;
+		case TokenType::IDEN_CHAR:
+		case TokenType::CHAR: return 3;
+	}
+	return -1;
+}
+
+void SematicAn::checkTypeEquality(int line, TokenType one, TokenType two){
+	if(one == TokenType::VAR || two == TokenType::VAR)return;
+	if(one == TokenType::IDEN_STRING)return;
+	int scoreSec = score(one);
+	int scoreS = score(two);
+	if(scoreS == -1 || scoreSec == -1) return;
+	if(scoreSec > scoreS){
+		ErrorThrower::error(line,"Can not convert data type please try casting");
+	}
+}
+
 void SematicAn::checkDecleration(Decleration* decleration){
 	
 	Token* name = ((Literal*)decleration->m_name)->m_token;
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
+		checkTypeEquality(type->m_line,type->m_type,getType(decleration->m_value));
 
 		m_vars.push_back(Lock(m_level,name->m_symbol,TypeInfo(type->m_symbol,type->m_type,decleration->m_isArray)));
 
@@ -206,6 +275,11 @@ void SematicAn::checkDecleration(Decleration* decleration){
 		}
 	}else{
 		check(decleration->m_name);
+		if(decleration->m_name->name() == "Literal"){
+			Token* token =((Literal*)decleration->m_name)->m_token; 
+			checkTypeEquality(token->m_line,token->m_type,getType(decleration->m_value));
+		}
+
 
 	}
 	check(decleration->m_value);
