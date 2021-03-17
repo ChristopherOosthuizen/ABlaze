@@ -23,6 +23,18 @@
           url: "docs/operators#string-operations"
         - title: Order of Operations 
           url: "docs/operators#order-of-operations"
+    - title: "Variables"
+      url: "docs/variables"
+      children:
+        - title: Decleration
+          url: "docs/variables#decleration"
+        - title: Assignment
+          url: "docs/variables#assignment"
+        - title: Types
+          url: "docs/variables#types"
+        - title: Casting
+          url: "docs/variables#casting"
+
 
 
 

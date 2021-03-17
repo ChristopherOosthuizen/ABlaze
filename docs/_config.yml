@@ -26,8 +26,8 @@ baseurl: "/ABlaze" # the subpath of your site, e.g. /blog
 url: "https://christopherOosthuizen.github.io" # the base hostname & protocol for your site
 
 # Social (First three Required)
-repo: "https://github.com/ChristopherOosthuizen/ABlaze.git"
-github_user: "christopherOosthuizen"
+repo: "https://github.com/ChristopherOosthuizen/ABlaze"
+github_user: "ChristopherOosthuizen"
 github_repo: "ABlaze"
 
 # Optional

@@ -212,6 +212,7 @@ bool ASTGen::isEquals(){
                 case TokenType::TIMES_EQUAL:
                 case TokenType::DIVIDE_EQUAL:
                 case TokenType::PLUS_EQUAL:
+                case TokenType::MOD_EQUAL:
                 case TokenType::MINUS_EQUAL: return 1;
         }
         return 0;
@@ -238,10 +239,13 @@ Expression* ASTGen::decleration(){
                 ErrorThrower::error(peek()->m_line,"Illigal idenifier: "+peek()->m_symbol);
        Expression* name = literal();
        Expression* value = nullptr;
-       if(eat(TokenType::EQUAL)){
+       Literal*  op= nullptr;
+       if(equals(TokenType::EQUAL)){
+                op = nextLit();
+
                 value = expression();
        }
-       return new Decleration(type,name,nullptr,value,true,isArr);
+       return new Decleration(type,name,op,value,true,isArr);
 }
 
 //return a asseminet expression

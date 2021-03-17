@@ -90,7 +90,7 @@ Token* Lexer::next() {
     char current = m_input.at(m_pos++);
     switch (current) {
 		case '%':
-		if(consume('='))return new Token(TokenType::PLUS_PLUS,"%=",m_line);
+		if(consume('='))return new Token(TokenType::MOD_EQUAL,"%=",m_line);
 		return new Token(TokenType::REMAND,"%",m_line);
 
         case '+':

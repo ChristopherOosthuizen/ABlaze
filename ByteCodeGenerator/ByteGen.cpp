@@ -298,7 +298,29 @@ void ByteGen::forToByte(Body* body,string line){
 void ByteGen::decToCommand(Decleration* dec, bool isfunc){
         if(dec->m_value != nullptr){
 
-                expressionToByte(dec->m_value);
+
+                TokenType type = dec->m_op->m_token->m_type;
+
+                if(type != TokenType::EQUAL){
+                        string name =((Literal*)dec->m_name)->m_token->m_symbol; 
+
+                        toCommand("load");
+                        toCommand(name);
+                        expressionToByte(dec->m_value);
+
+                        switch(type){
+                                case TokenType::PLUS_EQUAL:toCommand("add");break; 
+                                case TokenType::MINUS_EQUAL:toCommand("minus");break; 
+                                case TokenType::DIVIDE_EQUAL:toCommand("divide");break; 
+                                case TokenType::TIMES_EQUAL:toCommand("times");break; 
+                                case TokenType::MOD_EQUAL:toCommand("mod");break; 
+                        }
+
+                }else 
+                        expressionToByte(dec->m_value);
+
+
+
         }else if(!isfunc){
                 toCommand("push");
                 toCommand("nil");
@@ -331,26 +353,14 @@ void ByteGen::decToCommand(Decleration* dec, bool isfunc){
                 toCommand("set");
                 return;
         }
-
         string name =((Literal*)dec->m_name)->m_token->m_symbol; 
+
         if(dec->m_initalize)
                 toCommand("store");
         else{
-                TokenType type = dec->m_op->m_token->m_type;
-                if(type != TokenType::EQUAL){
-                        toCommand("load");
-                        toCommand(name);
-                        switch(type){
-                                case TokenType::PLUS_EQUAL:toCommand("plus");break; 
-                                case TokenType::MINUS_EQUAL:toCommand("minus");break; 
-                                case TokenType::DIVIDE_EQUAL:toCommand("divide");break; 
-                                case TokenType::TIMES_EQUAL:toCommand("times");break; 
-                                case TokenType::MOD_EQUAL:toCommand("mod");break; 
-                        }
-
-                }
                 toCommand("asi");
-        }
+
+       }
         toCommand(name); 
 
 }
