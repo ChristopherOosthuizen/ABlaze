@@ -116,6 +116,8 @@ Token* Lexer::next() {
         case '&':
 		if(consume('&'))return new Token(TokenType::AND_AND,"&&",m_line);
 		return new Token(TokenType::AND,"&",m_line);
+		case '^':
+		return new Token(TokenType::XOR,"^",m_line);
 
         case '|':
 		if(consume('|'))return new Token(TokenType::OR_OR,"||",m_line);

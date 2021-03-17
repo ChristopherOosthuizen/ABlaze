@@ -242,6 +242,9 @@ void ByteGen::unToByte(Unary* unary){
         if(type == TokenType::MINUS){
                 toCommand("neg");
                 return;
+        }else if(type == TokenType::NOT){
+                toCommand("not");
+                return;
         }
         toCommand("push");
         toCommand("1");

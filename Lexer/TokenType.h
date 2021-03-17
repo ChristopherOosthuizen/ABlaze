@@ -66,10 +66,10 @@ static string typeToString(TokenType type){
 		case TokenType::DIVIDE_EQUAL :return "divide_equal";
 		case TokenType::LESS_EQUAL :return "isle";
 		case TokenType::MORE_EQUAL :return "isge";
-		case TokenType::NOT_EQUAL :return "not_equal";
+		case TokenType::NOT_EQUAL :return "not\nequal_equal";
 		case TokenType::MOD_EQUAL :return "mod_equal";
-		case TokenType::AND :return "and";
-		case TokenType::OR :return "or";
+		case TokenType::AND :return "and_and";
+		case TokenType::OR :return "or_or";
 		case TokenType::XOR :return "xor";
 		case TokenType::NOT :return "not";
 		case TokenType::GREATER :return "isgt";

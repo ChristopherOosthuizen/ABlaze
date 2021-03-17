@@ -8,5 +8,7 @@
           url: "docs/getting-started#getting-started"
         - title: Hello World 
           url: "docs/getting-started#Hello-World"
+    - title: "Operators"
+      url: "docs/operators"
     - title: "About"
       url: "about"

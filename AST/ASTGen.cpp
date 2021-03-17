@@ -122,9 +122,11 @@ int ASTGen::order(Token* token){
         if(token == NULL)
                 return -1;
         switch(token->m_type){
-               case TokenType::XOR:
                 case TokenType::AND_AND:
-                case TokenType::OR_OR: return 6;
+                case TokenType::OR_OR: return 7;
+               case TokenType::XOR:
+                case TokenType::AND:
+                case TokenType::OR: return 6; 
                 case TokenType::LESS_EQUAL:
                 case TokenType::MORE_EQUAL:
                 case TokenType::GREATER:
@@ -218,7 +220,7 @@ bool ASTGen::isEquals(){
 //return the next general ststement
 Expression* ASTGen::expression(){
 
-        Expression* expression = binaryOperation(7); 
+        Expression* expression = binaryOperation(8); 
         if(isEquals()){
                 expression = assignment(expression);
         }else if(equals(TokenType::PLUS_PLUS) || equals(TokenType::MINUS_MINUS)){
