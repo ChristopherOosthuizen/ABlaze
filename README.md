@@ -39,20 +39,29 @@ cd ABlaze/
 sudo make install
 ```
 
-### Running
-1. Compile Program 
+### Hello World 
+1. Create a program
+
+HelloWorld.abz
 ```
-ablaze [filename]
+int main(){
+    println "Hello World";
+}
 ```
-2. Run Program 
+2. Compile Program 
+```
+ablaze HelloWorld.abz 
+```
+3. Run Program 
 ```
 ablaze -r a.laze
 ```
 ## Usage
 
-ABlaze is a multipurpose programming language with little to no enfisis in any direction. This can not be used for webdev that I have seen and can not be used for low level programming. But can be used for basic and scripting tasks. 
+ABlaze is a multipurpose programming language with little to no emphasis in any direction. This can not be used for webdev that I have seen and can not be used for low level programming. But can be used for basic and scripting tasks. 
 
-
+## Docs
+Documentation and additional information can be found [here](https://christopheroosthuizen.github.io/ABlaze/).
 
 ## Licence 
 Distributed under the MIT License See `LICENCE` for more information.  
