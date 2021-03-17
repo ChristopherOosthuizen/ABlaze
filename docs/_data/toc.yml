@@ -10,5 +10,23 @@
           url: "docs/getting-started#Hello-World"
     - title: "Operators"
       url: "docs/operators"
+      children:
+        - title: Math 
+          url: "docs/operators#math"
+        - title: Boolean 
+          url: "docs/operators#boolean"
+        - title: Equality
+          url: "docs/operators#equality"
+        - title: Bitwise 
+          url: "docs/operators#bitwise"
+        - title: String operations
+          url: "docs/operators#string-operations"
+        - title: Order of Operations 
+          url: "docs/operators#order-of-operations"
+
+
+
+
+
     - title: "About"
       url: "about"

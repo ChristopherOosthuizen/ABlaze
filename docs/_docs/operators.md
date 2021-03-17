@@ -1,5 +1,5 @@
 ---
-title: operators 
+title: Operators 
 tags: 
  - ABlaze 
  - DataTypes
