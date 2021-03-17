@@ -102,10 +102,11 @@ static string typeToString(TokenType type){
 		case TokenType::IF : return "if";  
 		case TokenType::FOR : return "for";  
 		case TokenType::WHILE : return "while";  
-		case TokenType::IDEN_INT : return "iden_int";  
-		case TokenType::IDEN_BOOL : return "iden_bool";  
-		case TokenType::IDEN_STRING : return "iden_string";  
-		case TokenType::IDEN_DOUBLE : return "iden_double";  
+		case TokenType::IDEN_INT : return "int";  
+		case TokenType::IDEN_BOOL : return "bool";  
+		case TokenType::IDEN_STRING : return "string";  
+		case TokenType::IDEN_CHAR: return "char";  
+		case TokenType::IDEN_DOUBLE : return "double";  
 		case TokenType::ELSE : return "else";  
 		case TokenType::NEW : return "new";  
 		case TokenType::LEN: return "len";

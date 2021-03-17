@@ -281,6 +281,7 @@ void Vm::cast(){
                         val.m_val.m_int = value;
                         val.m_val.m_char = value;
                 }
+                val.m_val.m_string= to_string(val.m_val.m_int);
                 val.m_type = ByteType::INT;                
         }else if(name == "double"){
               if(val.m_type == ByteType::STRING){
@@ -289,6 +290,8 @@ void Vm::cast(){
                         val.m_val.m_int = (int)value;
                         val.m_val.m_char = (int)value;
                 }
+                val.m_val.m_string= to_string(val.m_val.m_double);
+
                 val.m_type = ByteType::DOUBLE;                
         }else if(name == "char"){
                 if(val.m_type == ByteType::STRING){
@@ -297,6 +300,9 @@ void Vm::cast(){
                         val.m_val.m_int = value;
                         val.m_val.m_char = value;
                 }
+                string res;
+                res +=(char)val.m_val.m_char;
+                val.m_val.m_string = res;
                 val.m_type = ByteType::CHAR;                
         }else if(name == "string"){
                 val.m_type=ByteType::STRING;

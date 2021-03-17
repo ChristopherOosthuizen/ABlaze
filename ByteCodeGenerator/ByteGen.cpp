@@ -13,7 +13,7 @@ vector<string>* ByteGen::generateByteCode(){
 
                         structDec((Body*)(m_ast->m_lines->at(i)));
                 }else if(m_ast->m_lines->at(i)->name() == "Decleration"){
-                       decToCommand((Decleration*)(m_ast->m_lines->at(i)) ); 
+                       decToCommand((Decleration*)(m_ast->m_lines->at(i)) ,false); 
                 }
         }
         toCommand("call");
@@ -29,7 +29,7 @@ void ByteGen::toCommand(const string& com){
 void ByteGen::expressionToByte(Expression* expr){
         string name = expr->name(); 
         if(name == "Decleration"){
-                decToCommand((Decleration*)expr);
+                decToCommand((Decleration*)expr,false);
        }else if(name == "BinOP"){
                 ByteGen::binToCommand((BinOP*)expr);
         }else if(name =="FunctionCall"){
@@ -188,7 +188,7 @@ void ByteGen::classFunc(string name, Body* body){
        }else
                 toCommand("pop");
         for(int i=call->m_args->size()-1; i>=0 ;i--){
-                expressionToByte(call->m_args->at(i));
+                decToCommand((Decleration*)call->m_args->at(i),true);
         }
        bodyToByte(body);
        if(name == subname){
@@ -214,7 +214,7 @@ void ByteGen::structDec(Body* body){
         string className =((Struct*)body->m_control)->m_iden->m_token->m_symbol; 
          for(Expression* expression: *body->m_lines){
                  if(expression->name() == "Decleration")
-                        decToCommand((Decleration*)expression);
+                        decToCommand((Decleration*)expression,false);
                 else if(expression->name() == "Body" && ((Body*)expression)->m_control->name() =="Function"){
                         toCommand("functionPush");
                         FunctionCall* call = ((Function*)((Body*)expression)->m_control)->m_call;
@@ -295,9 +295,26 @@ void ByteGen::forToByte(Body* body,string line){
 }
 
 
-void ByteGen::decToCommand(Decleration* dec){
-        if(dec->m_value != nullptr)
+void ByteGen::decToCommand(Decleration* dec, bool isfunc){
+        if(dec->m_value != nullptr){
+
                 expressionToByte(dec->m_value);
+        }else if(!isfunc){
+                toCommand("push");
+                toCommand("nil");
+        }
+
+        if(dec->m_initalize){
+                Expression* typeEx = dec->m_type;
+                if(typeEx->name() == "Literal" ){
+                        TokenType type =((Literal*)typeEx)->m_token->m_type ; 
+                        if(type != TokenType::LIST &&type != TokenType::IDEN && type != TokenType::VAR){
+                                toCommand("cast");
+                                toCommand(typeToString(type));
+                        }
+                }
+
+        }
 
         
         if(dec->m_name->name() =="Dot"){
@@ -350,7 +367,7 @@ void ByteGen::functionToByte(Body* body){
         string name = control->m_name->m_token->m_symbol; 
         toCommand(name+to_string(control->m_args->size())+":");  
         for(int i=control->m_args->size()-1; i>=0 ;i--){
-                expressionToByte(control->m_args->at(i));
+                decToCommand((Decleration*)control->m_args->at(i),true);
         }
         bodyToByte(body);
         if(name != "main"){
