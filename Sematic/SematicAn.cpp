@@ -8,17 +8,24 @@ SematicAn::SematicAn(Body* body){
 	m_body  = body;
 	m_level =0;
 	string argsMes = " with args count ";
-	m_functions["delete"+argsMes+"2"] = TypeInfo("void",TokenType::VOID,false);
-	m_functions["input"+argsMes+"0"] = TypeInfo("string",TokenType::STRING,false);
-	m_functions["append"+argsMes+"2"] = TypeInfo("void",TokenType::VOID,false);
-	m_functions["deleteFile"+argsMes+"1"]= TypeInfo("void",TokenType::VOID,false);
-	m_functions["createFile"+argsMes+"1"]= TypeInfo("void",TokenType::VOID,false);
-	m_functions["exists"+argsMes+"1"]= TypeInfo("int",TokenType::INT,false);
-	m_functions["writeFile"+argsMes+"2"]= TypeInfo("void",TokenType::VOID,false);
-	m_functions["readFile"+argsMes+"1"]= TypeInfo("string",TokenType::LIST,true);
-	m_functions["sin"+argsMes+"1"]= TypeInfo("double",TokenType::DOUBLE,true);
-	m_functions["cos"+argsMes+"1"]= TypeInfo("double",TokenType::DOUBLE,true);
-	m_functions["tan"+argsMes+"1"]= TypeInfo("double",TokenType::DOUBLE,true);
+	vector<TypeInfo> info  ={TypeInfo("List",TokenType::VAR,true), TypeInfo("int",TokenType::INT,false)};
+	m_functions["delete"+argsMes+"2"] = FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
+	info  ={};
+	m_functions["input"+argsMes+"0"] = FunctionInfo(TypeInfo("string",TokenType::STRING,false),info );
+	info  ={TypeInfo("List",TokenType::VAR,true), TypeInfo("int",TokenType::INT,false)};
+	m_functions["append"+argsMes+"2"] = FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
+	info  ={TypeInfo("string",TokenType::STRING,false)};
+	m_functions["deleteFile"+argsMes+"1"]= FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
+	m_functions["createFile"+argsMes+"1"]= FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
+	m_functions["exists"+argsMes+"1"]= FunctionInfo(TypeInfo("int",TokenType::INT,false),info );
+	info  ={TypeInfo("string",TokenType::STRING,false),TypeInfo("string",TokenType::STRING,false)};
+	m_functions["writeFile"+argsMes+"2"]= FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
+	info  ={TypeInfo("string",TokenType::STRING,false)};
+	m_functions["readFile"+argsMes+"1"]= FunctionInfo(TypeInfo("string",TokenType::LIST,true),info );
+	info  ={TypeInfo("double",TokenType::DOUBLE,false)};
+	m_functions["sin"+argsMes+"1"]= FunctionInfo(TypeInfo("double",TokenType::DOUBLE,true),info );
+	m_functions["cos"+argsMes+"1"]= FunctionInfo(TypeInfo("double",TokenType::DOUBLE,true),info );
+	m_functions["tan"+argsMes+"1"]= FunctionInfo(TypeInfo("double",TokenType::DOUBLE,true),info );
 }
 
 TokenType SematicAn::getTypeBin(BinOP*  op){
@@ -61,7 +68,7 @@ TokenType SematicAn::getType(Expression* expression){
 	}else if(expression->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)expression;
 		string name = call->m_name->m_token->m_symbol +" with args count "+to_string(call->m_args->size());
-		return m_functions[name].m_type;
+		return m_functions[name].m_info.m_type;
 	}
 	return TokenType::VAR;
 }
@@ -245,8 +252,16 @@ void SematicAn::checkFunction(Function* expr){
 	Token* token =expr->m_type->m_token; 
 	FunctionCall* call =expr->m_call; 
 	string name =call->m_name->m_token->m_symbol+" with args count "+to_string(call->m_args->size());  
+	vector<TypeInfo> args; 
+	for(Expression* expression:*call->m_args){
+		if(expression->name() != "Decleration"){
+			ErrorThrower::error(token->m_line,"args must be declerations");
+			args.push_back(TypeInfo("",TokenType::NIL,false));
+			continue;
+		}
 
-	m_functions[name] =  TypeInfo(token->m_symbol,token->m_type,false);
+	}
+	m_functions[name] =  FunctionInfo(TypeInfo(token->m_symbol,token->m_type,false),args);
 	checkFunctionCall(expr->m_call);
 }
 

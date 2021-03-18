@@ -130,3 +130,19 @@ TEST(SematicAn,functionTypes){
 	ASSERT_EQ(ErrorThrower::errors->size(),1);
 	
 }
+
+
+TEST(SematicAn,functionCallTypes){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "int read(int i){return i;} int printer(12){return 1;} int main(){read(\"hello\");}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),2);
+	
+}

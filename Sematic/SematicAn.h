@@ -18,6 +18,16 @@ class TypeInfo{
 		}
 		TypeInfo(){}
 };
+class FunctionInfo{
+	public:
+		TypeInfo m_info;
+		vector<TypeInfo> m_args;
+		FunctionInfo(TypeInfo info,vector<TypeInfo> args){
+			m_info = info;
+			m_args = args;
+		}
+		FunctionInfo(){}
+};
 class Lock{
 	public:
 		int m_level;
@@ -34,7 +44,7 @@ class Lock{
 class SematicAn{
 	Body* m_body;
 	vector<Lock> m_vars;
-	map<string,TypeInfo> m_functions;
+	map<string,FunctionInfo> m_functions;
 	map<string,map<string,TypeInfo>> m_structsFunctions;
 	map<string,map<string,TypeInfo>> m_structs;
 	int m_level;
