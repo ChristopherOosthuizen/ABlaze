@@ -5,6 +5,7 @@
 #include "Lexer.h"
 #include "ErrorThrower.h"
 #include "TokenType.h"
+#include <iostream>
 
 
 Lexer::Lexer(const string& input) {
@@ -218,7 +219,8 @@ Token* Lexer::strings(char ender,TokenType type){
 	if(isAtEnd())ErrorThrower::error(line,"Unterminated string");
 	
 	m_pos++;
-	return new Token(type,m_input.substr(start, (m_pos-1)-start),m_line);
+	string result =m_input.substr(start, (m_pos-1)-start); 
+	return new Token(type,result,m_line);
 }
 
 /*

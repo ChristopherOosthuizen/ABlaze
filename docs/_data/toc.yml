@@ -26,14 +26,28 @@
     - title: "Variables"
       url: "docs/variables"
       children:
-        - title: Decleration
-          url: "docs/variables#decleration"
+        - title: Declaration 
+          url: "docs/variables#declaration"
         - title: Assignment
           url: "docs/variables#assignment"
         - title: Types
           url: "docs/variables#types"
         - title: Casting
           url: "docs/variables#casting"
+    - title: "Functions"
+      url: "docs/functions"
+      children:
+        - title: Declaration 
+          url: "docs/functions#declaration"
+        - title: Calling
+          url: "docs/functions#calling"
+        - title: Return 
+          url: "docs/functions#return"
+        - title: Builtin 
+          url: "docs/functions#builtin"
+
+
+
 
 
 

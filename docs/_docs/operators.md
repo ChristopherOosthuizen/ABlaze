@@ -4,7 +4,7 @@ tags:
  - ABlaze 
  - DataTypes
  - Math operators
-description: tech the user how to use ablaze basic math operations
+description: teach the user how to use ablaze basic math operations
 ---
 
 
