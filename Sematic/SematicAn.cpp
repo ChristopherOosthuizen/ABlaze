@@ -254,6 +254,26 @@ void SematicAn::checkStructs(Body* body){
 	}
 	popLevel();
 }
+int SematicAn::getLine(Expression* expression){
+	if(expression == nullptr)
+		return 0;
+	if(expression->name() == "Literal"){
+		return ((Literal*)expression)->m_token->m_line;
+	}else if(expression->name() == "BinOP"){
+		return getLine(((BinOP*)expression)->m_left);
+	}else if(expression->name() == "Dot"){
+		return getLine(((Dot*)expression)->m_iden);
+	}else if(expression->name() == "FunctionCall"){
+		return getLine(((FunctionCall*)expression)->m_name);
+	}else if(expression->name() == "BuiltIn"){
+		return getLine(((BuiltIn*)expression)->m_type);
+	}else if(expression->name() == "Cast"){
+		return getLine(((Cast*)expression)->m_iden);
+	}else if(expression->name() == "ArrayLiteral"){
+		return getLine(((ArrayLiteral*)expression)->m_iden);
+	}
+	return 0;
+}
 
 void SematicAn::controlStatements(Expression* expression){
 	if(expression == nullptr)
@@ -263,13 +283,17 @@ void SematicAn::controlStatements(Expression* expression){
 		ForStat* stat = (ForStat*)expression;
 		check(stat->m_initial);
 		check(stat->m_condition);
+		checkTypeEquality(getLine(stat->m_condition),TokenType::BOOL,getType(stat->m_condition));
 		check(stat->m_repitition);
 	}else if(name=="If"){
 		IfStat* stat = (IfStat*)expression;
 		check(stat->m_control);
+		checkTypeEquality(getLine(stat->m_control),TokenType::BOOL,getType(stat->m_control));
+
 	}else if(name == "While"){
 		IfStat* stat = (IfStat*)expression;
 		check(stat->m_control);
+		checkTypeEquality(getLine(stat->m_control),TokenType::BOOL,getType(stat->m_control));
 	}else if(name == "Function"){
 		checkFunction((Function*) expression);
 	}

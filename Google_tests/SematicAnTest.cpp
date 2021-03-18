@@ -161,3 +161,18 @@ TEST(SematicAn,returnCheck){
 	ASSERT_EQ(ErrorThrower::errors->size(),3);
 	
 }
+
+TEST(SematicAn,enforceBool){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "void main(){ if(\"hello\"){println \"hello\";} while(12.3){} for(;4.5;){println 14;} }";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
+	
+}

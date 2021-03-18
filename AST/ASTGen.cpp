@@ -21,6 +21,8 @@ Body* ASTGen::generateAST(){
 }
 //return weather the next is a token type
 bool ASTGen::equals(TokenType type){
+        if(peek() == nullptr)
+                return false;
         return peek()->m_type == type;
 }
 
@@ -78,8 +80,13 @@ Expression* ASTGen::body(){
                consume(TokenType::OPEN_PARENTHESE,"for has no opening parenthese");
                Expression* inital = lineStat();
                Expression* controlStat = expression();
+               if(controlStat == nullptr)
+                        ErrorThrower::error(lit->m_token->m_line,"for control statement can not be null");
                consume(TokenType::SEMI_COLON,"Missing SemiColon");
-               Expression* rep = expression();
+               Expression* rep = nullptr;
+               if(!equals(TokenType::CLOSE_PARENTHESE)){
+                       rep = expression();
+               }
                consume(TokenType::CLOSE_PARENTHESE,"Unclosed parentehse");
                control = new ForStat(inital,controlStat,rep);
        }else if(type == TokenType::WHILE){
@@ -194,6 +201,8 @@ Expression* ASTGen::lineExpr(){
 
 //return the next while assuming the next is a semicolon
 Expression* ASTGen::lineStat(){
+        if(eat(TokenType::SEMI_COLON))
+                return nullptr;
         Expression* expr = lineExpr();
         if(expr->name() !="Body"){
                 if(!eat(TokenType::SEMI_COLON)){

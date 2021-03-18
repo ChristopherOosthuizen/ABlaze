@@ -27,6 +27,8 @@ void ByteGen::toCommand(const string& com){
 }
 
 void ByteGen::expressionToByte(Expression* expr){
+        if(expr == nullptr)
+                return;
         string name = expr->name(); 
         if(name == "Decleration"){
                 decToCommand((Decleration*)expr,false);

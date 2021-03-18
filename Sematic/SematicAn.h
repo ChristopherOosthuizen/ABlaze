@@ -72,7 +72,8 @@ class SematicAn{
 		void increaseLevel();
 		bool isReserved(const string& s);
 		void checkFunction(Function* function);
-		void controlStatements(Expression* expr);
+		void controlStatements( Expression* expr);
+		int getLine(Expression* expression);
 			
 };
 #endif
