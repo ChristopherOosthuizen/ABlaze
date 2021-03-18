@@ -11,7 +11,7 @@ ABlaze has a builtin variable declaration and system to use and assign variables
 ## Declaration
 To declare variables you simply have to follow the following syntax
 ```
-int main(){
+void main(){
     int i = 12;# with value
     int o; # without value
     println i;
@@ -29,7 +29,7 @@ In this example we defined the variables i and o giving i the value of 12 and o 
 ## Assignment 
 You can also set values for variables that have already been set declared. As seen in the example below.
 ```
-int main(){
+void main(){
     int i = 12;
     println i;
     i = 14;
@@ -43,7 +43,7 @@ output
 ```
 There are also special assignment operators that can change the value of the variable
 ```
-int main(){
+void main(){
     int i = 15;
     println i;
     i += 4;# addition
@@ -71,7 +71,7 @@ output
 ## Types 
 As you may have seen throughout this tutorial ABlaze has a few different types well here are all the built-in types
 ```
-int main(){
+void main(){
     int i = 12;
     double o = 13.4;
     char c= 'a';
@@ -84,7 +84,7 @@ All the built-in data types have a hierarchy of conversion anything can be turne
 ## Casting
 If a data type is one type, but you want it in another a solution is to cast it. 
 ```
-int main(){
+void main(){
     int i = (int)12.5;
     int o = (int)"5";
     char j = (char)c;

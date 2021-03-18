@@ -56,7 +56,7 @@ TEST(Sematic,structs){
 	ErrorThrower::hasError = false;
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
-	Lexer lexer("struct Pos{int x; int y;} int main(){Pos pos = new Pos; Position posses = new Position; pos.t = 12;}");
+	Lexer lexer("struct Pos{int x; int y;} void main(){Pos pos = new Pos; Position posses = new Position; pos.t = 12;}");
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
 	SematicAn an(body);
@@ -88,8 +88,8 @@ TEST(Sematic,Functions){
 	ErrorThrower::errors = new vector<string>();
 	string voidfunc = "void voider(){print(\"void func\");}\n";
 	string stringfunc = "string roiders(){return \"hello\";}";
-	string noReturn = "int loders(){ int i =0; println(12);}";
-	string main = "int main(){roiders(); voiders(); noiders(); int i = roiders(); string hello = roiders();}";
+	string noReturn = "void loders(){ int i =0; println(12);}";
+	string main = "void main(){roiders(); voiders(); noiders(); int i = roiders(); string hello = roiders();}";
 	Lexer lexer(voidfunc+stringfunc+noReturn+main);
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
@@ -105,7 +105,7 @@ TEST(Sematic,paranLength){
 	ErrorThrower::hasError = false;
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
-	string main = "void type(int a, int b){println a+b;}int main(){ type(12,14); type(12);}";
+	string main = "void type(int a, int b){println a+b;}void main(){ type(12,14); type(12);}";
 	Lexer lexer(main);
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
@@ -120,7 +120,7 @@ TEST(SematicAn,functionTypes){
 	ErrorThrower::hasError = false;
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
-	string main = "int read(){return 12;} void like(){println 12;} int main(){int i = read(); var o = like();}";
+	string main = "int read(){return 12;} void like(){println 12;} void main(){int i = read(); var o = like();}";
 	Lexer lexer(main);
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
@@ -136,7 +136,22 @@ TEST(SematicAn,functionCallTypes){
 	ErrorThrower::hasError = false;
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
-	string main = "int read(int i){return i;} int printer(12){return 1;} int main(){read(\"hello\");}";
+	string main = "int read(int i){return i;} int printer(12){return 1;} void main(){read(\"hello\");}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
+	
+}
+
+TEST(SematicAn,returnCheck){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "int read(int i){if(i == 12){return 5.8;}} void right(){return 3;} void main(){}";
 	Lexer lexer(main);
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	

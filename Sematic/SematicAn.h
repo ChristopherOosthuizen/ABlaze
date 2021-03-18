@@ -55,6 +55,7 @@ class SematicAn{
 		void checkFunction(Body* body);
 		void checkBinOP(BinOP* op);
 		void checkBody(Body* body);
+		bool checkReturns(Body* body,TokenType type);
 		TokenType getTypeBin(BinOP* bin);
 		TokenType getType(Expression* expression);
 		int score(TokenType type);

@@ -16,7 +16,7 @@ ABlaze for the most part has standard math operators so if you are familiar with
 ABlaze has the following math operators
 
 ```
-int main(){
+void main(){
     println 12+4; #addition
     println 12-4; #substraction
     println 12/4; #divition
@@ -43,7 +43,7 @@ As you should have seen from the output certain operations change the type from 
 ### Pemdas
 ABlaze also supports pemdas for order of operations so code like this
 ```
-int main(){
+void main(){
     println 12+8*4**8/2+4-1
 }
 ```
@@ -56,7 +56,7 @@ Will return
 Like any good programming language ablaze supports boolean operations
 ABlaze supports the following
 ```
-int main(){
+void main(){
     println true&&true; # AND
     println true||true; # OR
     println true^true; # XOR
@@ -81,7 +81,7 @@ I'm writing this with the assumption that ABlaze won't be anyone's first program
 ## Equality 
 ABlaze supports the basic equality operators
 ```
-int main(){
+void main(){
     println 8 ==8;#EQUAL
     println 8!=8; #Not EQUAL
     println 12>4; #Greater than
@@ -102,7 +102,7 @@ true
 ## Bitwise 
 ABlaze also supports a few bitwise operators 
 ```
-int main(){
+void main(){
     println 4<<4; #left shift
     println 32>>2; #Right Shift
     println 5&10; #bitwise and
@@ -124,7 +124,7 @@ I don't have quite enough room to explain bitwise operations, but if you are unf
 ## String operations
 As of now one kind of string operation exists which is addition that can also be used to switch the types of certain variables
 ```
-int main(){
+void main(){
     println "Hello " +"there"; # string on string
     println "There are "+12+" students"; # string on other data type
 }

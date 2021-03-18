@@ -31,7 +31,7 @@ Congratulations you have successfully installed ABlaze!
 ## Hello World
 HelloWorld.abz
 ```
-int main(){
+void main(){
   println "Hello World!";
 }
 ```

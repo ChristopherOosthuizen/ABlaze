@@ -192,11 +192,38 @@ void SematicAn::checkBinOP(BinOP* binop){
 	check(binop->m_left);
 }
 
+bool SematicAn::checkReturns(Body* body,TokenType type){
+	bool hasReturn = false;
+	for(Expression* expr: *body->m_lines){
+		if(expr->name() == "BuiltIn"){
+			BuiltIn* name = ((BuiltIn*)expr);
+			if(name->m_type->m_token->m_type == TokenType::RETURN){
+				if(type != TokenType::VOID)
+					checkTypeEquality(name->m_type->m_token->m_line,type,getType(name->m_value));
+				else if(name->m_value != nullptr)
+					ErrorThrower::error(name->m_type->m_token->m_line, "use of non null return in void function");
+					
+				hasReturn = true;
+			}
+		}else if(expr->name() == "Body"){
+			checkReturns((Body*)expr,type);
+		}
+	}
+	return hasReturn;
+}
+
 void SematicAn::checkBody(Body* body){
 	increaseLevel();
 	if(body->m_control != nullptr &&body->m_control->name() == "Struct"){
 		checkStructs(body);
 		return;
+	}
+	if(body->m_control != nullptr &&body->m_control->name() == "Function"){
+		Function* func = (Function*)body->m_control;
+		TokenType type =func->m_type->m_token->m_type; 
+		bool hasRet = checkReturns(body,type);
+		if(!hasRet && type != TokenType::VOID)
+			ErrorThrower::error(func->m_type->m_token->m_line,"Function can reach end without return");
 	}
 	controlStatements(body->m_control);
 	for(int i=0; i< body->m_lines->size(); i++){
