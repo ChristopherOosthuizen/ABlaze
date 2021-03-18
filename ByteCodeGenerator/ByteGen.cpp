@@ -145,16 +145,16 @@ void ByteGen::bodyToByte(Body* body){
                                 toCommand("startlocal");
                                 expressionToByte(((IfStat*)bod->m_control)->m_control);
                                 toCommand("jif");
-                                toCommand("startif"+line);
+                                toCommand("startif#"+line);
                                 if(body->m_lines->size()-1 >i && body->m_lines->at(i+1)->name() == "Body" && ((Body*)body->m_lines->at(i+1))->m_control->name() == "Else"){
                                         bodyToByte((Body*)body->m_lines->at(i+1));
                                         i++;
                                 }
                                 toCommand("jmp");
-                                toCommand("endif"+line);
-                                toCommand("startif"+line+":");
+                                toCommand("endif#"+line);
+                                toCommand("startif#"+line+":");
                                 bodyToByte(bod);
-                                toCommand("endif"+line+":");
+                                toCommand("endif#"+line+":");
                                 toCommand("poplocal");
                         }else if(bod->m_control->name() == "While"){
                                 whileToByte(bod,line);
@@ -259,18 +259,18 @@ void ByteGen::unToByte(Unary* unary){
 }
 
 void ByteGen::whileToByte(Body* body,string line){
-        toCommand("startWhile"+line+":");
+        toCommand("startWhile#"+line+":");
         toCommand("startlocal");
         expressionToByte(((WhileStat*)body->m_control)->m_control);
         toCommand("not");
         toCommand("startlocal");
         toCommand("jif");
-        toCommand("endWhile"+line);
+        toCommand("endWhile#"+line);
         bodyToByte(body);
         toCommand("poplocal");
         toCommand("jmp");
-        toCommand("startWhile"+line);
-        toCommand("endWhile"+line+":");
+        toCommand("startWhile#"+line);
+        toCommand("endWhile#"+line+":");
         toCommand("poplocal");
 
 }
@@ -279,18 +279,18 @@ void ByteGen::forToByte(Body* body,string line){
         ForStat* stat =((ForStat*)body->m_control);
         toCommand("startlocal");
         expressionToByte(stat->m_initial);
-        toCommand("startFor"+line+":");
+        toCommand("startFor#"+line+":");
         expressionToByte(stat->m_condition);
         toCommand("not");
         toCommand("startlocal");
         toCommand("jif");
-        toCommand("endFor"+line);
+        toCommand("endFor#"+line);
         bodyToByte(body);
         expressionToByte(stat->m_repitition);
         toCommand("poplocal");
         toCommand("jmp");
-        toCommand("startFor"+line);
-        toCommand("endFor"+line+":");
+        toCommand("startFor#"+line);
+        toCommand("endFor#"+line+":");
         toCommand("poplocal");
 }
 

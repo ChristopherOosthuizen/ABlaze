@@ -210,17 +210,17 @@ TEST(ByteCode,ifs){
         ASSERT_EQ(strs->at(i++),"load"); 
         ASSERT_EQ(strs->at(i++),"right"); 
         ASSERT_EQ(strs->at(i++),"jif"); 
-        ASSERT_EQ(strs->at(i++),"startif24"); 
+        ASSERT_EQ(strs->at(i++),"startif#24"); 
         ASSERT_EQ(strs->at(i++),"load"); 
         ASSERT_EQ(strs->at(i++),"o"); 
         ASSERT_EQ(strs->at(i++),"print"); 
         ASSERT_EQ(strs->at(i++),"jmp"); 
-        ASSERT_EQ(strs->at(i++),"endif24"); 
-        ASSERT_EQ(strs->at(i++),"startif24:"); 
+        ASSERT_EQ(strs->at(i++),"endif#24"); 
+        ASSERT_EQ(strs->at(i++),"startif#24:"); 
         ASSERT_EQ(strs->at(i++),"load"); 
         ASSERT_EQ(strs->at(i++),"i"); 
         ASSERT_EQ(strs->at(i++),"print"); 
-        ASSERT_EQ(strs->at(i++),"endif24:"); 
+        ASSERT_EQ(strs->at(i++),"endif#24:"); 
         ASSERT_EQ(strs->at(i++),"poplocal");
         ASSERT_EQ(strs->at(i++),"halt"); 
 }
@@ -242,7 +242,7 @@ TEST(ByteCode,whiles){
         ASSERT_EQ(strs->at(i++),"int"); 
         ASSERT_EQ(strs->at(i++),"store"); 
         ASSERT_EQ(strs->at(i++),"i"); 
-        ASSERT_EQ(strs->at(i++),"startWhile9:"); 
+        ASSERT_EQ(strs->at(i++),"startWhile#9:"); 
         ASSERT_EQ(strs->at(i++),"startlocal"); 
         ASSERT_EQ(strs->at(i++),"load"); 
         ASSERT_EQ(strs->at(i++),"i"); 
@@ -252,7 +252,7 @@ TEST(ByteCode,whiles){
         ASSERT_EQ(strs->at(i++),"not"); 
         ASSERT_EQ(strs->at(i++),"startlocal"); 
         ASSERT_EQ(strs->at(i++),"jif"); 
-        ASSERT_EQ(strs->at(i++),"endWhile9"); 
+        ASSERT_EQ(strs->at(i++),"endWhile#9"); 
         ASSERT_EQ(strs->at(i++),"load"); 
         ASSERT_EQ(strs->at(i++),"i"); 
         ASSERT_EQ(strs->at(i++),"push"); 
@@ -265,8 +265,8 @@ TEST(ByteCode,whiles){
         ASSERT_EQ(strs->at(i++),"print"); 
         ASSERT_EQ(strs->at(i++),"poplocal"); 
         ASSERT_EQ(strs->at(i++),"jmp"); 
-        ASSERT_EQ(strs->at(i++),"startWhile9"); 
-        ASSERT_EQ(strs->at(i++),"endWhile9:"); 
+        ASSERT_EQ(strs->at(i++),"startWhile#9"); 
+        ASSERT_EQ(strs->at(i++),"endWhile#9:"); 
         ASSERT_EQ(strs->at(i++),"poplocal"); 
         ASSERT_EQ(strs->at(i++),"halt"); 
 }
@@ -290,7 +290,7 @@ TEST(ByteCode,fors){
         ASSERT_EQ(strs->at(i++),"int"); 
         ASSERT_EQ(strs->at(i++),"store"); 
         ASSERT_EQ(strs->at(i++),"i"); 
-        ASSERT_EQ(strs->at(i++),"startFor3:"); 
+        ASSERT_EQ(strs->at(i++),"startFor#3:"); 
         ASSERT_EQ(strs->at(i++),"load"); 
         ASSERT_EQ(strs->at(i++),"i"); 
         ASSERT_EQ(strs->at(i++),"push"); 
@@ -299,7 +299,7 @@ TEST(ByteCode,fors){
         ASSERT_EQ(strs->at(i++),"not"); 
         ASSERT_EQ(strs->at(i++),"startlocal"); 
         ASSERT_EQ(strs->at(i++),"jif"); 
-        ASSERT_EQ(strs->at(i++),"endFor3"); 
+        ASSERT_EQ(strs->at(i++),"endFor#3"); 
         ASSERT_EQ(strs->at(i++),"load"); 
         ASSERT_EQ(strs->at(i++),"i"); 
         ASSERT_EQ(strs->at(i++),"print"); 
@@ -312,8 +312,8 @@ TEST(ByteCode,fors){
         ASSERT_EQ(strs->at(i++),"i"); 
         ASSERT_EQ(strs->at(i++),"poplocal"); 
         ASSERT_EQ(strs->at(i++),"jmp"); 
-        ASSERT_EQ(strs->at(i++),"startFor3"); 
-        ASSERT_EQ(strs->at(i++),"endFor3:"); 
+        ASSERT_EQ(strs->at(i++),"startFor#3"); 
+        ASSERT_EQ(strs->at(i++),"endFor#3:"); 
         ASSERT_EQ(strs->at(i++),"poplocal"); 
         ASSERT_EQ(strs->at(i++),"halt"); 
 }
