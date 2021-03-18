@@ -59,6 +59,7 @@ class SematicAn{
 		Lock getVar(string str);
 		void popLevel();
 		void increaseLevel();
+		bool isReserved(const string& s);
 		void checkFunction(Function* function);
 		void controlStatements(Expression* expr);
 			

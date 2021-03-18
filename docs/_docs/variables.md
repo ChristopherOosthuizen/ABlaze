@@ -6,7 +6,7 @@ tags:
 - types
 ---
 # Variables 
-ABlaze has a builtin variable deceleration and system to use and assign variables
+ABlaze has a builtin variable declaration and system to use and assign variables
 
 ## Declaration
 To declare variables you simply have to follow the following syntax

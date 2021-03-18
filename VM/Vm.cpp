@@ -48,6 +48,15 @@ void Vm::garbageCollect(int pos){
                         }
                 }
         }
+        for(DataObj* obj:m_objs ){
+                if(obj != nullptr &&obj->m_type == ByteType::LIST){
+                        vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
+                        for(DataVal val: *vals){
+                                if(val.m_type == ByteType::OBJ && val.m_val.m_int == pos)
+                                        return;
+                        }
+                }
+        }
         for(int i= 0; i< m_stack.size() ;i++){
                 if( m_stack[i].m_type == ByteType::OBJ &&  m_stack[i].m_val.m_int ==pos){
                                 return;

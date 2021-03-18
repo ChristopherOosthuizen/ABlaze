@@ -73,7 +73,7 @@ void SematicAn::analize(){
 }
 
 void SematicAn::check(Expression* expr){
-	if(expr == NULL)
+	if(expr == nullptr)
 		return;
 	string name = expr->name(); 
 	if(name == "Decleration"){
@@ -95,9 +95,23 @@ void SematicAn::check(Expression* expr){
 		if(ins->m_type->m_token->m_type != TokenType::NEW)
 			check(ins->m_value);
 		else{
-			Literal* lit = (Literal*)ins->m_value;
-			if(m_structs.count(lit->m_token->m_symbol) == 0){
-				ErrorThrower::error(lit->m_token->m_line,"Undefinded class refrence" );
+			string symbol = "";
+			int line = 0;
+			if(ins->m_value->name() == "Literal"){
+				Literal* lit = (Literal*)ins->m_value;
+				symbol = lit->m_token->m_symbol;
+				line = lit->m_token->m_line;
+			}
+			else if(ins->m_value->name() == "FunctionCall"){
+				FunctionCall* call = (FunctionCall*)ins->m_value;
+				symbol = call->m_name->m_token->m_symbol;
+				line = call->m_name->m_token->m_line;
+			}else{
+				return;
+			}
+			if(m_structs.count(symbol) == 0){
+
+				ErrorThrower::error(line,"Undefinded class refrence" );
 			}
 		}
 	}
@@ -131,10 +145,19 @@ Lock SematicAn::getVar(string str){
 	return Lock();
 }
 
+bool SematicAn::isReserved(const string& s){
+	vector<string> strs = {"this"};
+	for(string st : strs){
+		if(st == s)
+			return true;
+	}
+	return false;
+}
+
 void SematicAn::checkLiteral(Literal* literal){
 	Token* token = literal->m_token;	
 	if(token->m_type == TokenType::IDEN){
-		if(!containsVar(token->m_symbol)){
+		if(!containsVar(token->m_symbol) &&!isReserved(token->m_symbol) ){
 			ErrorThrower::error(token->m_line,"uninitilized variable: "+token->m_symbol);
 		}
 	}
@@ -174,7 +197,10 @@ void SematicAn::checkBody(Body* body){
 void SematicAn::checkStructs(Body* body){
 	Struct* control = (Struct*)body->m_control;
 	string name = control->m_iden->m_token->m_symbol;
+
 	map<string,TypeInfo> vars;
+	m_structs[name] = vars;
+
 	for(int i=0; i< body->m_lines->size(); i++){
 		Expression* expr =body->m_lines->at(i); 
 		check(expr);
@@ -188,7 +214,6 @@ void SematicAn::checkStructs(Body* body){
 		}
 		
 	}
-	m_structs[name] = vars;
 	popLevel();
 }
 
@@ -262,6 +287,9 @@ void SematicAn::checkTypeEquality(int line, TokenType one, TokenType two){
 void SematicAn::checkDecleration(Decleration* decleration){
 	
 	Token* name = ((Literal*)decleration->m_name)->m_token;
+	if(isReserved(name->m_symbol)){
+		ErrorThrower::error(name->m_line,"Illigal use of reserved identifier");
+	}
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
 		checkTypeEquality(type->m_line,type->m_type,getType(decleration->m_value));
