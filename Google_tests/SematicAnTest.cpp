@@ -143,6 +143,6 @@ TEST(SematicAn,functionCallTypes){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),2);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
 	
 }

@@ -259,6 +259,14 @@ void SematicAn::checkFunction(Function* expr){
 			args.push_back(TypeInfo("",TokenType::NIL,false));
 			continue;
 		}
+		Decleration* arg = (Decleration*)expression;
+		if(!arg->m_initalize){
+			ErrorThrower::error(token->m_line,"args must be declerations");
+			args.push_back(TypeInfo("",TokenType::NIL,false));
+			continue;
+	
+		}
+		args.push_back(TypeInfo(arg->m_type->m_token->m_symbol,arg->m_type->m_token->m_type,arg->m_isArray));
 
 	}
 	m_functions[name] =  FunctionInfo(TypeInfo(token->m_symbol,token->m_type,false),args);
@@ -269,10 +277,16 @@ void SematicAn::checkFunction(Function* expr){
 void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	Token* token = functionCall->m_name->m_token; 
 	string name =token->m_symbol+" with args count "+to_string(functionCall->m_args->size());  
-	if(m_functions.count(name) ==0 )
+	if(m_functions.count(name) ==0 ){
 		ErrorThrower::error(token->m_line, "Undefined function: "+name);
+		return;
+	}
+	FunctionInfo info = m_functions[name];
 	for(int i=0; i< functionCall->m_args->size(); i++){
-		check(functionCall->m_args->at(i));
+		Expression* arg =functionCall->m_args->at(i); 
+		check(arg);
+		checkTypeEquality(token->m_line,info.m_args[i].m_type,getType(arg));
+
 	}
 }
 
