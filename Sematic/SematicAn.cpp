@@ -58,6 +58,10 @@ TokenType SematicAn::getType(Expression* expression){
 		return ((Cast*)expression)->m_iden->m_token->m_type;
 	}else if(expression->name() == "Literal"){
 		return ((Literal*)expression)->m_token->m_type;
+	}else if(expression->name() == "FunctionCall"){
+		FunctionCall* call = (FunctionCall*)expression;
+		string name = call->m_name->m_token->m_symbol +" with args count "+to_string(call->m_args->size());
+		return m_functions[name].m_type;
 	}
 	return TokenType::VAR;
 }
@@ -274,6 +278,9 @@ int SematicAn::score(TokenType type){
 }
 
 void SematicAn::checkTypeEquality(int line, TokenType one, TokenType two){
+	if(two == TokenType::VOID){
+		ErrorThrower::error(line,"Can not use void function as value");
+	}
 	if(one == TokenType::VAR || two == TokenType::VAR)return;
 	if(one == TokenType::IDEN_STRING)return;
 	int scoreSec = score(one);

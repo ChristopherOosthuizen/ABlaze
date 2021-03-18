@@ -51,7 +51,7 @@ TEST(Sematic,structures){
 
 } 
 
-/*
+
 TEST(Sematic,structs){
 	ErrorThrower::hasError = false;
 	delete ErrorThrower::errors;
@@ -61,9 +61,9 @@ TEST(Sematic,structs){
 	Body* body = gen.generateAST();	
 	SematicAn an(body);
 	an.analize();
-	ASSERT_EQ(ErrorThrower::errors->size(),3);
+	ASSERT_EQ(ErrorThrower::errors->size(),2);
 }
-*/
+
 
 
 
@@ -81,25 +81,6 @@ TEST(SematicAn,wrongUse){
 	ASSERT_EQ(ErrorThrower::errors->size(),2);
 }
 
-/*
-//Test weather the Determine type functions can correctly deduce types
-TEST(SematicAn,typer){
-	ErrorThrower::hasError = false;
-	delete ErrorThrower::errors;
-	ErrorThrower::errors = new vector<string>();
-	Lexer lexer("6.8; 12; 12+6.8; 5+\"hello\"; true; \"hello\"+6.8");
-	ASTGen gen = ASTGen(lexer.readAllTokens());
-	Body* body = gen.generateAST();	
-	SematicAn an(body);
-	ASSERT_EQ(an.endType(body->m_lines->at(0),nullptr,nullptr),TokenType::IDEN_DOUBLE);
-	ASSERT_EQ(an.endType(body->m_lines->at(1),nullptr,nullptr),TokenType::IDEN_INT);
-	ASSERT_EQ(an.endType(body->m_lines->at(2),nullptr ,nullptr),TokenType::IDEN_DOUBLE);
-	ASSERT_EQ(an.endType(body->m_lines->at(3),nullptr,nullptr),TokenType::IDEN_STRING);
-	ASSERT_EQ(an.endType(body->m_lines->at(4),nullptr,nullptr),TokenType::IDEN_BOOL);
-	ASSERT_EQ(an.endType(body->m_lines->at(5),nullptr,nullptr),TokenType::IDEN_STRING);
-}
-*/
-
 // test to see weather the ast can catch wrong typed functions and weather it can handle functions
 TEST(Sematic,Functions){
 	ErrorThrower::hasError = false;
@@ -115,7 +96,7 @@ TEST(Sematic,Functions){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),2);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
 	
 }
 
@@ -125,6 +106,21 @@ TEST(Sematic,paranLength){
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
 	string main = "void type(int a, int b){println a+b;}int main(){ type(12,14); type(12);}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
+	
+}
+
+TEST(SematicAn,functionTypes){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "int read(){return 12;} void like(){println 12;} int main(){int i = read(); var o = like();}";
 	Lexer lexer(main);
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
