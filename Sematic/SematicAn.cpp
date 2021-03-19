@@ -12,7 +12,7 @@ SematicAn::SematicAn(Body* body){
 	m_functions["delete"+argsMes+"2"] = FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
 	info  ={};
 	m_functions["input"+argsMes+"0"] = FunctionInfo(TypeInfo("string",TokenType::STRING,false),info );
-	info  ={TypeInfo("List",TokenType::VAR,true), TypeInfo("int",TokenType::INT,false)};
+	info  ={TypeInfo("var",TokenType::VAR,true), TypeInfo("int",TokenType::INT,false)};
 	m_functions["append"+argsMes+"2"] = FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
 	info  ={TypeInfo("string",TokenType::STRING,false)};
 	m_functions["deleteFile"+argsMes+"1"]= FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
@@ -246,8 +246,8 @@ void SematicAn::checkBody(Body* body){
 		bool hasRet = checkReturns(body,TypeInfo(typeToString(type),type,func->m_isArray));
 		if(!hasRet && type != TokenType::VOID)
 			ErrorThrower::error(func->m_type->m_token->m_line,"Function can reach end without return");
-	}
-	controlStatements(body->m_control);
+	}else 
+		controlStatements(body->m_control);
 	for(int i=0; i< body->m_lines->size(); i++){
 		check(body->m_lines->at(i));
 	}
@@ -344,7 +344,12 @@ void SematicAn::checkFunction(Function* expr){
 
 	}
 	m_functions[name] =  FunctionInfo(TypeInfo(token->m_symbol,token->m_type,expr->m_isArray),args);
-	checkFunctionCall(expr->m_call);
+	for(Expression* arg: *call->m_args){
+		check(arg);
+	}
+		
+	
+
 }
 
 
@@ -359,8 +364,16 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	for(int i=0; i< functionCall->m_args->size(); i++){
 		Expression* arg =functionCall->m_args->at(i); 
 		check(arg);
-		TokenType type =info.m_args[i].m_type; 
-		checkTypeEquality(token->m_line,TypeInfo(typeToString(type),type,info.m_info.m_isArray),getType(arg));
+		TypeInfo type =info.m_args[i]; 
+		if(arg->name() != "Array")
+			checkTypeEquality(token->m_line,type,getType(arg));
+		else {
+			Array* arr = (Array*)arg;
+			type.m_isArray = false;
+			for(int j=0; j< arr->m_args->size(); j++){
+				checkTypeEquality(token->m_line,type,getType(arr->m_args->at(j)));
+			}
+		}
 
 	}
 }
@@ -385,7 +398,7 @@ void SematicAn::checkTypeEquality(int line, TypeInfo oneT, TypeInfo twoT){
 	TokenType one = oneT.m_type;
 	TokenType two = twoT.m_type;
 	if(oneT.m_isArray != twoT.m_isArray){
-		ErrorThrower::error(line,"can not convert array into no array value");
+		ErrorThrower::error(line,"can not convert array into non array value");
 	}
 	if(two == TokenType::VOID){
 		ErrorThrower::error(line,"Can not use void function as value");
@@ -410,7 +423,8 @@ void SematicAn::checkDecleration(Decleration* decleration){
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
 		 info =TypeInfo(typeToString(type->m_type),type->m_type,decleration->m_isArray); 
-		checkTypeEquality(type->m_line,info,getType(decleration->m_value));
+		 if(decleration->m_value != nullptr)
+			checkTypeEquality(type->m_line,info,getType(decleration->m_value));
 
 		m_vars.push_back(Lock(m_level,name->m_symbol,TypeInfo(type->m_symbol,type->m_type,decleration->m_isArray)));
 		

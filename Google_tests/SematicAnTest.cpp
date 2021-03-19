@@ -143,7 +143,7 @@ TEST(SematicAn,functionCallTypes){
 	SematicAn an(body);
 	an.analize();
 	ASSERT_TRUE(ErrorThrower::hasError);
-	ASSERT_EQ(ErrorThrower::errors->size(),3);
+	ASSERT_EQ(ErrorThrower::errors->size(),2);
 	
 }
 
@@ -223,3 +223,17 @@ TEST(SematicAn, listLiteral){
 	
 }
 
+TEST(SematicAn, paramterArray){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "void make(int: a, char: o){println 1;}void main(){ make({12,5.4,1},{'a','b'});}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
+	
+}
