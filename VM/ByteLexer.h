@@ -13,6 +13,7 @@ class ByteLexer{
         map<string,ByteType> m_types;
         string readNext();
         string strings(int start);
+        string chars(int start);
         ByteToken* createToken(const string& str);
         ByteToken* numbers(const string& str);
         public:

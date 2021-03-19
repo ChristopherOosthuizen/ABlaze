@@ -542,8 +542,10 @@ void Vm::pushToStack(){
                 m_stack.push_back(val);
                 return;
         }
-        if(token->m_type != ByteType::STRING)
+        if(token->m_type != ByteType::STRING && token->m_type != ByteType::CHAR)
                 value = stod(token->m_symbol); 
+        else if(token->m_type == ByteType::CHAR)
+                value = token->m_symbol[0];
         DataVal val(token->m_type,Val(token->m_value, value ,token->m_value,token->m_symbol));
         m_stack.push_back(val);
 }

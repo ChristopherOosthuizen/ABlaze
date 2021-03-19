@@ -61,6 +61,14 @@ TypeInfo SematicAn::getType(Expression* expression){
 		return TypeInfo("var",TokenType::VAR,false);
 	if(expression->name() == "BinOP"){
 		return  getTypeBin((BinOP*)expression);
+	}else if(expression->name() == "BuiltIn"){
+		BuiltIn* builtin = (BuiltIn*)expression;
+		if(builtin->m_type->m_token->m_type == TokenType::LEN){
+			return TypeInfo("int",TokenType::INT,false);
+		}else if(builtin->m_type->m_token->m_type == TokenType::NEW){
+			return TypeInfo("var",TokenType::VAR,false);
+		}
+		return TypeInfo("void",TokenType::VOID,false);
 	}else if(expression->name() == "Cast"){
 		Cast* cast = (Cast*)expression;
 		return TypeInfo(typeToString(cast->m_iden->m_token->m_type),cast->m_iden->m_token->m_type,false);

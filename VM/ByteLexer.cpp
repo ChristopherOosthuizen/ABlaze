@@ -79,6 +79,19 @@ string ByteLexer::strings(int start){
 
 }
 
+string ByteLexer::chars(int start){
+        m_pos--;
+	char peeked = m_input.at(m_pos+1);
+	while(m_pos < m_input.length() && (peeked != '\'' )){ 
+		m_pos++;
+		peeked = m_input[m_pos+1]; 
+	}
+        m_pos+=2;
+        return m_input.substr(start, (m_pos)-start);  
+
+
+}
+
 string ByteLexer::readNext(){
         int start = m_pos;
         char c;
@@ -91,6 +104,8 @@ string ByteLexer::readNext(){
 }
 
 ByteToken* ByteLexer::createToken( const string& str){
+        if(str.at(0) =='\'')
+                return new ByteToken(ByteType::CHAR,0,str.substr(1,str.size()-2));
         if(str.at(0) =='"')
                 return new ByteToken(ByteType::STRING,0,str.substr(1,str.size()-2));
         if(m_types.count(str) !=0)

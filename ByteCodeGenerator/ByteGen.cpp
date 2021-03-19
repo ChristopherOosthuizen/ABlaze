@@ -46,6 +46,9 @@ void ByteGen::expressionToByte(Expression* expr){
                         toCommand("push");
                         if(((Literal*)expr)->m_token->m_type == TokenType::STRING)
                                 toCommand("\""+((Literal*)expr)->m_token->m_symbol+"\"");
+                        else if(((Literal*)expr)->m_token->m_type == TokenType::CHAR)
+                                toCommand("'"+((Literal*)expr)->m_token->m_symbol+"'");
+
                         else
                                 toCommand(((Literal*)expr)->m_token->m_symbol);
                 }
@@ -328,11 +331,11 @@ void ByteGen::decToCommand(Decleration* dec, bool isfunc){
                 toCommand("nil");
         }
 
-        if(dec->m_initalize){
+        if(dec->m_initalize && !dec->m_isArray){
                 Expression* typeEx = dec->m_type;
                 if(typeEx->name() == "Literal" ){
                         TokenType type =((Literal*)typeEx)->m_token->m_type ; 
-                        if(type != TokenType::LIST &&type != TokenType::IDEN && type != TokenType::VAR){
+                        if(type != TokenType::LIST&&type != TokenType::IDEN && type != TokenType::VAR){
                                 toCommand("cast");
                                 toCommand(typeToString(type));
                         }

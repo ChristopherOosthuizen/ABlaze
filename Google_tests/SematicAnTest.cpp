@@ -42,7 +42,7 @@ TEST(Sematic,structures){
 	ErrorThrower::hasError = false;
 	delete ErrorThrower::errors;
 	ErrorThrower::errors = new vector<string>();
-	Lexer lexer("int fith = 6;for(int i =0; i<12;i++){i =6; fith = 12;}");
+	Lexer lexer("void main(){int fith = 6;for(int i =0; i<12;i++){i =6; fith = 12;}}");
 	ASTGen gen = ASTGen(lexer.readAllTokens());
 	Body* body = gen.generateAST();	
 	SematicAn an(body);
@@ -266,4 +266,21 @@ TEST(SematicAn, classeinarrays){
 	ASSERT_TRUE(!ErrorThrower::hasError);
 	
 }
+
+TEST(SematicAn, builtinerror){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "void main(){int i = println(12); int i = len(12);}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
+	
+}
+
+
 
