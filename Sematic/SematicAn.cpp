@@ -74,7 +74,7 @@ TypeInfo SematicAn::getType(Expression* expression){
 	}else if(expression->name() == "ArrayLiteral"){
 		ArrayLiteral* literal = (ArrayLiteral*)expression;
 		Token* name =literal->m_iden->m_token; 
-		if(name->m_type== TokenType::IDEN){
+		if(name->m_type== TokenType::IDEN&& m_structs.count(name->m_symbol) == 0){
 			TypeInfo info = getVar(name->m_symbol).m_type;
 			if(!info.m_isArray &&info.m_type == TokenType::IDEN_STRING){
 				return TypeInfo("char",TokenType::IDEN_CHAR,false);
@@ -469,7 +469,7 @@ void SematicAn::checkDecleration(Decleration* decleration){
 
 void SematicAn::checkArrayLiteral(ArrayLiteral* literal){
 	TokenType type =literal->m_iden->m_token->m_type ; 
-	if(type == TokenType::IDEN || type == TokenType::STRING){
+	if(m_structs.count(literal->m_iden->m_token->m_symbol) ==0 && type == TokenType::IDEN || type == TokenType::STRING){
 		check(literal->m_iden);
 		checkTypeEquality(getLine(literal->m_iden),TypeInfo("int",TokenType::INT,false),getType(literal->m_value));
 	}else{

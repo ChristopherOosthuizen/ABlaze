@@ -252,3 +252,18 @@ TEST(SematicAn, checkFunctionAppend){
 	ASSERT_EQ(ErrorThrower::errors->size(),1);
 	
 }
+
+TEST(SematicAn, classeinarrays){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "struct Person{int age; string name; void Person(int age, string name){this.age = age; this.name = name;}} void main(){ Person: ps= Person[]; append(ps, new Person(12,\"hello\")); }";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(!ErrorThrower::hasError);
+	
+}
+
