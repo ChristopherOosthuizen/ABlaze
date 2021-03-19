@@ -28,49 +28,51 @@ SematicAn::SematicAn(Body* body){
 	m_functions["tan"+argsMes+"1"]= FunctionInfo(TypeInfo("double",TokenType::DOUBLE,true),info );
 }
 
-TokenType SematicAn::getTypeBin(BinOP*  op){
+TypeInfo SematicAn::getTypeBin(BinOP*  op){
 	TokenType os = op->m_op->m_type;
 	switch(os){
 		case TokenType::TIMES_TIMES:
-		case TokenType::DIVIDE_DIVIDE:return TokenType::DOUBLE;
+		case TokenType::DIVIDE_DIVIDE:return TypeInfo("bool",TokenType::DOUBLE,false);
 		case TokenType::OR_OR:
 		case TokenType::AND_AND:
 		case TokenType::LESS:
 		case TokenType::GREATER:
 		case TokenType::MORE_EQUAL:
-		case TokenType::LESS_EQUAL:return TokenType::BOOL;
+		case TokenType::LESS_EQUAL:return TypeInfo("bool",TokenType::BOOL,false);
 	}
-	TokenType left = getType(op->m_left);
-	TokenType right = getType(op->m_right);
-	if(left == TokenType::STRING || right == TokenType::STRING){
-		return TokenType::STRING;
-	}else if(left == TokenType::DOUBLE || right == TokenType::DOUBLE){
-		return TokenType::DOUBLE;
-	}else if(left == TokenType::INT || right == TokenType::INT){
-		return TokenType::INT;
-	}else if(right == TokenType::CHAR ||left == TokenType::CHAR ){
-		return TokenType::INT;
-	}else if(right == TokenType::BOOL || left == TokenType::BOOL){
-		return TokenType::INT;
+	TypeInfo left = getType(op->m_left);
+	TypeInfo right = getType(op->m_right);
+	if(left.m_type == TokenType::STRING || right.m_type == TokenType::STRING){
+		return TypeInfo("string",TokenType::STRING,false);
+	}else if(left.m_type == TokenType::DOUBLE || right.m_type == TokenType::DOUBLE){
+		return TypeInfo("double",TokenType::DOUBLE,false);
+	}else if(left.m_type == TokenType::INT || right.m_type == TokenType::INT){
+		return TypeInfo("int",TokenType::INT,false);
+	}else if(right.m_type == TokenType::CHAR ||left.m_type == TokenType::CHAR ){
+		return TypeInfo("int",TokenType::INT,false);
+	}else if(right.m_type == TokenType::BOOL || left.m_type == TokenType::BOOL){
+		return TypeInfo("int",TokenType::INT,false);
 	}
-	return TokenType::VAR;
+	return TypeInfo("var",TokenType::VAR,false);
 }
 
-TokenType SematicAn::getType(Expression* expression){
+TypeInfo SematicAn::getType(Expression* expression){
 	if(expression == nullptr)
-		return TokenType::VAR;
+		return TypeInfo("var",TokenType::VAR,false);
 	if(expression->name() == "BinOP"){
 		return  getTypeBin((BinOP*)expression);
 	}else if(expression->name() == "Cast"){
-		return ((Cast*)expression)->m_iden->m_token->m_type;
+		Cast* cast = (Cast*)expression;
+		return TypeInfo(typeToString(cast->m_iden->m_token->m_type),cast->m_iden->m_token->m_type,false);
 	}else if(expression->name() == "Literal"){
-		return ((Literal*)expression)->m_token->m_type;
+		Literal* lit = (Literal*)expression;
+		return TypeInfo(typeToString(lit->m_token->m_type),lit->m_token->m_type,false);
 	}else if(expression->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)expression;
 		string name = call->m_name->m_token->m_symbol +" with args count "+to_string(call->m_args->size());
-		return m_functions[name].m_info.m_type;
+		return m_functions[name].m_info;
 	}
-	return TokenType::VAR;
+	return TypeInfo("var",TokenType::VAR,false);
 }
 
 void SematicAn::analize(){
@@ -192,13 +194,13 @@ void SematicAn::checkBinOP(BinOP* binop){
 	check(binop->m_left);
 }
 
-bool SematicAn::checkReturns(Body* body,TokenType type){
+bool SematicAn::checkReturns(Body* body,TypeInfo type){
 	bool hasReturn = false;
 	for(Expression* expr: *body->m_lines){
 		if(expr->name() == "BuiltIn"){
 			BuiltIn* name = ((BuiltIn*)expr);
 			if(name->m_type->m_token->m_type == TokenType::RETURN){
-				if(type != TokenType::VOID)
+				if(type.m_type != TokenType::VOID)
 					checkTypeEquality(name->m_type->m_token->m_line,type,getType(name->m_value));
 				else if(name->m_value != nullptr)
 					ErrorThrower::error(name->m_type->m_token->m_line, "use of non null return in void function");
@@ -221,7 +223,7 @@ void SematicAn::checkBody(Body* body){
 	if(body->m_control != nullptr &&body->m_control->name() == "Function"){
 		Function* func = (Function*)body->m_control;
 		TokenType type =func->m_type->m_token->m_type; 
-		bool hasRet = checkReturns(body,type);
+		bool hasRet = checkReturns(body,TypeInfo(typeToString(type),type,false));
 		if(!hasRet && type != TokenType::VOID)
 			ErrorThrower::error(func->m_type->m_token->m_line,"Function can reach end without return");
 	}
@@ -283,17 +285,17 @@ void SematicAn::controlStatements(Expression* expression){
 		ForStat* stat = (ForStat*)expression;
 		check(stat->m_initial);
 		check(stat->m_condition);
-		checkTypeEquality(getLine(stat->m_condition),TokenType::BOOL,getType(stat->m_condition));
+		checkTypeEquality(getLine(stat->m_condition),TypeInfo("bool",TokenType::BOOL,false),getType(stat->m_condition));
 		check(stat->m_repitition);
 	}else if(name=="If"){
 		IfStat* stat = (IfStat*)expression;
 		check(stat->m_control);
-		checkTypeEquality(getLine(stat->m_control),TokenType::BOOL,getType(stat->m_control));
+		checkTypeEquality(getLine(stat->m_control),TypeInfo("bool",TokenType::BOOL,false),getType(stat->m_control));
 
 	}else if(name == "While"){
 		IfStat* stat = (IfStat*)expression;
 		check(stat->m_control);
-		checkTypeEquality(getLine(stat->m_control),TokenType::BOOL,getType(stat->m_control));
+		checkTypeEquality(getLine(stat->m_control),TypeInfo("bool",TokenType::BOOL,false),getType(stat->m_control));
 	}else if(name == "Function"){
 		checkFunction((Function*) expression);
 	}
@@ -336,7 +338,8 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	for(int i=0; i< functionCall->m_args->size(); i++){
 		Expression* arg =functionCall->m_args->at(i); 
 		check(arg);
-		checkTypeEquality(token->m_line,info.m_args[i].m_type,getType(arg));
+		TokenType type =info.m_args[i].m_type; 
+		checkTypeEquality(token->m_line,TypeInfo(typeToString(type),type,false),getType(arg));
 
 	}
 }
@@ -357,7 +360,9 @@ int SematicAn::score(TokenType type){
 	return -1;
 }
 
-void SematicAn::checkTypeEquality(int line, TokenType one, TokenType two){
+void SematicAn::checkTypeEquality(int line, TypeInfo oneT, TypeInfo twoT){
+	TokenType one = oneT.m_type;
+	TokenType two = twoT.m_type;
 	if(two == TokenType::VOID){
 		ErrorThrower::error(line,"Can not use void function as value");
 	}
@@ -379,7 +384,8 @@ void SematicAn::checkDecleration(Decleration* decleration){
 	}
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
-		checkTypeEquality(type->m_line,type->m_type,getType(decleration->m_value));
+
+		checkTypeEquality(type->m_line,TypeInfo(typeToString(type->m_type),type->m_type,decleration->m_isArray),getType(decleration->m_value));
 
 		m_vars.push_back(Lock(m_level,name->m_symbol,TypeInfo(type->m_symbol,type->m_type,decleration->m_isArray)));
 
@@ -392,7 +398,7 @@ void SematicAn::checkDecleration(Decleration* decleration){
 		check(decleration->m_name);
 		if(decleration->m_name->name() == "Literal"){
 			Token* token =((Literal*)decleration->m_name)->m_token; 
-			checkTypeEquality(token->m_line,token->m_type,getType(decleration->m_value));
+			checkTypeEquality(token->m_line,TypeInfo(typeToString(token->m_type),token->m_type,decleration->m_isArray),getType(decleration->m_value));
 		}
 
 
