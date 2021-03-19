@@ -54,6 +54,23 @@
           url: "docs/functions#return"
         - title: Builtin 
           url: "docs/functions#builtin"
+    - title: "Arrays"
+      url: "docs/arrays"
+      children:
+        - title: Initializing 
+          url: "docs/arrays#initializing"
+        - title: Appending
+          url: "docs/arrays#appending"
+        - title: Setting 
+          url: "docs/arrays#setting"
+        - title: Deleting
+          url: "docs/arrays#deleting"
+        - title: Length
+          url: "docs/arrays#length"
+        - title: Selecting
+          url: "docs/arrays#selecting"
+        - title: Strings
+          url: "docs/arrays#strings"
 
 
 
