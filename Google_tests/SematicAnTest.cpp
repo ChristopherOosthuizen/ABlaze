@@ -176,3 +176,19 @@ TEST(SematicAn,enforceBool){
 	ASSERT_EQ(ErrorThrower::errors->size(),3);
 	
 }
+
+TEST(SematicAn,listCatch){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "void main(){ var s = int[]; string: r = string[]; int i = r[i]; string ss = \"hello\"; ss[0] = \"hello\";}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
+	
+}
+

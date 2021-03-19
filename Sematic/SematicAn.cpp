@@ -67,6 +67,24 @@ TypeInfo SematicAn::getType(Expression* expression){
 	}else if(expression->name() == "Literal"){
 		Literal* lit = (Literal*)expression;
 		return TypeInfo(typeToString(lit->m_token->m_type),lit->m_token->m_type,false);
+
+	}else if(expression->name() == "ArrayLiteral"){
+		ArrayLiteral* literal = (ArrayLiteral*)expression;
+		Token* name =literal->m_iden->m_token; 
+		if(name->m_type== TokenType::IDEN){
+			TypeInfo info = getVar(name->m_symbol).m_type;
+			if(!info.m_isArray &&info.m_type == TokenType::IDEN_STRING){
+				return TypeInfo("char",TokenType::IDEN_CHAR,false);
+			}
+			info.m_isArray = false;
+
+			return info;  
+		}else{
+			if(name->m_type == TokenType::STRING){
+				TypeInfo("char",TokenType::IDEN_CHAR,false);
+			}
+			return TypeInfo(typeToString(name->m_type),name->m_type,true );
+		}
 	}else if(expression->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)expression;
 		string name = call->m_name->m_token->m_symbol +" with args count "+to_string(call->m_args->size());
@@ -363,6 +381,9 @@ int SematicAn::score(TokenType type){
 void SematicAn::checkTypeEquality(int line, TypeInfo oneT, TypeInfo twoT){
 	TokenType one = oneT.m_type;
 	TokenType two = twoT.m_type;
+	if(oneT.m_isArray != twoT.m_isArray){
+		ErrorThrower::error(line,"can not convert array into no array value");
+	}
 	if(two == TokenType::VOID){
 		ErrorThrower::error(line,"Can not use void function as value");
 	}
@@ -399,6 +420,10 @@ void SematicAn::checkDecleration(Decleration* decleration){
 		if(decleration->m_name->name() == "Literal"){
 			Token* token =((Literal*)decleration->m_name)->m_token; 
 			checkTypeEquality(token->m_line,TypeInfo(typeToString(token->m_type),token->m_type,decleration->m_isArray),getType(decleration->m_value));
+		}else if(decleration->m_name->name() == "ArrayLiteral"){
+			ArrayLiteral* literal = (ArrayLiteral*)decleration->m_name;
+			TypeInfo info = getType(literal);
+			checkTypeEquality(getLine(literal),info,getType(decleration->m_value));
 		}
 
 
@@ -406,4 +431,14 @@ void SematicAn::checkDecleration(Decleration* decleration){
 	check(decleration->m_value);
 }
 
-void SematicAn::checkArrayLiteral(ArrayLiteral* literal){}
+void SematicAn::checkArrayLiteral(ArrayLiteral* literal){
+	TokenType type =literal->m_iden->m_token->m_type ; 
+	if(type == TokenType::IDEN || type == TokenType::STRING){
+		check(literal->m_iden);
+		checkTypeEquality(getLine(literal->m_iden),TypeInfo("int",TokenType::INT,false),getType(literal->m_value));
+	}else{
+		if(literal->m_value != nullptr){
+			ErrorThrower::error(getLine(literal->m_value),"can not use number when declaring array ex: int[] ");
+		}
+	}
+}
