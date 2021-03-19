@@ -12,7 +12,7 @@ SematicAn::SematicAn(Body* body){
 	m_functions["delete"+argsMes+"2"] = FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
 	info  ={};
 	m_functions["input"+argsMes+"0"] = FunctionInfo(TypeInfo("string",TokenType::STRING,false),info );
-	info  ={TypeInfo("var",TokenType::VAR,true), TypeInfo("int",TokenType::INT,false)};
+	info  ={TypeInfo("var",TokenType::VAR,true), TypeInfo("var",TokenType::VAR,false)};
 	m_functions["append"+argsMes+"2"] = FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
 	info  ={TypeInfo("string",TokenType::STRING,false)};
 	m_functions["deleteFile"+argsMes+"1"]= FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
@@ -66,6 +66,9 @@ TypeInfo SematicAn::getType(Expression* expression){
 		return TypeInfo(typeToString(cast->m_iden->m_token->m_type),cast->m_iden->m_token->m_type,false);
 	}else if(expression->name() == "Literal"){
 		Literal* lit = (Literal*)expression;
+		if(lit->m_token->m_type == TokenType::IDEN){
+			return getVar(lit->m_token->m_symbol).m_type;
+		}
 		return TypeInfo(typeToString(lit->m_token->m_type),lit->m_token->m_type,false);
 
 	}else if(expression->name() == "ArrayLiteral"){
@@ -358,6 +361,12 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	string name =token->m_symbol+" with args count "+to_string(functionCall->m_args->size());  
 	if(m_functions.count(name) ==0 ){
 		ErrorThrower::error(token->m_line, "Undefined function: "+name);
+		return;
+	}
+	if(name == "append with args count 2"){
+		TypeInfo type = getType(functionCall->m_args->at(0));
+		type.m_isArray = false;
+		checkTypeEquality(getLine(functionCall),type,getType(functionCall->m_args->at(1)));
 		return;
 	}
 	FunctionInfo info = m_functions[name];
