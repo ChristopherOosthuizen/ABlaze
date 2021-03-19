@@ -208,3 +208,18 @@ TEST(SematicAn,listFunctions){
 	
 }
 
+TEST(SematicAn, listLiteral){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "void main(){ int: lister = {12,5.5,16,18}; int: i ={14,5,6};}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
+	
+}
+

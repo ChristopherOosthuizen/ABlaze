@@ -276,6 +276,7 @@ void SematicAn::checkStructs(Body* body){
 	}
 	popLevel();
 }
+
 int SematicAn::getLine(Expression* expression){
 	if(expression == nullptr)
 		return 0;
@@ -405,12 +406,14 @@ void SematicAn::checkDecleration(Decleration* decleration){
 	if(isReserved(name->m_symbol)){
 		ErrorThrower::error(name->m_line,"Illigal use of reserved identifier");
 	}
+	TypeInfo info;
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
-
-		checkTypeEquality(type->m_line,TypeInfo(typeToString(type->m_type),type->m_type,decleration->m_isArray),getType(decleration->m_value));
+		 info =TypeInfo(typeToString(type->m_type),type->m_type,decleration->m_isArray); 
+		checkTypeEquality(type->m_line,info,getType(decleration->m_value));
 
 		m_vars.push_back(Lock(m_level,name->m_symbol,TypeInfo(type->m_symbol,type->m_type,decleration->m_isArray)));
+		
 
 		if(type->m_type ==TokenType::IDEN){
 			if(m_structs.count(type->m_symbol) ==0){
@@ -424,10 +427,18 @@ void SematicAn::checkDecleration(Decleration* decleration){
 			checkTypeEquality(token->m_line,TypeInfo(typeToString(token->m_type),token->m_type,decleration->m_isArray),getType(decleration->m_value));
 		}else if(decleration->m_name->name() == "ArrayLiteral"){
 			ArrayLiteral* literal = (ArrayLiteral*)decleration->m_name;
-			TypeInfo info = getType(literal);
+			info = getType(literal);
 			checkTypeEquality(getLine(literal),info,getType(decleration->m_value));
 		}
 
+
+	}
+	if(decleration->m_value != nullptr&& decleration->m_value->name() == "Array"){
+			Array* array = (Array*)decleration->m_value; 
+			info.m_isArray = false;
+			for(Expression* arg: *array->m_args){
+				checkTypeEquality(getLine(decleration->m_name),info,getType(arg));
+			}
 
 	}
 	check(decleration->m_value);
