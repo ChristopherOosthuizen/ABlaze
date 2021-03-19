@@ -103,9 +103,15 @@ Expression* ASTGen::body(){
        }else if(type == TokenType::CLASS){
                control = new Class(nextLit());
         }else if(type == TokenType::STATIC){
-                control = new Function(true,nextLit(),(FunctionCall*)functionCall() );
+                bool isArray =false;
+                if(eat(TokenType::COLON))
+                        isArray = true;
+                control = new Function(true,isArray,nextLit(),(FunctionCall*)functionCall() );
        }else if(isIden(lit->m_token)){
-                control = new Function(false,lit,(FunctionCall*)functionCall());
+               bool isArray = false;
+               if(eat(TokenType::COLON))
+                        isArray = true;;
+                control = new Function(false,isArray,lit,(FunctionCall*)functionCall());
        }
        return new Body(control,lines());
 }
@@ -189,7 +195,7 @@ bool ASTGen::isBod(){
 Expression* ASTGen::lineExpr(){
         Expression* expr = nullptr;
         bool isDec =isIden(peek()) || (equalsForward(1,TokenType::COLON) || (equals(TokenType::IDEN)&& equalsForward(1,TokenType::IDEN))); 
-        if( isBod() ||(isDec && equalsForward(2,TokenType::OPEN_PARENTHESE))){
+        if( isBod() ||(isDec && equalsForward(2,TokenType::OPEN_PARENTHESE)) ||(isDec && equalsForward(3,TokenType::OPEN_PARENTHESE))  ){
                 return body();
         }else if(isDec){
                expr = decleration(); 

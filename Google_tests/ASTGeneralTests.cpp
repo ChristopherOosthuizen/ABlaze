@@ -37,6 +37,19 @@ TEST(ASTGeneral,classs){
  
 }
 
+TEST(ASTGeneral,arrayFunc){
+        ErrorThrower::hasError = false;
+        ErrorThrower::errors = new vector<string>();
+        string end = "int: its(){return {12,14};}";
+        Lexer lexer(end);
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_TRUE(!ErrorThrower::hasError);
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Body");
+}
+
+
 
 TEST(ASTGeneral,array){
         ErrorThrower::hasError = false;

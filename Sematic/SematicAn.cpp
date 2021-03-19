@@ -89,6 +89,8 @@ TypeInfo SematicAn::getType(Expression* expression){
 		FunctionCall* call = (FunctionCall*)expression;
 		string name = call->m_name->m_token->m_symbol +" with args count "+to_string(call->m_args->size());
 		return m_functions[name].m_info;
+	}else if(expression->name() == "Array"){
+		return TypeInfo("var",TokenType::VAR,true);
 	}
 	return TypeInfo("var",TokenType::VAR,false);
 }
@@ -241,7 +243,7 @@ void SematicAn::checkBody(Body* body){
 	if(body->m_control != nullptr &&body->m_control->name() == "Function"){
 		Function* func = (Function*)body->m_control;
 		TokenType type =func->m_type->m_token->m_type; 
-		bool hasRet = checkReturns(body,TypeInfo(typeToString(type),type,false));
+		bool hasRet = checkReturns(body,TypeInfo(typeToString(type),type,func->m_isArray));
 		if(!hasRet && type != TokenType::VOID)
 			ErrorThrower::error(func->m_type->m_token->m_line,"Function can reach end without return");
 	}
@@ -340,7 +342,7 @@ void SematicAn::checkFunction(Function* expr){
 		args.push_back(TypeInfo(arg->m_type->m_token->m_symbol,arg->m_type->m_token->m_type,arg->m_isArray));
 
 	}
-	m_functions[name] =  FunctionInfo(TypeInfo(token->m_symbol,token->m_type,false),args);
+	m_functions[name] =  FunctionInfo(TypeInfo(token->m_symbol,token->m_type,expr->m_isArray),args);
 	checkFunctionCall(expr->m_call);
 }
 
@@ -357,7 +359,7 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 		Expression* arg =functionCall->m_args->at(i); 
 		check(arg);
 		TokenType type =info.m_args[i].m_type; 
-		checkTypeEquality(token->m_line,TypeInfo(typeToString(type),type,false),getType(arg));
+		checkTypeEquality(token->m_line,TypeInfo(typeToString(type),type,info.m_info.m_isArray),getType(arg));
 
 	}
 }

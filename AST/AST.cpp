@@ -120,10 +120,11 @@ ForStat::~ForStat(){
        delete m_condition;
        delete m_repitition;
 }
-Function::Function(bool isStatic,Literal* type,FunctionCall* call){
+Function::Function(bool isStatic,bool isArray,Literal* type,FunctionCall* call){
         m_type = type;
         m_call = call;
         m_isStatic = isStatic;
+        m_isArray = isArray;
 
 }
 

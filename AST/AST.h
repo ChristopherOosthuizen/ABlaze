@@ -115,11 +115,12 @@ class ForStat: public Expression{
 class Function: public Expression{
         public:
                 string name() override;
-                Function(bool m_isStatic,Literal* type, FunctionCall* call);
+                Function(bool m_isStatic,bool isArray,Literal* type, FunctionCall* call);
                 ~Function(); 
                 Literal* m_type;
                 FunctionCall* m_call;
                 bool m_isStatic;
+                bool m_isArray;
 };
 
 class ArrayLiteral: public Expression{
