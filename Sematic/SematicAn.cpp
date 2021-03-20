@@ -321,13 +321,16 @@ void SematicAn::checkStructs(Body* body){
 	m_structs[name] = vars;
 	vector<FunctionInfo> funcInfo;
 	if(control->m_extends){
-		vector<FunctionInfo> info = m_structsFunctions[control->m_extender->m_token->m_symbol];
-		for(FunctionInfo in: info){
-			in.m_level = m_level;
+		if(m_structs.count(control->m_extender->m_token->m_symbol) != 0){
+			vector<FunctionInfo> info = m_structsFunctions[control->m_extender->m_token->m_symbol];
+			for(FunctionInfo in: info){
+				in.m_level = m_level;
 
-			funcInfo.push_back(in);		
-			m_functions.push_back(in);
-		}
+				funcInfo.push_back(in);		
+				m_functions.push_back(in);
+			}
+		}else
+			ErrorThrower::error(getLine(control->m_extender),"extends unknown class");
 	}
 	m_structsFunctions[name] = funcInfo;
 
