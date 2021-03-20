@@ -22,7 +22,11 @@ class FunctionInfo{
 	public:
 		TypeInfo m_info;
 		vector<TypeInfo> m_args;
-		FunctionInfo(TypeInfo info,vector<TypeInfo> args){
+		string m_name;
+		int m_level;
+		FunctionInfo(int level, string name, TypeInfo info,vector<TypeInfo> args){
+			m_level = level;
+			m_name = name;
 			m_info = info;
 			m_args = args;
 		}
@@ -44,14 +48,16 @@ class Lock{
 class SematicAn{
 	Body* m_body;
 	vector<Lock> m_vars;
-	map<string,FunctionInfo> m_functions;
-	map<string,map<string,FunctionInfo>> m_structsFunctions;
+	vector<FunctionInfo> m_functions;
+	map<string,vector<FunctionInfo>> m_structsFunctions;
 	map<string,map<string,TypeInfo>> m_structs;
 	int m_level;
 	string m_inside;
 	public:
 		SematicAn(Body* body);
 		void analize();
+		bool containsFunc(vector<FunctionInfo> info,string func);
+		FunctionInfo getFunc(vector<FunctionInfo> info,string func);
 		void check(Expression* expression);
 		void checkFunction(Body* body);
 		void checkBinOP(BinOP* op);

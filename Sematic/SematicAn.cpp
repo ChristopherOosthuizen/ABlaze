@@ -9,23 +9,23 @@ SematicAn::SematicAn(Body* body){
 	m_level =0;
 	string argsMes = " with args count ";
 	vector<TypeInfo> info  ={TypeInfo("List",TokenType::VAR,true), TypeInfo("int",TokenType::INT,false)};
-	m_functions["delete"+argsMes+"2"] = FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
+	m_functions.push_back(FunctionInfo(0,"delete"+argsMes+"2", TypeInfo("void",TokenType::VOID,false),info ));
 	info  ={};
-	m_functions["input"+argsMes+"0"] = FunctionInfo(TypeInfo("string",TokenType::STRING,false),info );
+	m_functions.push_back(FunctionInfo(0,"input"+argsMes+"0" , TypeInfo("string",TokenType::STRING,false),info ));
 	info  ={TypeInfo("var",TokenType::VAR,true), TypeInfo("var",TokenType::VAR,false)};
-	m_functions["append"+argsMes+"2"] = FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
+	m_functions.push_back(FunctionInfo(0,"append"+argsMes+"2" , TypeInfo("void",TokenType::VOID,false),info ));
 	info  ={TypeInfo("string",TokenType::STRING,false)};
-	m_functions["deleteFile"+argsMes+"1"]= FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
-	m_functions["createFile"+argsMes+"1"]= FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
-	m_functions["exists"+argsMes+"1"]= FunctionInfo(TypeInfo("int",TokenType::INT,false),info );
+	m_functions.push_back(FunctionInfo(0,"deleteFile"+argsMes+"1" , TypeInfo("void",TokenType::VOID,false),info ));
+	m_functions.push_back(FunctionInfo(0,"createFile"+argsMes+"1" , TypeInfo("void",TokenType::VOID,false),info ));
+	m_functions.push_back(FunctionInfo(0,"exists"+argsMes+"1" , TypeInfo("int",TokenType::INT,false),info ));
 	info  ={TypeInfo("string",TokenType::STRING,false),TypeInfo("string",TokenType::STRING,false)};
-	m_functions["writeFile"+argsMes+"2"]= FunctionInfo(TypeInfo("void",TokenType::VOID,false),info );
+	m_functions.push_back(FunctionInfo(0,"writeFile"+argsMes+"2" , TypeInfo("void",TokenType::VOID,false),info ));
 	info  ={TypeInfo("string",TokenType::STRING,false)};
-	m_functions["readFile"+argsMes+"1"]= FunctionInfo(TypeInfo("string",TokenType::LIST,true),info );
+	m_functions.push_back(FunctionInfo(0,"readFile"+argsMes+"1" , TypeInfo("string",TokenType::LIST,true),info ));
 	info  ={TypeInfo("double",TokenType::DOUBLE,false)};
-	m_functions["sin"+argsMes+"1"]= FunctionInfo(TypeInfo("double",TokenType::DOUBLE,true),info );
-	m_functions["cos"+argsMes+"1"]= FunctionInfo(TypeInfo("double",TokenType::DOUBLE,true),info );
-	m_functions["tan"+argsMes+"1"]= FunctionInfo(TypeInfo("double",TokenType::DOUBLE,true),info );
+	m_functions.push_back(FunctionInfo(0,"sin"+argsMes+"1" , TypeInfo("double",TokenType::DOUBLE,true),info ));
+	m_functions.push_back(FunctionInfo(0,"cos"+argsMes+"1" , TypeInfo("double",TokenType::DOUBLE,true),info ));
+	m_functions.push_back(FunctionInfo(0,"tan"+argsMes+"1" , TypeInfo("double",TokenType::DOUBLE,true),info ));
 }
 
 TypeInfo SematicAn::getTypeBin(BinOP*  op){
@@ -61,7 +61,7 @@ TypeInfo SematicAn::getTypeDot(Dot* dot){
 	if(dot->m_subIden->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)dot->m_subIden;
 		string name = call->m_name->m_token->m_symbol+ " with args count "+to_string(call->m_args->size());
-		return m_structsFunctions[info.m_symbol][name].m_info; 
+		return getFunc(m_structsFunctions[info.m_symbol],name).m_info; 
 	}else if(dot->m_subIden->name() == "Literal"){
 		Literal* literal = (Literal*)dot->m_subIden;
 		return m_structs[info.m_symbol][literal->m_token->m_symbol];
@@ -116,7 +116,7 @@ TypeInfo SematicAn::getType(Expression* expression){
 	}else if(expression->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)expression;
 		string name = call->m_name->m_token->m_symbol +" with args count "+to_string(call->m_args->size());
-		return m_functions[name].m_info;
+		return getFunc(m_functions,name).m_info;
 	}else if(expression->name() == "Array"){
 		return TypeInfo("var",TokenType::VAR,true);
 	}
@@ -184,6 +184,9 @@ void SematicAn::increaseLevel(){
 
 
 void SematicAn::popLevel(){
+	while(m_functions.size() >0 && m_functions[m_functions.size()-1].m_level == m_level){
+		m_functions.pop_back();
+	}
 	while(m_vars.size() >0 && m_vars[m_vars.size()-1].m_level == m_level){
 		m_vars.pop_back();
 	}
@@ -231,11 +234,11 @@ void SematicAn::checkDot(Dot* dot){
 	if(dot->m_subIden->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)dot->m_subIden;
 		string name =call->m_name->m_token->m_symbol+" with args count "+to_string(call->m_args->size()); 
-		if(m_structsFunctions[info.m_symbol].count(name) == 0){
+		if(!containsFunc(m_structsFunctions[info.m_symbol],name)){
 			ErrorThrower::error(call->m_name->m_token->m_line,"Undefined class call");
 			return;
 		}	
-		FunctionInfo funcInfo = m_structsFunctions[info.m_symbol][name];
+		FunctionInfo funcInfo = getFunc(m_structsFunctions[info.m_symbol],name);
 		for(int i=0;  i < funcInfo.m_args.size(); i++){
 			checkTypeEquality(call->m_name->m_token->m_line,funcInfo.m_args[i],getType(call->m_args->at(i)));
 
@@ -297,7 +300,7 @@ void SematicAn::checkStructs(Body* body){
 
 	map<string,TypeInfo> vars;
 	m_structs[name] = vars;
-	map<string,FunctionInfo> funcInfo;
+	vector<FunctionInfo> funcInfo;
 	m_structsFunctions[name] = funcInfo;
 	m_inside= name;
 	for(int i=0; i< body->m_lines->size(); i++){
@@ -333,7 +336,9 @@ void SematicAn::checkStructs(Body* body){
 				}
 				string nameFunc = call->m_name->m_token->m_symbol;
 				Token* token = func->m_type->m_token;
-				m_structsFunctions[name][nameFunc+" with args count "+to_string(call->m_args->size())] = FunctionInfo(TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo);
+				FunctionInfo info =FunctionInfo(m_level,nameFunc+" with args count "+to_string(call->m_args->size()) ,TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo); 
+				m_functions.push_back(info);
+				m_structsFunctions[name].push_back(info);
 			}
 		}
 
@@ -389,6 +394,23 @@ void SematicAn::controlStatements(Expression* expression){
 		checkFunction((Function*) expression);
 	}
 }
+bool SematicAn::containsFunc(vector<FunctionInfo> funcs,string name ){
+	for(FunctionInfo info : funcs){
+		if(name == info.m_name)
+			return true;
+	}
+	return false;
+}
+
+FunctionInfo SematicAn::getFunc(vector<FunctionInfo> funcs,string name ){
+	for(FunctionInfo info : funcs){
+		if(name == info.m_name)
+			return info;
+	}
+	return FunctionInfo();
+}
+
+
 
 void SematicAn::checkFunction(Function* expr){
 	Token* token =expr->m_type->m_token; 
@@ -411,7 +433,7 @@ void SematicAn::checkFunction(Function* expr){
 		args.push_back(TypeInfo(arg->m_type->m_token->m_symbol,arg->m_type->m_token->m_type,arg->m_isArray));
 
 	}
-	m_functions[name] =  FunctionInfo(TypeInfo(token->m_symbol,token->m_type,expr->m_isArray),args);
+	m_functions.push_back(FunctionInfo(m_level,name,TypeInfo(token->m_symbol,token->m_type,expr->m_isArray),args));
 	for(Expression* arg: *call->m_args){
 		check(arg);
 	}
@@ -425,13 +447,9 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	Token* token = functionCall->m_name->m_token; 
 	string name =token->m_symbol+" with args count "+to_string(functionCall->m_args->size());  
 	
-	if(m_functions.count(name) ==0 && m_inside == "" ){
+	if(containsFunc(m_functions,name) ==0 && m_inside == "" ){
 		ErrorThrower::error(token->m_line, "Undefined function: "+name);
 		return;
-	}else if(m_inside != "" && m_structsFunctions[m_inside].count(name) ==0){
-		ErrorThrower::error(token->m_line, "Undefined function: "+name);
-		return;
-
 	}
 	if(name == "append with args count 2"){
 		TypeInfo type = getType(functionCall->m_args->at(0));
@@ -440,11 +458,7 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 		return;
 	}
 
-	FunctionInfo info;
-	if(m_inside !="" && m_structsFunctions[m_inside].count(name) != 0 ){
-		info = m_structsFunctions[m_inside][name];
-	}else
-		info = m_functions[name];
+	FunctionInfo info = getFunc(m_functions,name);
 	for(int i=0; i< functionCall->m_args->size(); i++){
 		Expression* arg =functionCall->m_args->at(i); 
 		check(arg);
