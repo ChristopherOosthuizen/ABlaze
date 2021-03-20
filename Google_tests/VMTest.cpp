@@ -266,6 +266,17 @@ TEST(Vm,staticFuncs){
 
 }
 
+TEST(VM,classwihoutSTate){
+       ByteLexer lexer("startlocal functionPush make0 structdec Pos call main Pos.make0: store this call much0 return much0: store this push 15 return main: new Pos store pos load pos classcall make0 halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),1);
+       ASSERT_EQ(vm.m_stack[0].m_type,ByteType::INT);
+       ASSERT_EQ(vm.m_stack[0].m_val.m_int,15);
+}
+
+
 TEST(VM,classcallStates){
        ByteLexer lexer("startlocal functionPush make0 functionPush much0 structdec Pos call main Pos.make0: store this call much0 return Pos.much0: store this push 15 return main: new Pos store pos load pos classcall make0 halt");
        vector<ByteToken*> tokens = lexer.readAllTokens();

@@ -179,7 +179,10 @@ void Vm::classcall(){
                 name = (*m_structs[val.m_val.m_string]->m_functions)[funcName];
         }else{
                 StructObj* obj = (StructObj*)m_objs[val.m_val.m_int]->m_pointer;
-                name = (*obj->m_functions)[funcName];
+                if(obj->m_functions->count(funcName) !=0)
+                        name = (*obj->m_functions)[funcName];
+                else 
+                        name = funcName;
         }
         m_jumpBacks.push_back(m_pos+1);
         vector<Local*>* locals = new vector<Local*>();
