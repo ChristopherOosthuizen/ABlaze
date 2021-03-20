@@ -91,6 +91,12 @@ TypeInfo SematicAn::getType(Expression* expression){
 		return TypeInfo(typeToString(cast->m_iden->m_token->m_type),cast->m_iden->m_token->m_type,false);
 	}else if(expression->name() == "Literal"){
 		Literal* lit = (Literal*)expression;
+		if(lit->m_token->m_symbol == "this"){
+			return TypeInfo(m_inside,TokenType::STRUCT,false);
+		}
+		if(m_structs.count(lit->m_token->m_symbol) !=0){
+			return TypeInfo(lit->m_token->m_symbol,TokenType::NIL,false);
+		}
 		if(lit->m_token->m_type == TokenType::IDEN){
 			return getVar(lit->m_token->m_symbol).m_type;
 		}
@@ -229,17 +235,9 @@ void SematicAn::checkLiteral(Literal* literal){
 
 
 void SematicAn::checkDot(Dot* dot){
-	TypeInfo info ;
-
-	if(dot->m_iden->name() != "Literal" || m_structs.count(((Literal*)dot->m_iden)->m_token->m_symbol) ==0){
+	TypeInfo info = getType(dot->m_iden);
+	if(info.m_type != TokenType::NIL)
 		check(dot->m_iden);		
-		info = getType(dot->m_iden);
-	}
-	else if(dot->m_iden->name() == "Literal"){
-		Literal* literal = (Literal*)dot->m_iden;	
-		info = TypeInfo(literal->m_token->m_symbol,TokenType::NIL,false);
-	}else
-		return;
 
 
 	if(dot->m_subIden->name() == "FunctionCall"){
@@ -258,6 +256,13 @@ void SematicAn::checkDot(Dot* dot){
 
 		}
 
+	}else if(dot->m_subIden->name() == "Literal"){
+		Literal* literal = (Literal*)dot->m_subIden;
+		string name =info.m_symbol; 
+		if(m_structs[name].count(literal->m_token->m_symbol ) ==0){
+			ErrorThrower::error(literal->m_token->m_line,"Undefined class variable");	
+			return;
+		}
 	}
 	
 }
@@ -334,9 +339,9 @@ void SematicAn::checkStructs(Body* body){
 		
 			Decleration* dect = (Decleration*)expr;
 		
-			string name = ((Literal*)dect->m_name)->m_token->m_symbol;
+			string nameVar = ((Literal*)dect->m_name)->m_token->m_symbol;
 			Token* type =dect->m_type->m_token;
-			vars[name] =  TypeInfo(type->m_symbol,type->m_type, dect->m_isArray);
+			m_structs[name][nameVar] =  TypeInfo(type->m_symbol,type->m_type, dect->m_isArray);
 		}else if(expr->name() == "Body"){
 			Body* body = (Body*)expr;
 			if(body->m_control->name() == "Function"){

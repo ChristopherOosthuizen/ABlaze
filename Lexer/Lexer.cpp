@@ -49,7 +49,7 @@ bool Lexer::isNum(char c){
 
 // check if weather a char is a letter
 bool Lexer::isLetter(char c){
-	bool is = c== '_'|| (c >=65 && c< 91) || (c >= 97 && c < 122);
+	bool is = c== '_'|| (c >=65 && c< 91) || (c >= 97 && c < 123);
 	return is;
 }
 

@@ -61,7 +61,7 @@ TEST(Sematic,structs){
 	Body* body = gen.generateAST();	
 	SematicAn an(body);
 	an.analize();
-	ASSERT_EQ(ErrorThrower::errors->size(),2);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
 }
 
 
