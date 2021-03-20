@@ -345,5 +345,21 @@ TEST(SematicAn, extends){
 	
 }
 
+TEST(SematicAn, stats){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = " struct Pos { static void mint(){println 12;} void read(){}} void main(){ Pos.mint(); Pos.read(); }";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
+	
+}
+
+
 
 

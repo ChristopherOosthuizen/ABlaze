@@ -229,8 +229,19 @@ void SematicAn::checkLiteral(Literal* literal){
 
 
 void SematicAn::checkDot(Dot* dot){
-	check(dot->m_iden);	
-	TypeInfo info = getType(dot->m_iden);
+	TypeInfo info ;
+
+	if(dot->m_iden->name() != "Literal" || m_structs.count(((Literal*)dot->m_iden)->m_token->m_symbol) ==0){
+		check(dot->m_iden);		
+		info = getType(dot->m_iden);
+	}
+	else if(dot->m_iden->name() == "Literal"){
+		Literal* literal = (Literal*)dot->m_iden;	
+		info = TypeInfo(literal->m_token->m_symbol,TokenType::NIL,false);
+	}else
+		return;
+
+
 	if(dot->m_subIden->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)dot->m_subIden;
 		string name =call->m_name->m_token->m_symbol+" with args count "+to_string(call->m_args->size()); 
@@ -239,6 +250,9 @@ void SematicAn::checkDot(Dot* dot){
 			return;
 		}	
 		FunctionInfo funcInfo = getFunc(m_structsFunctions[info.m_symbol],name);
+		if(info.m_type == TokenType::NIL &&!funcInfo.m_static){
+			ErrorThrower::error(call->m_name->m_token->m_line, "Static call of non ststic function");
+		}
 		for(int i=0;  i < funcInfo.m_args.size(); i++){
 			checkTypeEquality(call->m_name->m_token->m_line,funcInfo.m_args[i],getType(call->m_args->at(i)));
 
@@ -346,7 +360,7 @@ void SematicAn::checkStructs(Body* body){
 				}
 				string nameFunc = call->m_name->m_token->m_symbol;
 				Token* token = func->m_type->m_token;
-				FunctionInfo info =FunctionInfo(m_level,nameFunc+" with args count "+to_string(call->m_args->size()) ,TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo); 
+				FunctionInfo info =FunctionInfo(func->m_isStatic,m_level,nameFunc+" with args count "+to_string(call->m_args->size()) ,TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo); 
 				m_functions.push_back(info);
 				m_structsFunctions[name].push_back(info);
 			}
