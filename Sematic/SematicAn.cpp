@@ -298,6 +298,8 @@ void SematicAn::checkStructs(Body* body){
 	map<string,TypeInfo> vars;
 	m_structs[name] = vars;
 	map<string,FunctionInfo> funcInfo;
+	m_structsFunctions[name] = funcInfo;
+	m_inside= name;
 	for(int i=0; i< body->m_lines->size(); i++){
 		Expression* expr =body->m_lines->at(i); 
 		check(expr);
@@ -329,15 +331,16 @@ void SematicAn::checkStructs(Body* body){
 					Token* token = decleration->m_type->m_token;
 					argInfo.push_back(TypeInfo(token->m_symbol,token->m_type,decleration->m_isArray));	
 				}
-				string name = call->m_name->m_token->m_symbol;
+				string nameFunc = call->m_name->m_token->m_symbol;
 				Token* token = func->m_type->m_token;
-				funcInfo[name+" with args count "+to_string(call->m_args->size())] = FunctionInfo(TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo);
+				m_structsFunctions[name][nameFunc+" with args count "+to_string(call->m_args->size())] = FunctionInfo(TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo);
 			}
 		}
 
 		
 	}
-	m_structsFunctions[name] = funcInfo;
+	m_inside = "";
+	
 
 	popLevel();
 }
@@ -421,9 +424,14 @@ void SematicAn::checkFunction(Function* expr){
 void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	Token* token = functionCall->m_name->m_token; 
 	string name =token->m_symbol+" with args count "+to_string(functionCall->m_args->size());  
-	if(m_functions.count(name) ==0 ){
+	
+	if(m_functions.count(name) ==0 && m_inside == "" ){
 		ErrorThrower::error(token->m_line, "Undefined function: "+name);
 		return;
+	}else if(m_inside != "" && m_structsFunctions[m_inside].count(name) ==0){
+		ErrorThrower::error(token->m_line, "Undefined function: "+name);
+		return;
+
 	}
 	if(name == "append with args count 2"){
 		TypeInfo type = getType(functionCall->m_args->at(0));
@@ -431,7 +439,12 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 		checkTypeEquality(getLine(functionCall),type,getType(functionCall->m_args->at(1)));
 		return;
 	}
-	FunctionInfo info = m_functions[name];
+
+	FunctionInfo info;
+	if(m_inside !="" && m_structsFunctions[m_inside].count(name) != 0 ){
+		info = m_structsFunctions[m_inside][name];
+	}else
+		info = m_functions[name];
 	for(int i=0; i< functionCall->m_args->size(); i++){
 		Expression* arg =functionCall->m_args->at(i); 
 		check(arg);

@@ -48,6 +48,7 @@ class SematicAn{
 	map<string,map<string,FunctionInfo>> m_structsFunctions;
 	map<string,map<string,TypeInfo>> m_structs;
 	int m_level;
+	string m_inside;
 	public:
 		SematicAn(Body* body);
 		void analize();
