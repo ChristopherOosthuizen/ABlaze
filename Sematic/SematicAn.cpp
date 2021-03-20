@@ -301,7 +301,17 @@ void SematicAn::checkStructs(Body* body){
 	map<string,TypeInfo> vars;
 	m_structs[name] = vars;
 	vector<FunctionInfo> funcInfo;
+	if(control->m_extends){
+		vector<FunctionInfo> info = m_structsFunctions[control->m_extender->m_token->m_symbol];
+		for(FunctionInfo in: info){
+			in.m_level = m_level;
+
+			funcInfo.push_back(in);		
+			m_functions.push_back(in);
+		}
+	}
 	m_structsFunctions[name] = funcInfo;
+
 	m_inside= name;
 	for(int i=0; i< body->m_lines->size(); i++){
 		Expression* expr =body->m_lines->at(i); 

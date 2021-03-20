@@ -331,4 +331,19 @@ TEST(SematicAn, structsFunctions){
 	
 }
 
+TEST(SematicAn, extends){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "struct Place{ void read(){}} struct Pos extends Place{ void make(){read();} void write(){ make();}} void main(){ Pos pos = new Pos; pos.read();}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(!ErrorThrower::hasError);
+	
+}
+
+
 
