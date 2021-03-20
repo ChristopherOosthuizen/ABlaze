@@ -56,12 +56,29 @@ TypeInfo SematicAn::getTypeBin(BinOP*  op){
 	return TypeInfo("var",TokenType::VAR,false);
 }
 
+TypeInfo SematicAn::getTypeDot(Dot* dot){
+	TypeInfo info = getType(dot->m_iden);
+	if(dot->m_subIden->name() == "FunctionCall"){
+		FunctionCall* call = (FunctionCall*)dot->m_subIden;
+		string name = call->m_name->m_token->m_symbol+ " with args count "+to_string(call->m_args->size());
+		return m_structsFunctions[info.m_symbol][name].m_info; 
+	}else if(dot->m_subIden->name() == "Literal"){
+		Literal* literal = (Literal*)dot->m_subIden;
+		return m_structs[info.m_symbol][literal->m_token->m_symbol];
+	}
+	return TypeInfo("var",TokenType::VAR,false);
+
+}
+
 TypeInfo SematicAn::getType(Expression* expression){
 	if(expression == nullptr)
 		return TypeInfo("var",TokenType::VAR,false);
 	if(expression->name() == "BinOP"){
 		return  getTypeBin((BinOP*)expression);
-	}else if(expression->name() == "BuiltIn"){
+	}else if(expression->name() == "Dot"){
+		return getTypeDot((Dot*)expression);
+	}
+	else if(expression->name() == "BuiltIn"){
 		BuiltIn* builtin = (BuiltIn*)expression;
 		if(builtin->m_type->m_token->m_type == TokenType::LEN){
 			return TypeInfo("int",TokenType::INT,false);
@@ -210,13 +227,22 @@ void SematicAn::checkLiteral(Literal* literal){
 
 void SematicAn::checkDot(Dot* dot){
 	check(dot->m_iden);	
-	/*if(containsVar(dot->m_iden->m_token->m_symbol)){
-		string type = getVar(dot->m_iden->m_token->m_symbol).m_type.m_symbol;
-		Token* sub = dot->m_subIden->m_token;
-		if(m_structs[type].count(sub->m_symbol) ==0){
-			ErrorThrower::unNamedError("unkown type",sub->m_line);
+	TypeInfo info = getType(dot->m_iden);
+	if(dot->m_subIden->name() == "FunctionCall"){
+		FunctionCall* call = (FunctionCall*)dot->m_subIden;
+		string name =call->m_name->m_token->m_symbol+" with args count "+to_string(call->m_args->size()); 
+		if(m_structsFunctions[info.m_symbol].count(name) == 0){
+			ErrorThrower::error(call->m_name->m_token->m_line,"Undefined class call");
+			return;
+		}	
+		FunctionInfo funcInfo = m_structsFunctions[info.m_symbol][name];
+		for(int i=0;  i < funcInfo.m_args.size(); i++){
+			checkTypeEquality(call->m_name->m_token->m_line,funcInfo.m_args[i],getType(call->m_args->at(i)));
+
 		}
-	}*/
+
+	}
+	
 }
 
 
@@ -271,7 +297,7 @@ void SematicAn::checkStructs(Body* body){
 
 	map<string,TypeInfo> vars;
 	m_structs[name] = vars;
-
+	map<string,FunctionInfo> funcInfo;
 	for(int i=0; i< body->m_lines->size(); i++){
 		Expression* expr =body->m_lines->at(i); 
 		check(expr);
@@ -282,9 +308,37 @@ void SematicAn::checkStructs(Body* body){
 			string name = ((Literal*)dect->m_name)->m_token->m_symbol;
 			Token* type =dect->m_type->m_token;
 			vars[name] =  TypeInfo(type->m_symbol,type->m_type, dect->m_isArray);
+		}else if(expr->name() == "Body"){
+			Body* body = (Body*)expr;
+			if(body->m_control->name() == "Function"){
+				Function* func = (Function*)body->m_control; 	
+				FunctionCall* call = func->m_call;	
+				vector<TypeInfo> argInfo;
+				for(Expression* arg:*call->m_args){
+					if(arg->name() != "Decleration"){
+						argInfo.push_back(TypeInfo("",TokenType::NIL,false));
+						ErrorThrower::error(getLine(arg),"illigal use of non decleration as argument");
+						continue;
+					}
+					Decleration* decleration = (Decleration*)arg;
+					if(!decleration->m_initalize){
+						argInfo.push_back(TypeInfo("",TokenType::NIL,false));
+						ErrorThrower::error(getLine(arg),"illigal use of non decleration as argument");
+						continue;
+					}
+					Token* token = decleration->m_type->m_token;
+					argInfo.push_back(TypeInfo(token->m_symbol,token->m_type,decleration->m_isArray));	
+				}
+				string name = call->m_name->m_token->m_symbol;
+				Token* token = func->m_type->m_token;
+				funcInfo[name+" with args count "+to_string(call->m_args->size())] = FunctionInfo(TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo);
+			}
 		}
+
 		
 	}
+	m_structsFunctions[name] = funcInfo;
+
 	popLevel();
 }
 

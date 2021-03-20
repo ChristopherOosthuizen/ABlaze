@@ -45,7 +45,7 @@ class SematicAn{
 	Body* m_body;
 	vector<Lock> m_vars;
 	map<string,FunctionInfo> m_functions;
-	map<string,map<string,TypeInfo>> m_structsFunctions;
+	map<string,map<string,FunctionInfo>> m_structsFunctions;
 	map<string,map<string,TypeInfo>> m_structs;
 	int m_level;
 	public:
@@ -58,6 +58,7 @@ class SematicAn{
 		bool checkReturns(Body* body,TypeInfo type);
 		TypeInfo getTypeBin(BinOP* bin);
 		TypeInfo getType(Expression* expression);
+		TypeInfo getTypeDot(Dot* dot);
 		int score(TokenType type);
 		void checkTypeEquality(int line,TypeInfo one, TypeInfo two);
 		void checkDecleration(Decleration* dec);

@@ -284,3 +284,36 @@ TEST(SematicAn, builtinerror){
 
 
 
+
+TEST(SematicAn, classFuncs){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "struct Pos{ void read(){} double make(){return \"12\";} } void main(){ Pos pos = new Pos; pos.read(); int i= pos.make(); pos.right();}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),3);
+	
+}
+
+TEST(SematicAn, strucElements){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main = "struct Pos{ double x =12; double y = 14; } void main(){ Pos pos = new Pos; int i = pos.x;  pos.z;}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_TRUE(ErrorThrower::hasError);
+	ASSERT_EQ(ErrorThrower::errors->size(),2);
+	
+}
+
+
+
