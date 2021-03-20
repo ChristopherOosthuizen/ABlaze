@@ -606,6 +606,14 @@ void Vm::call(){
         }
         m_locals.push_back(locals);
         m_localCounts.push_back(1);
+        vector<Local*>* prevLocal= m_locals[m_locals.size()-2];
+        for(Local* local: *prevLocal){
+                if(local->m_name == "this"){
+                        m_stack.push_back(local->m_val);
+                        classcall();
+                        return;
+                }
+        }
         jump();
 }
 
