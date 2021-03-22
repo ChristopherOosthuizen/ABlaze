@@ -343,7 +343,9 @@ void SematicAn::checkStructs(Body* body){
 		
 			string nameVar = ((Literal*)dect->m_name)->m_token->m_symbol;
 			Token* type =dect->m_type->m_token;
-			m_structs[name][nameVar] =  TypeInfo(type->m_symbol,type->m_type, dect->m_isArray);
+			TypeInfo info =TypeInfo(type->m_symbol,type->m_type, dect->m_isArray); 
+			m_structs[name][nameVar] = info; 
+			m_vars.push_back(Lock(m_level,nameVar,info));
 		}else if(expr->name() == "Body"){
 			increaseLevel();
 			Body* body = (Body*)expr;

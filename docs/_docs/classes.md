@@ -95,5 +95,30 @@ Output
 ```
 12 15
 ```
+## Extends
+A big part of oop is extending classes  so ABlaze supports this
+```
+struct Pos{
+    int x;
+    int y;
+    void printer(){
+        println x+" "+y;
+    }
+}
+struct Place extends Pos{
+    void Place(int x,int y){
+        this.x = x;
+        this.y =y;
+    }
+}
+void main(){
+    Place place = new Place(13,15);
+    place.printer();
+}
+```
 
+Output
+```
+13 15
+```
 Congratulations you learned about classes in ablaze.
