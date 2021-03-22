@@ -71,6 +71,20 @@
           url: "docs/arrays#selecting"
         - title: Strings
           url: "docs/arrays#strings"
+    - title: "Classes"
+      url: "docs/classes"
+      children:
+        - title: Basic 
+          url: "docs/classes#basic"
+        - title: Constructors
+          url: "docs/classes#constructors"
+        - title: Functions 
+          url: "docs/classes#functions"
+        - title: Static
+          url: "docs/classes#static"
+        - title: Extends
+          url: "docs/classes#extends"
+
 
 
 
