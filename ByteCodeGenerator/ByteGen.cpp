@@ -116,13 +116,15 @@ void ByteGen::array(Array* array){
 
 }
 void ByteGen::dotToByte(Dot* dot){
-        expressionToByte(dot->m_iden);
         if(dot->m_subIden->name() == "Literal"){
+                expressionToByte(dot->m_iden);
+
                 toCommand("select");
                 toCommand(((Literal*)dot->m_subIden)->m_token->m_symbol);
         }else if(dot->m_subIden->name() == "FunctionCall"){
                 FunctionCall* call = (FunctionCall*)dot->m_subIden;
                 argsToBye(call->m_args);
+                expressionToByte(dot->m_iden);
                 
                 toCommand("classcall");
                 toCommand(call->m_name->m_token->m_symbol+to_string(call->m_args->size()));

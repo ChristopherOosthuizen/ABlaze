@@ -337,7 +337,6 @@ void SematicAn::checkStructs(Body* body){
 	m_inside= name;
 	for(int i=0; i< body->m_lines->size(); i++){
 		Expression* expr =body->m_lines->at(i); 
-		check(expr);
 		if(expr->name() == "Decleration"){
 		
 			Decleration* dect = (Decleration*)expr;
@@ -346,6 +345,7 @@ void SematicAn::checkStructs(Body* body){
 			Token* type =dect->m_type->m_token;
 			m_structs[name][nameVar] =  TypeInfo(type->m_symbol,type->m_type, dect->m_isArray);
 		}else if(expr->name() == "Body"){
+			increaseLevel();
 			Body* body = (Body*)expr;
 			if(body->m_control->name() == "Function"){
 				Function* func = (Function*)body->m_control; 	
@@ -364,14 +364,27 @@ void SematicAn::checkStructs(Body* body){
 						continue;
 					}
 					Token* token = decleration->m_type->m_token;
-					argInfo.push_back(TypeInfo(token->m_symbol,token->m_type,decleration->m_isArray));	
+					TypeInfo info  =TypeInfo(token->m_symbol,token->m_type,decleration->m_isArray); 
+					m_vars.push_back(Lock(m_level,((Literal*)decleration->m_name)->m_token->m_symbol,info));
+					argInfo.push_back(info);	
 				}
 				string nameFunc = call->m_name->m_token->m_symbol;
 				Token* token = func->m_type->m_token;
 				FunctionInfo info =FunctionInfo(func->m_isStatic,m_level,nameFunc+" with args count "+to_string(call->m_args->size()) ,TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo); 
 				m_functions.push_back(info);
 				m_structsFunctions[name].push_back(info);
+				bool hasRet = checkReturns(body,TypeInfo(token->m_symbol,token->m_type,func->m_isArray));
+				if(!hasRet && token->m_type!= TokenType::VOID)
+					ErrorThrower::error(func->m_type->m_token->m_line,"Function can reach end without return");
+
+
 			}
+
+			for(Expression* exp: *body->m_lines){
+				check(exp);
+			}
+			
+			popLevel();
 		}
 
 		
