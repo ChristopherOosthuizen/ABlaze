@@ -16,11 +16,3 @@ var max( var a,var b){
     return b; 
 }
 
-var factorial(var end){
-    var result = 1;
-    for(var i =1;i<=end;i++ ){
-        result =i*result;
-    } 
-    return result;
-}
-

@@ -84,6 +84,25 @@
           url: "docs/classes#static"
         - title: Extends
           url: "docs/classes#extends"
+    - title: "Files"
+      url: "docs/files"
+      children:
+        - title: Import 
+          url: "docs/files#import"
+        - title: Library
+          url: "docs/files#import-library"
+        - title: Read File 
+          url: "docs/files#read-file"
+        - title: Write Files 
+          url: "docs/files#write-files"
+        - title: Create Files
+          url: "docs/files#create-files"
+        - title: Delete Files 
+          url: "docs/files#delete-files"
+
+
+
+
 
 
 

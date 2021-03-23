@@ -232,11 +232,14 @@ void Vm::exists(){
         ifstream ifile;
         string str = popStackString();
         ifile.open(str);
-        m_stack.pop_back();
         int res = 0;
-        if(ifile)
+        if(ifile.good())
                 res =1;
-        DataVal val(ByteType::INT,Val(res,res,res,to_string(res)));
+        ifile.close();
+        string ss= "false";
+        if(res ==1)
+                ss= "true";
+        DataVal val(ByteType::BOOL,Val(res,res,res,ss));
         m_stack.push_back(val);
 }
 
@@ -244,14 +247,14 @@ void Vm::readFile(){
         string line = "";
         string path= popStackString(); 
 
-        vector<string>* strs = new vector<string>();
+        vector<DataVal>* strs = new vector<DataVal>();
         ifstream reader(path);
         if(!reader.good()){
                 runTimeError("File "+path+" does not exist");
                 return;
         }
         while ( getline ( reader , line ) ) {
-                strs->push_back(line);
+                strs->push_back(DataVal(ByteType::STRING,Val(0,0,0,line)));
         }
         int pos = m_objs.size();
         DataVal val(ByteType::OBJ, Val(pos,pos,pos,""));     
