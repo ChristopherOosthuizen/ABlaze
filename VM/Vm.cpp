@@ -171,13 +171,43 @@ void Vm::functionPush(){
         m_functionStack.push_back(name);
 }
 
+void Vm::classcallMaps(){
+        DataVal val = popStack();
+        string funcName = nextToken()->m_symbol;
+        map<DataVal,DataVal>* maper = (map<DataVal,DataVal>*)m_objs[val.m_val.m_int]->m_pointer;
+        vector<DataVal>* vals = new vector<DataVal>();
+        if(funcName == "keys0"){
+               for(auto const& val:*maper){
+                        vals->push_back(val.first);
+               }
+        }else if(funcName == "vals0"){
+               for(auto const& val:*maper){
+                        vals->push_back(val.second);
+               }
+ 
+        }
+        int index = m_objs.size();
+        DataVal result(ByteType::LIST,Val(index,index,index,to_string(index)));
+	DataObj* obj = new DataObj(ByteType::LIST,vals);
+	m_objs.push_back(obj);
+	m_stack.push_back(result);
+}
+
 void Vm::classcall(){
       DataVal val = m_stack[m_stack.size()-1]; 
       string funcName = nextToken()->m_symbol;
         string name;
         if(val.m_type == ByteType::NIL){
                 name = (*m_structs[val.m_val.m_string]->m_functions)[funcName];
-        }else{
+        }
+
+        else{
+		if(m_objs[val.m_val.m_int]->m_type == ByteType::MAP){
+			m_pos--;
+		       classcallMaps();
+		       return;
+		}
+
                 StructObj* obj = (StructObj*)m_objs[val.m_val.m_int]->m_pointer;
                 if(obj->m_functions->count(funcName) !=0)
                         name = (*obj->m_functions)[funcName];
@@ -348,7 +378,11 @@ void Vm::input(){
 void Vm::set(){
         DataVal two = popStack(); 
         DataObj* data = m_objs[two.m_val.m_int];
-        if(data->m_type == ByteType::STRUCT){
+        if(data->m_type == ByteType::MAP){
+                map<DataVal,DataVal>* vals = (map<DataVal,DataVal>*)data->m_pointer;
+                (*vals)[popStack()] = popStack();
+        }
+        else if(data->m_type == ByteType::STRUCT){
                 StructObj* obj = (StructObj*)data->m_pointer;
                 asi(obj->m_vals);
         }else{
@@ -439,6 +473,12 @@ void Vm::at(){
                 return;
         }
         DataObj* obj = m_objs[one.m_val.m_int];
+
+	if(obj->m_type == ByteType::MAP){
+		map<DataVal,DataVal>* vals = (map<DataVal,DataVal>*)obj->m_pointer;
+		m_stack.push_back((*vals)[two]);
+		return;
+	}
         vector<DataVal>* vals = (vector<DataVal>*)obj->m_pointer;
         if(index >=vals->size()){
                 runTimeError("Index out of bounds for value "+to_string(index));
@@ -473,7 +513,11 @@ void Vm::newObj(){
                 m_objs.push_back(nullptr);
         }
         DataVal val(ByteType::OBJ, Val(pos,0,0,""));     
-        if(token->m_symbol == "list"){          
+        if(token->m_symbol == "map"){
+                m_objs[pos] = new DataObj(ByteType::MAP,new map<DataVal,DataVal>());
+                
+        }
+        else if(token->m_symbol == "list"){          
                 m_objs[pos] = new DataObj(ByteType::LIST,new vector<DataVal>());
         }else{            
                 m_objs[pos] = new DataObj(ByteType::STRUCT,new StructObj((token->m_symbol), m_structs[token->m_symbol]->m_vals,m_structs[token->m_symbol]->m_functions));

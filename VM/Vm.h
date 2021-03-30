@@ -35,6 +35,17 @@ public:
                 m_val = val;
         }
         DataVal(){}
+
+        bool operator==(const DataVal &val) const{
+                return val.m_type == m_type && val.m_val.m_string == m_val.m_string;
+        }
+
+        bool operator<(const DataVal &val) const{
+                if(val.m_type == m_type)
+                        return val.m_type <m_type;
+                return val.m_val.m_string < m_val.m_string;
+        }
+
 };
 
 class DataObj{
@@ -143,6 +154,7 @@ public:
         void readFile();
         void writeFile();
         void classcall();
+        void classcallMaps();
         void createFile();
         void deleteFile();
         void exists();

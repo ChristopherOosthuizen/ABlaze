@@ -327,3 +327,17 @@ TEST(VM,dup){
 
 
 
+
+TEST(VM,maps){
+      ByteLexer lexer("startlocal new map store lis push 15 push \"hello\" load lis set  push \"ok\" push 19 load lis set load lis classcall keys0 load lis classcall vals0 load lis push \"ok\"  at halt");
+       vector<ByteToken*> tokens = lexer.readAllTokens();
+       Vm vm(tokens); 
+       vm.execute();
+       ASSERT_EQ(vm.m_stack.size(),3);
+       ASSERT_EQ(vm.m_stack[0].m_type,ByteType::LIST);
+       ASSERT_EQ(vm.m_stack[1].m_type,ByteType::LIST);
+       ASSERT_EQ(vm.m_stack[2].m_type,ByteType::INT);
+}
+
+
+

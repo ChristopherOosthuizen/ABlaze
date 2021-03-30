@@ -65,7 +65,9 @@ ByteLexer::ByteLexer(const string& input){
         m_types["true"] = ByteType::TRUE;
         m_types["false"] = ByteType::FALSE;
         m_types["select"] = ByteType::SELECT;
+        m_types["map"] = ByteType::MAP;
 }
+
 
 string ByteLexer::strings(int start){
         m_pos--;
