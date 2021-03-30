@@ -25,13 +25,15 @@ BinOP::~BinOP(){
         delete m_op;
 }
 
-Decleration::Decleration(Literal* type, Expression* name ,Literal* op, Expression* value, bool initalize, bool isArray){
+Decleration::Decleration(Literal* type, Expression* name ,Literal* op, Expression* value, bool initalize, bool isArray, bool ismap, Literal* mapType){
     m_name = name; 
     m_op = op;
     m_value = value;
     m_type = type;
     m_initalize= initalize;
     m_isArray = isArray;
+    m_isMap = ismap;
+    m_mapType = mapType;
 }
 string Decleration::name(){return "Decleration";}
 

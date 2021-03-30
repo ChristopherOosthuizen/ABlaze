@@ -250,6 +250,12 @@ Expression* ASTGen::expression(){
 Expression* ASTGen::decleration(){
        Literal* type = new Literal(next());
        bool isArr = eat(TokenType::COLON); 
+       bool isMap = false;
+       Literal* mapType = nullptr;
+       if(isArr && (equals(TokenType::IDEN) || isIden(peek())) && m_tokens[m_pos+1]->m_type == TokenType::IDEN){
+		isMap = true;	
+		mapType = nextLit();
+       }
        if(!equals(TokenType::IDEN))
                 ErrorThrower::error(peek()->m_line,"Illigal idenifier: "+peek()->m_symbol);
        Expression* name = literal();
@@ -264,14 +270,14 @@ Expression* ASTGen::decleration(){
                value = expression();
                ErrorThrower::error(op->m_token->m_line,"Illigal use of specilized equals in decleration");
        }
-       return new Decleration(type,name,op,value,true,isArr);
+       return new Decleration(type,name,op,value,true,isArr,isMap,mapType);
 }
 
 //return a asseminet expression
 Expression* ASTGen::assignment(Expression* name){
        Literal* op =nextLit(); 
        Expression* value = expression();
-       return new Decleration(nullptr,name,op,value,false,false);
+       return new Decleration(nullptr,name,op,value,false,false,false,nullptr);
 }
 
 //rescursavly go down to keep pemdas in a binary operation

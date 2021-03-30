@@ -41,7 +41,7 @@ class Decleration: public Expression{
 
     public:
         string name() override;
-        Decleration(Literal* type, Expression* name,Literal* op,Expression* value, bool initalize, bool m_isArray);
+        Decleration(Literal* type, Expression* name,Literal* op,Expression* value, bool initalize, bool isArray,bool ismap,Literal* mapType);
         ~Decleration();
         Expression* m_name;
         Literal* m_op;
@@ -49,6 +49,8 @@ class Decleration: public Expression{
         Literal* m_type;
         bool m_initalize;
         bool m_isArray;
+	bool m_isMap;
+	Literal* m_mapType;
 };
 
 class Body: public Expression{
