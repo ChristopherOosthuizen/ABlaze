@@ -10,12 +10,23 @@ class TypeInfo{
 	public:
 		string m_symbol;
 		bool m_isArray;
+		bool m_map;
+		TokenType m_mapType;
 		TokenType m_type;
-		TypeInfo(string symbol,TokenType type, bool isArray){
+		TypeInfo(string symbol,TokenType type, bool isArray ){
 			m_isArray = isArray;
 			m_symbol = symbol;
 			m_type = type;
+			m_map = false;
 		}
+		TypeInfo(string symbol,TokenType type, bool isArray ,bool maper, TokenType mapType){
+			m_isArray = isArray;
+			m_symbol = symbol;
+			m_type = type;
+			m_map = maper;
+			m_mapType = mapType;
+		}
+
 		TypeInfo(){}
 };
 class FunctionInfo{

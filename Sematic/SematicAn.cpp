@@ -105,8 +105,12 @@ TypeInfo SematicAn::getType(Expression* expression){
 	}else if(expression->name() == "ArrayLiteral"){
 		ArrayLiteral* literal = (ArrayLiteral*)expression;
 		Token* name =literal->m_iden->m_token; 
-		if(name->m_type== TokenType::IDEN&& m_structs.count(name->m_symbol) == 0){
+		if(name->m_type== TokenType::IDEN&& (m_structs.count(name->m_symbol) == 0)){
 			TypeInfo info = getVar(name->m_symbol).m_type;
+			if(info.m_map){
+				info.m_map = false;
+				info.m_type = info.m_mapType;
+			}
 			if(!info.m_isArray &&info.m_type == TokenType::IDEN_STRING){
 				return TypeInfo("char",TokenType::IDEN_CHAR,false);
 			}
@@ -117,7 +121,12 @@ TypeInfo SematicAn::getType(Expression* expression){
 			if(name->m_type == TokenType::STRING){
 				TypeInfo("char",TokenType::IDEN_CHAR,false);
 			}
-			return TypeInfo(typeToString(name->m_type),name->m_type,true );
+			if(literal->m_value != nullptr && literal->m_value->name() == "Literal"){
+				Literal* type= (Literal*)(literal->m_value);
+				return TypeInfo(typeToString(name->m_type),name->m_type,true,true, type->m_token->m_type);
+
+			}
+			return TypeInfo(typeToString(name->m_type),name->m_type,true);
 		}
 	}else if(expression->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)expression;
@@ -243,6 +252,8 @@ void SematicAn::checkDot(Dot* dot){
 	if(dot->m_subIden->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)dot->m_subIden;
 		string name =call->m_name->m_token->m_symbol+" with args count "+to_string(call->m_args->size()); 
+		if(info.m_map && (name =="keys with args count 0" ||name == "vals with args count 0"))
+			return;
 		if(!containsFunc(m_structsFunctions[info.m_symbol],name)){
 			ErrorThrower::error(call->m_name->m_token->m_line,"Undefined class call");
 			return;
@@ -545,6 +556,9 @@ void SematicAn::checkTypeEquality(int line, TypeInfo oneT, TypeInfo twoT){
 	if(oneT.m_isArray != twoT.m_isArray){
 		ErrorThrower::error(line,"can not convert array into non array value");
 	}
+	if(oneT.m_map != twoT.m_map){
+		ErrorThrower::error(line,"can not convert map into non map value");
+	}
 	if(two == TokenType::VOID){
 		ErrorThrower::error(line,"Can not use void function as value");
 	}
@@ -567,11 +581,16 @@ void SematicAn::checkDecleration(Decleration* decleration){
 	TypeInfo info;
 	if(decleration->m_initalize){
 		Token* type = decleration->m_type->m_token;
-		 info =TypeInfo(typeToString(type->m_type),type->m_type,decleration->m_isArray); 
+		TokenType mapType;
+		if(decleration->m_isMap){
+			mapType = decleration->m_mapType->m_token->m_type;
+		}
+		 info =TypeInfo(typeToString(type->m_type),type->m_type,decleration->m_isArray,decleration->m_isMap,mapType); 
 		 if(decleration->m_value != nullptr)
 			checkTypeEquality(type->m_line,info,getType(decleration->m_value));
 
-		m_vars.push_back(Lock(m_level,name->m_symbol,TypeInfo(type->m_symbol,type->m_type,decleration->m_isArray)));
+		 TypeInfo inf(type->m_symbol,type->m_type,decleration->m_isArray,decleration->m_isMap,mapType); 
+		m_vars.push_back(Lock(m_level,name->m_symbol,inf));
 		
 
 		if(type->m_type ==TokenType::IDEN){
@@ -607,10 +626,11 @@ void SematicAn::checkArrayLiteral(ArrayLiteral* literal){
 	TokenType type =literal->m_iden->m_token->m_type ; 
 	if(m_structs.count(literal->m_iden->m_token->m_symbol) ==0 && type == TokenType::IDEN || type == TokenType::STRING){
 		check(literal->m_iden);
-		checkTypeEquality(getLine(literal->m_iden),TypeInfo("int",TokenType::INT,false),getType(literal->m_value));
 	}else{
-		if(literal->m_value != nullptr){
-			ErrorThrower::error(getLine(literal->m_value),"can not use number when declaring array ex: int[] ");
+		if(literal->m_value != nullptr ){
+			TypeInfo type = getType(literal->m_value);
+			if(type.m_type == TokenType::INT)
+				ErrorThrower::error(getLine(literal->m_value),"can not use number when declaring array ex: int[] ");
 		}
 	}
 }
