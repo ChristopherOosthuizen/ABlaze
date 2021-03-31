@@ -329,7 +329,7 @@ TEST(VM,dup){
 
 
 TEST(VM,maps){
-      ByteLexer lexer("startlocal new map store lis push 15 push \"hello\" load lis set  push \"ok\" push 19 load lis set load lis classcall keys0 load lis classcall vals0 load lis push \"ok\"  at halt");
+      ByteLexer lexer("startlocal new map store lis push 15 push \"hello\" load lis set   push 19 push \"ok\" load lis set load lis classcall keys0 load lis classcall vals0 load lis push \"ok\"  at halt");
        vector<ByteToken*> tokens = lexer.readAllTokens();
        Vm vm(tokens); 
        vm.execute();

@@ -137,6 +137,12 @@ void ByteGen::arrayToByte(ArrayLiteral* literal){
                 toCommand("list");
                 return;
         }
+	TokenType type = literal->m_iden->m_token->m_type;
+	if( type != TokenType::IDEN && type!= TokenType::STRING && literal->m_value != nullptr){
+		toCommand("new");
+		toCommand("map");
+		return;
+	}
         expressionToByte(literal->m_iden);
         expressionToByte(literal->m_value);
         toCommand("at");

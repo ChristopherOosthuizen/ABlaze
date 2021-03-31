@@ -380,7 +380,9 @@ void Vm::set(){
         DataObj* data = m_objs[two.m_val.m_int];
         if(data->m_type == ByteType::MAP){
                 map<DataVal,DataVal>* vals = (map<DataVal,DataVal>*)data->m_pointer;
-                (*vals)[popStack()] = popStack();
+		DataVal key = popStack();
+		DataVal val = popStack();
+                (*vals)[key]=val; 
         }
         else if(data->m_type == ByteType::STRUCT){
                 StructObj* obj = (StructObj*)data->m_pointer;
