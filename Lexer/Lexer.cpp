@@ -150,6 +150,7 @@ Token* Lexer::next() {
         case ']':return new Token(TokenType::CLOSE_BRACKET,"]",m_line);
         case '(':return new Token(TokenType::OPEN_PARENTHESE,"(",m_line);
         case ')':return new Token(TokenType::CLOSE_PARENTHESE,")",m_line);
+        case '@':return new Token(TokenType::AT,"@",m_line);
         case ',':return new Token(TokenType::COMMA,",",m_line);
         case '.': if(isNum(peek())){
 				m_pos--;
