@@ -334,8 +334,8 @@ TEST(VM,maps){
        Vm vm(tokens); 
        vm.execute();
        ASSERT_EQ(vm.m_stack.size(),3);
-       ASSERT_EQ(vm.m_stack[0].m_type,ByteType::LIST);
-       ASSERT_EQ(vm.m_stack[1].m_type,ByteType::LIST);
+       ASSERT_EQ(vm.m_stack[0].m_type,ByteType::OBJ);
+       ASSERT_EQ(vm.m_stack[1].m_type,ByteType::OBJ);
        ASSERT_EQ(vm.m_stack[2].m_type,ByteType::INT);
 }
 

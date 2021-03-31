@@ -101,6 +101,14 @@
           url: "docs/files#delete-files"
 
 
+    - title: "Maps"
+      url: "docs/maps"
+      children:
+        - title: Initializing 
+          url: "docs/maps#initializing"
+        - title: Getting Keys and Vals 
+          url: "docs/maps#getting-keys-and-vals"
+        
 
 
 

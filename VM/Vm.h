@@ -41,7 +41,7 @@ public:
         }
 
         bool operator<(const DataVal &val) const{
-                if(val.m_type == m_type)
+                if(val.m_type != m_type)
                         return val.m_type <m_type;
                 return val.m_val.m_string < m_val.m_string;
         }

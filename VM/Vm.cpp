@@ -187,7 +187,7 @@ void Vm::classcallMaps(){
  
         }
         int index = m_objs.size();
-        DataVal result(ByteType::LIST,Val(index,index,index,to_string(index)));
+        DataVal result(ByteType::OBJ,Val(index,index,index,to_string(index)));
 	DataObj* obj = new DataObj(ByteType::LIST,vals);
 	m_objs.push_back(obj);
 	m_stack.push_back(result);
