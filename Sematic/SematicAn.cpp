@@ -158,7 +158,12 @@ void SematicAn::check(Expression* expr){
 		checkBinOP((BinOP*) expr);
 	}else if(name == "Body"){
 		checkBody((Body*) expr);
-	}else if(name == "FunctionCall"){
+	}else if(name == "ForArray"){
+		ForArray* array = (ForArray*)expr;
+		check(array->m_dect);
+		check(array->m_value);
+	}
+	else if(name == "FunctionCall"){
 		checkFunctionCall((FunctionCall*)expr);
 	}else if(name == "Dot"){
 		checkDot((Dot*)expr);
@@ -436,9 +441,12 @@ void SematicAn::controlStatements(Expression* expression){
 	if(name == "For"){
 		ForStat* stat = (ForStat*)expression;
 		check(stat->m_initial);
-		check(stat->m_condition);
-		checkTypeEquality(getLine(stat->m_condition),TypeInfo("bool",TokenType::BOOL,false),getType(stat->m_condition));
-		check(stat->m_repitition);
+		if(stat->m_initial == nullptr ||stat->m_initial->name()!="ForArray" ){
+
+			check(stat->m_condition);
+			checkTypeEquality(getLine(stat->m_condition),TypeInfo("bool",TokenType::BOOL,false),getType(stat->m_condition));
+			check(stat->m_repitition);
+		}
 	}else if(name=="If"){
 		IfStat* stat = (IfStat*)expression;
 		check(stat->m_control);

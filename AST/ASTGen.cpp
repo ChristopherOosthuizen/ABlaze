@@ -78,17 +78,25 @@ Expression* ASTGen::body(){
                control = new IfStat(expression());
        }else if(type == TokenType::FOR){
                consume(TokenType::OPEN_PARENTHESE,"for has no opening parenthese");
-               Expression* inital = lineStat();
-               Expression* controlStat = expression();
-               if(controlStat == nullptr)
-                        ErrorThrower::error(lit->m_token->m_line,"for control statement can not be null");
-               consume(TokenType::SEMI_COLON,"Missing SemiColon");
-               Expression* rep = nullptr;
-               if(!equals(TokenType::CLOSE_PARENTHESE)){
-                       rep = expression();
-               }
-               consume(TokenType::CLOSE_PARENTHESE,"Unclosed parentehse");
-               control = new ForStat(inital,controlStat,rep);
+               Expression* inital = lineExpr();
+	       if(inital != nullptr && inital->name() == "ForArray"){
+		       consume(TokenType::CLOSE_PARENTHESE,"Unclosed parentehse");
+		       control = new ForStat(inital,inital,inital);
+		
+	       }else{
+		       if(inital != nullptr)
+			       consume(TokenType::SEMI_COLON,"Missing semi colon");
+		       Expression* controlStat = expression();
+		       if(controlStat == nullptr)
+				ErrorThrower::error(lit->m_token->m_line,"for control statement can not be null");
+		       consume(TokenType::SEMI_COLON,"Missing SemiColon");
+		       Expression* rep = nullptr;
+		       if(!equals(TokenType::CLOSE_PARENTHESE)){
+			       rep = expression();
+		       }
+		       consume(TokenType::CLOSE_PARENTHESE,"Unclosed parentehse");
+		       control = new ForStat(inital,controlStat,rep);
+	       }
        }else if(type == TokenType::WHILE){
                control = new WhileStat(expression()); 
        }else if(type == TokenType::STRUCT){
@@ -361,6 +369,8 @@ bool ASTGen::isFunc(){
 }
 
 Expression* ASTGen::literal(){
+	if(eat(TokenType::SEMI_COLON))
+		return nullptr;
         if(equals(TokenType::NIL)){
                 return nextLit();
         }

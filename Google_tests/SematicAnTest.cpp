@@ -404,6 +404,22 @@ TEST(SematicAn, maps){
 	
 }
 
+TEST(SematicAn, forsan){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main ="void main(){ int: lister = int[]; for(int i@lister){println i;}}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_EQ(ErrorThrower::errors->size(),0);
+
+	
+}
+
+
 
 
 
