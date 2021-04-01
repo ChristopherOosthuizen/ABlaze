@@ -270,7 +270,12 @@ Expression* ASTGen::decleration(){
                value = expression();
                ErrorThrower::error(op->m_token->m_line,"Illigal use of specilized equals in decleration");
        }
-       return new Decleration(type,name,op,value,true,isArr,isMap,mapType);
+	Decleration* dect =new Decleration(type,name,op,value,true,isArr,isMap,mapType);
+
+       if(eat(TokenType::AT)){
+		return new ForArray(dect,literal());
+       }
+	return dect;
 }
 
 //return a asseminet expression
