@@ -53,6 +53,14 @@ class Decleration: public Expression{
 	Literal* m_mapType;
 };
 
+class ForArray: public Expression{
+	public:
+		string name() override;
+		ForArray(Decleration* decleration, Expression* value);
+		~ForArray();
+		Decleration* m_dect;
+		Expression* m_value;
+};
 class Body: public Expression{
         public:
                 string name() override;

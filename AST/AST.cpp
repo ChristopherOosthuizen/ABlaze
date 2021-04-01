@@ -25,6 +25,18 @@ BinOP::~BinOP(){
         delete m_op;
 }
 
+ForArray::ForArray(Decleration* dect, Expression* expr ){
+	m_value = expr;
+	m_dect = dect;
+}
+string ForArray::name(){return "ForArray";}
+
+ForArray::~ForArray(){
+	delete m_dect;
+	delete m_value;
+}
+
+
 Decleration::Decleration(Literal* type, Expression* name ,Literal* op, Expression* value, bool initalize, bool isArray, bool ismap, Literal* mapType){
     m_name = name; 
     m_op = op;
