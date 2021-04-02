@@ -290,6 +290,10 @@ void ByteGen::whileToByte(Body* body,string line){
 
 void ByteGen::forToByte(Body* body,string line){
         ForStat* stat =((ForStat*)body->m_control);
+	if(stat->m_condition->name() == "ForArray"){
+		forArray(body,line);
+		return;
+	}
         toCommand("startlocal");
         expressionToByte(stat->m_initial);
         toCommand("startFor#"+line+":");
@@ -302,6 +306,51 @@ void ByteGen::forToByte(Body* body,string line){
         expressionToByte(stat->m_repitition);
         toCommand("poplocal");
         toCommand("jmp");
+        toCommand("startFor#"+line);
+        toCommand("endFor#"+line+":");
+        toCommand("poplocal");
+}
+void ByteGen::forArray(Body* body, string line){
+        ForStat* stat =((ForStat*)body->m_control);
+
+	ForArray* array = (ForArray*)stat->m_condition;
+	toCommand("startlocal");
+	toCommand("push");
+	toCommand("0");
+	toCommand("store");
+	toCommand("#For"+line);
+        decToCommand(array->m_dect,false);
+
+        toCommand("startFor#"+line+":");
+	toCommand("load");
+	toCommand("#For"+line);
+        expressionToByte(array->m_value);
+	toCommand("len");
+        toCommand("islt");
+        toCommand("not");
+        toCommand("startlocal");
+        toCommand("jif");
+        toCommand("endFor#"+line);
+        expressionToByte(array->m_value);
+
+	toCommand("load");
+	toCommand("#For"+line);
+	toCommand("at");
+	Literal* literal  = ((Literal*)(array->m_dect)->m_name);
+	toCommand("asi");
+	toCommand(literal->m_token->m_symbol);
+        bodyToByte(body);
+
+	toCommand("load");
+	toCommand("#For"+line);
+	toCommand("push");
+	toCommand("1");
+	toCommand("add");
+	toCommand("asi");
+	toCommand("#For"+line);
+
+        toCommand("poplocal");
+	toCommand("jmp");
         toCommand("startFor#"+line);
         toCommand("endFor#"+line+":");
         toCommand("poplocal");
