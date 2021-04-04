@@ -131,6 +131,9 @@ TypeInfo SematicAn::getType(Expression* expression){
 	}else if(expression->name() == "FunctionCall"){
 		FunctionCall* call = (FunctionCall*)expression;
 		string name = call->m_name->m_token->m_symbol +" with args count "+to_string(call->m_args->size());
+		if(m_inside != "" && containsFunc(m_structsFunctions[m_inside],name)){
+			return getFunc(m_structsFunctions[m_inside],name).m_info;
+		}
 		return getFunc(m_functions,name).m_info;
 	}else if(expression->name() == "Array"){
 		return TypeInfo("var",TokenType::VAR,true);
