@@ -2,6 +2,7 @@
 // The AST generator is meant to return 
 // A based off a list of tokens constructed by a lexer
 #include "ASTGen.h"
+#include <iostream>
 #include "AST.h"
 #include "ErrorThrower.h"
 
@@ -110,16 +111,21 @@ Expression* ASTGen::body(){
                control = new Struct(name,extends,extender);
        }else if(type == TokenType::CLASS){
                control = new Class(nextLit());
-        }else if(type == TokenType::STATIC){
-                bool isArray =false;
-                if(eat(TokenType::COLON))
-                        isArray = true;
-                control = new Function(true,isArray,nextLit(),(FunctionCall*)functionCall() );
-       }else if(isIden(lit->m_token)){
+        }else if(isIden(lit->m_token)|| type== TokenType::STATIC ||type == TokenType::PUBLIC|| type==TokenType::PRIVATE){
+		bool isType = type==TokenType::PUBLIC||type ==TokenType::PRIVATE;
+		bool isPublic= type!=TokenType::PRIVATE;
+		if(isType){
+			type = peek()->m_type;
+
+			lit = nextLit();
+		}
+		bool isStatic = type==TokenType::STATIC;
+		if(isStatic)
+			lit = nextLit();
                bool isArray = false;
                if(eat(TokenType::COLON))
                         isArray = true;;
-                control = new Function(false,isArray,lit,(FunctionCall*)functionCall());
+                control = new Function(isPublic,isStatic,isArray,lit,(FunctionCall*)functionCall());
        }
        return new Body(control,lines());
 }
@@ -192,6 +198,8 @@ bool ASTGen::isBod(){
                 case TokenType::WHILE:
                 case TokenType::ELSE:
                 case TokenType::CLASS:
+                case TokenType::PUBLIC:
+                case TokenType::PRIVATE:
                 case TokenType::STATIC:
                 case TokenType::STRUCT:return 1;
         }

@@ -36,6 +36,8 @@ Lexer::Lexer(const string& input) {
 			m_built_in_words["extends"] = TokenType::EXTENDS;
 			m_built_in_words["nil"] = TokenType::NIL;
 			m_built_in_words["static"] = TokenType::STATIC;
+			m_built_in_words["public"] = TokenType::PUBLIC;
+			m_built_in_words["private"] = TokenType::PRIVATE;
 			m_built_in_words["len"] = TokenType::LEN;
 
 		}

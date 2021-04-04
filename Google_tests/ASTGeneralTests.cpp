@@ -178,6 +178,16 @@ TEST(ASTGenetal,Static){
         ASSERT_EQ(((Body*)body->m_lines->at(0))->m_lines->size(),2);
 }
 
+TEST(ASTGenetal,publics){
+        Lexer lexer("struct Left {int i=12; public static int make(){return 12;} public int rake(){return 15;}}");
+        vector<Token*> tokens = lexer.readAllTokens();
+        ASTGen gen(tokens);
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_EQ(((Body*)body->m_lines->at(0))->m_lines->size(),3);
+}
+
+
 TEST(ASTGenetal,maps){
         Lexer lexer("void main(){string:int maper = string[int]; int str = maper[\"hello\"]; maper.keys(); maper.vals();}");
         vector<Token*> tokens = lexer.readAllTokens();

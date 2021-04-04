@@ -299,10 +299,20 @@ TEST(IDEN,basic){
  */
 
 TEST(IDEN,reserved){
-	Lexer lexer("print println import var if for while return int double string bool else char extends ");
+	Lexer lexer("public private print println import var if for while return int double string bool else char extends ");
 	
 	Token* token;
 
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::PUBLIC);
+	ASSERT_EQ(token->m_symbol,"public");
+	delete token;
+
+	token = lexer.next();
+	ASSERT_EQ(token->m_type,TokenType::PRIVATE);
+	ASSERT_EQ(token->m_symbol,"private");
+	delete token;
 
 	token = lexer.next();
 	ASSERT_EQ(token->m_type,TokenType::PRINT);
