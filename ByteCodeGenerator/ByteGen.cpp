@@ -450,8 +450,10 @@ void ByteGen::functionToByte(Body* body){
 
 void ByteGen::castToByte(Cast* cast){
         expressionToByte(cast->m_value);
-        toCommand("cast");
-        toCommand(cast->m_iden->m_token->m_symbol);
+	if(cast->m_iden->m_token->m_type != TokenType::IDEN){
+		toCommand("cast");
+		toCommand(cast->m_iden->m_token->m_symbol);
+	}
 }
 
 bool ByteGen::isBuiltIn(string name){
