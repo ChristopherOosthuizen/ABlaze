@@ -283,3 +283,13 @@ TEST(AST, cast){
 
 
 
+TEST(AST, forArray){
+        Lexer lexer("int i@light;");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"ForArray");
+}
+
+

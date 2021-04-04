@@ -159,9 +159,7 @@ void SematicAn::check(Expression* expr){
 	}else if(name == "Body"){
 		checkBody((Body*) expr);
 	}else if(name == "ForArray"){
-		ForArray* array = (ForArray*)expr;
-		check(array->m_dect);
-		check(array->m_value);
+		checkForArray((ForArray*)expr);
 	}
 	else if(name == "FunctionCall"){
 		checkFunctionCall((FunctionCall*)expr);
@@ -196,6 +194,20 @@ void SematicAn::check(Expression* expr){
 			}
 		}
 	}
+}
+
+void SematicAn::checkForArray(ForArray* array){
+	check(array->m_dect);
+	check(array->m_value);
+	TypeInfo info = getType(array->m_value);
+	if(info.m_isArray){
+		info.m_isArray = false;
+		string name = ((Literal*)array->m_dect->m_name)->m_token->m_symbol;
+		TypeInfo dectInfo(name,array->m_dect->m_type->m_token->m_type,array->m_dect->m_isArray);
+		checkTypeEquality(getLine(array->m_dect),dectInfo,info);
+	}else
+		ErrorThrower::error(getLine(array->m_value),"can only use array values"); 
+
 }
 
 void SematicAn::increaseLevel(){

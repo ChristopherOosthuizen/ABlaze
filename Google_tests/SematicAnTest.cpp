@@ -419,6 +419,22 @@ TEST(SematicAn, forsan){
 	
 }
 
+TEST(SematicAn, forsArray){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main ="void main(){ int lister = 12; string: listed = string[]; for(int i@lister){println i;} for(int i@listed){}}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_EQ(ErrorThrower::errors->size(),2);
+
+	
+}
+
+
 
 
 
