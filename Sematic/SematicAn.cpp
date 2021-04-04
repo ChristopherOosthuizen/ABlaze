@@ -274,7 +274,11 @@ void SematicAn::checkDot(Dot* dot){
 		if(!containsFunc(m_structsFunctions[info.m_symbol],name)){
 			ErrorThrower::error(call->m_name->m_token->m_line,"Undefined class call");
 			return;
-		}	
+		}else if(containsFunc(m_structsFunctions[info.m_symbol],name) && !getFunc(m_structsFunctions[info.m_symbol],name).m_public){
+			ErrorThrower::error(call->m_name->m_token->m_line,"can not call private class function");
+			return;
+
+		}
 		FunctionInfo funcInfo = getFunc(m_structsFunctions[info.m_symbol],name);
 		if(info.m_type == TokenType::NIL &&!funcInfo.m_static){
 			ErrorThrower::error(call->m_name->m_token->m_line, "Static call of non ststic function");
@@ -400,7 +404,7 @@ void SematicAn::checkStructs(Body* body){
 				}
 				string nameFunc = call->m_name->m_token->m_symbol;
 				Token* token = func->m_type->m_token;
-				FunctionInfo info =FunctionInfo(func->m_isStatic,m_level,nameFunc+" with args count "+to_string(call->m_args->size()) ,TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo); 
+				FunctionInfo info =FunctionInfo(func->m_isPublic,func->m_isStatic,m_level,nameFunc+" with args count "+to_string(call->m_args->size()) ,TypeInfo(token->m_symbol,token->m_type,func->m_isArray),argInfo); 
 				m_functions.push_back(info);
 				m_structsFunctions[name].push_back(info);
 				bool hasRet = checkReturns(body,TypeInfo(token->m_symbol,token->m_type,func->m_isArray));
@@ -525,10 +529,12 @@ void SematicAn::checkFunctionCall(FunctionCall* functionCall){
 	Token* token = functionCall->m_name->m_token; 
 	string name =token->m_symbol+" with args count "+to_string(functionCall->m_args->size());  
 	
-	if(containsFunc(m_functions,name) ==0 && m_inside == "" ){
-		ErrorThrower::error(token->m_line, "Undefined function: "+name);
-		return;
-	}
+	if(containsFunc(m_functions,name) ==0  ){
+		if(m_inside =="" || !containsFunc(m_structsFunctions[m_inside],name)){
+			ErrorThrower::error(token->m_line, "Undefined function: "+name);
+			return;
+		}	
+	} 
 	if(name == "append with args count 2"){
 		TypeInfo type = getType(functionCall->m_args->at(0));
 		type.m_isArray = false;

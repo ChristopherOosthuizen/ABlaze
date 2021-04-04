@@ -36,15 +36,17 @@ class FunctionInfo{
 		string m_name;
 		int m_level;
 		bool m_static;
+		bool m_public;
 		FunctionInfo(int level, string name, TypeInfo info,vector<TypeInfo> args){
 			m_level = level;
 			m_name = name;
 			m_info = info;
 			m_args = args;
 		}
-		FunctionInfo(bool stat, int level, string name, TypeInfo info,vector<TypeInfo> args){
+		FunctionInfo(bool pub,bool stat, int level, string name, TypeInfo info,vector<TypeInfo> args){
 			m_level = level;
 			m_static = stat;
+			m_public = pub;
 			m_name = name;
 			m_info = info;
 			m_args = args;

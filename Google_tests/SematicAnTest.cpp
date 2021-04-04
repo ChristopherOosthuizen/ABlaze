@@ -434,6 +434,22 @@ TEST(SematicAn, forsArray){
 	
 }
 
+TEST(SematicAn, Private){
+	ErrorThrower::hasError = false;
+	delete ErrorThrower::errors;
+	ErrorThrower::errors = new vector<string>();
+	string main ="struct Name{ private int namer(){return 12;} int lake(){namer(); return  12;}}void main(){ Name n = new Name; n.namer();}";
+	Lexer lexer(main);
+	ASTGen gen = ASTGen(lexer.readAllTokens());
+	Body* body = gen.generateAST();	
+	SematicAn an(body);
+	an.analize();
+	ASSERT_EQ(ErrorThrower::errors->size(),1);
+
+	
+}
+
+
 
 
 
