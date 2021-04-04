@@ -387,7 +387,7 @@ Expression* ASTGen::literal(){
         }
         if(eat(TokenType::OPEN_PARENTHESE)){
                 Expression* expr = parans();
-                if( expr->name() == "Literal" && isIden(((Literal*)expr)->m_token) ){
+                if( expr->name()=="Literal"&&order(peek()) == -1 && !equals(TokenType::OPEN_BRACKET)&&!equals(TokenType::OPEN_BRACE) &&!isBod()&&!isEquals()&&!equals(TokenType::SEMI_COLON)){
                        expr = new Cast((Literal*)expr,unary()); 
 
                 }

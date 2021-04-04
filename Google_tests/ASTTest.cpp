@@ -281,6 +281,16 @@ TEST(AST, cast){
         ASSERT_EQ(body->m_lines->at(1)->name(),"Cast");
 }
 
+TEST(AST, nonprimcast){
+        Lexer lexer("(Home)h;");
+        ASTGen gen(lexer.readAllTokens());
+        Body* body = gen.generateAST();
+        ASSERT_EQ(body->m_lines->size(),1);
+        ASSERT_TRUE(body->m_lines->at(0) != nullptr);
+        ASSERT_EQ(body->m_lines->at(0)->name(),"Cast");
+}
+
+
 
 
 TEST(AST, forArray){
