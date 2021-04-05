@@ -88,7 +88,7 @@ TypeInfo SematicAn::getType(Expression* expression){
 		return TypeInfo("void",TokenType::VOID,false);
 	}else if(expression->name() == "Cast"){
 		Cast* cast = (Cast*)expression;
-		return TypeInfo(typeToString(cast->m_iden->m_token->m_type),cast->m_iden->m_token->m_type,false);
+		return TypeInfo(cast->m_iden->m_token->m_symbol,cast->m_iden->m_token->m_type,false);
 	}else if(expression->name() == "Literal"){
 		Literal* lit = (Literal*)expression;
 		if(lit->m_token->m_symbol == "this"){
