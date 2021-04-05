@@ -116,6 +116,7 @@ public:
         DataVal popStack();
         string popStackString();
         ByteToken* nextToken();
+	void loadArgs(int len,char** argv);
         void pushLocals(vector<Local*>* ins,vector<Local*>* outs);
         void newObj();
         void execute();

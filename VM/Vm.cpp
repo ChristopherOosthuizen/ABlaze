@@ -142,6 +142,16 @@ void Vm::step(){
        collectAllGarbage();
 }
 
+void Vm::loadArgs(int len, char** argv){
+	vector<DataVal>* args = new vector<DataVal>();
+	for(int i=0; i <len;i++){
+		args->push_back(DataVal(ByteType::STRING,Val(0,0,0,argv[i])));
+	}
+	m_locals[0]->push_back(new Local(0,"args",DataVal(ByteType::OBJ,Val(0,0,0,"0"))));
+	m_objs.push_back(new DataObj(ByteType::LIST,args));
+
+}
+
 void Vm::dup(){
         pushToStack();
         int times = popStack().m_val.m_int;

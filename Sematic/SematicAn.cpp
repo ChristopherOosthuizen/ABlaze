@@ -94,6 +94,9 @@ TypeInfo SematicAn::getType(Expression* expression){
 		if(lit->m_token->m_symbol == "this"){
 			return TypeInfo(m_inside,TokenType::STRUCT,false);
 		}
+		if(lit->m_token->m_symbol == "args"){
+			return TypeInfo("string",TokenType::STRING,true);
+		}
 		if(m_structs.count(lit->m_token->m_symbol) !=0){
 			return TypeInfo(lit->m_token->m_symbol,TokenType::NIL,false);
 		}
@@ -245,7 +248,7 @@ Lock SematicAn::getVar(string str){
 }
 
 bool SematicAn::isReserved(const string& s){
-	vector<string> strs = {"this"};
+	vector<string> strs = {"this","args"};
 	for(string st : strs){
 		if(st == s)
 			return true;

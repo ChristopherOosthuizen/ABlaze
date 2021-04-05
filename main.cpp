@@ -90,7 +90,7 @@ int convertToByte(const string& wholeFile,const string& output, const string& pa
  * interprets ABlaze programs contained inside
  * files
  */
-int file(string path,string  output,bool run) {
+int file(char** argv, int argc ,string path,string  output,bool run) {
     string wholeFile;
     string line;
 
@@ -110,6 +110,7 @@ int file(string path,string  output,bool run) {
     ByteLexer lexer(wholeFile);
     vector<ByteToken*> tokens = lexer.readAllTokens();
     Vm vm(tokens);
+	vm.loadArgs(argc,argv);
     vm.execute();
     return 0;
 }
@@ -132,10 +133,10 @@ int main(int argc , char** argv) {
         string output = "a.laze";
         string input = argv[argc-1];
         if(arg1 == "-r"){
-                return file(input,output,true);
+                return file(argv, argc,input,output,true);
         }
         if(arg1 == "-o"){
                 output = argv[2];
         }
-        return file(input,output,false);
+        return file(argv, argc,input,output,false);
 }
